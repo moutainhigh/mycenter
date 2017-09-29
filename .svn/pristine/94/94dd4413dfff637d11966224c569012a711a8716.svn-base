@@ -1,0 +1,273 @@
+<div class="ser-main-box">
+    <div class="crumbs">
+        <a class="crumb-link" href="/mywf/index.html">全部服务</a>
+        <i class="crumb-line">&gt;</i>
+        <a class="crumb-link" href="#">流程首页</a>
+    </div>
+    
+    <div class="box">
+        <div class="box-con">
+            <div class="xw-tag">自助办理</div>
+            <div class="con1">
+                <p class="tit-box">
+                    <span class="t1">公司注册</span>
+                    <!-- <span class="t2">小微代办</span> -->
+                    <!-- <span class="t3">已购买</span> -->
+                </p> 
+                <p class="text-box">
+                    <span>
+                    	<label>1、</label>
+                    	<a>注册完成是指核名、设立、领照、刻章四步完成；国税地税报到为公司开始运营所需必要条件，您可以自己通过以下步骤办理完成全部的公司注册。</a>
+                    </span>   
+                    <span>
+                    	<label>2、</label>
+						<a>在办理过程遇到的疑难问题小微已为您准备温馨提示，且伴随重磅惊喜。</a>
+					</span>
+                </p>
+            </div>
+            <div class="con2">
+                <!-- <a class="btn" href="http://www.lvzheng.com/reg_bj.html">购买全部服务</a> -->
+                <p class="hot-call">咨询热线<br>010-57426695</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-flow">  
+        <ul class="tabbtn" id="normaltab">
+            <li class="current"><a>服务流程</a></li>
+            <li><a>咨询详情 <span class="ico">$!{availableCount}</span></a></li>
+        </ul>
+        <div class="tabcon" id="normalcon">
+            <div class="sublist" style="display: block;">
+            	
+				#set($index = 0)            	
+				#foreach($fullReceiveTask in $fullReceiveTaskList)
+				#set($index = $index + 1)
+				<!-- 未开始服务 -->
+				#if(!$fullReceiveTask.getStartTime())
+				<div class="list-box">
+                    <div class="con1">
+                        <div class="step">$index</div>
+                        <div class="con-left">
+                            <p class="tit-box">
+                                <span class="t1">$!{fullReceiveTask.getActivityName()}</span>
+                            </p> 
+                            <p class="text">$!{fullReceiveTask.getDescription()}</p>
+                        </div>
+                        <div class="con-right"><a class="btn" href="/mywf/company/detail/$!{fullReceiveTask.getProcessInstanceId()}/showflow/$!{fullReceiveTask.getAttributes().get("flowKey")}?activityId=$!{fullReceiveTask.getActivityId()}">了解任务</a></div>
+                    </div>
+                </div>
+				#end
+				
+				<!-- 服务中 -->
+				#if($fullReceiveTask.getStartTime() && !$fullReceiveTask.getEndTime())
+				<div class="list-box" id="list-on">
+                    <div class="con1">
+                        <div class="step">$index</div>
+                        <div class="con-left">
+                            <p class="tit-box">
+                                <span class="t1">$!{fullReceiveTask.getActivityName()}</span>
+                            </p> 
+                            <p class="text">$!{fullReceiveTask.getDescription()}</p>
+                        </div>
+                        <div class="con-right"><a class="btn" href="/mywf/company/detail/$!{fullReceiveTask.getProcessInstanceId()}/$!{fullReceiveTask.getId()}">处理任务</a></div>
+                    </div>
+                    <div class="con2">
+                    	#if($fullReceiveTask.getCalledProcessInstanceId())
+                        <div class="con-left">
+                            <div class="c-tag">
+                                <p class="pic"><img src="/file/download/$!{fullReceiveTask.getTaskVariables().get("employer-photo")}"></p>
+                                <p class="text">
+                                    <span class="job">服务顾问：</span>
+                                    <a class="name" href="javascript:void(0);"><span class="s1">$!{fullReceiveTask.getTaskVariables().get("employer-name")}</span> <i></i><span class="s2">高级</span></a>
+	                            	<span class="tel">手机号：<a>$!{fullReceiveTask.getTaskVariables().get("employer-phoneNum")}</a></span>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- <div class="con-right"><a class="btn" href="javascript:void(0);">联系TA</a></div> -->
+                        #else
+                        <div class="con-btn">
+
+                            <a class="btn1" id="consultzx" data-value="http://mycenter.lvzheng.com/mywf/company/reg/$!{procInstId}" href="javascript:void(0)" >
+                            #if( ${callid} && $!{callid} != "" && $!{callid} != -1 ) 咨询小微  #else 付费咨询  #end
+                            </a>
+                            
+                            #if($fullReceiveTask.getAttributes().get("productCode"))
+                            	#set( $payid = $!{fullReceiveTask.getTaskVariables().get("order-unPayCount")} )
+	                            #if($payid > 0)
+	                            <a class="btn2" target="_blank"  href="http://pay.lvzheng.com/reqpay/$!{payid}" >去支付</a>
+	                            #else
+	                           	<a class="btn2" href="javascript:void(0)"
+	                            data-superProcessInstanceId="$!{fullReceiveTask.getProcessInstanceId()}" 
+	                            data-superActivityId="$!{fullReceiveTask.getId()}" 
+	                            data-productCode="$!{fullReceiveTask.getAttributes().get("productCode")}" 
+	                            data-busid="$!{fullReceiveTask.getProcessVariables().get("busid")}" 
+	                            id="buysiglebutton">小微代办</a>
+	                            #end
+                            #end
+                            
+                        </div>
+                    	#end
+                    </div>
+                </div>
+
+				#end
+				
+				<!-- 已完成 -->
+				#if($fullReceiveTask.getStartTime() && $fullReceiveTask.getEndTime())
+                <div class="list-box">
+                    <div class="con1 wcbg">
+                        <div class="step">$index</div>
+                        <div class="con-left">
+                            <p class="tit-box">
+                                <span class="t1">$!{fullReceiveTask.getActivityName()}</span>
+                                
+                                #if($fullReceiveTask.getCalledProcessInstanceId())
+                                <span class="t2">小微代办</span>
+                                #end
+                                
+                            </p> 
+                            <p class="text">$!{fullReceiveTask.getDescription()}</p>
+                        </div>
+                        <div class="con-right"><a class="btn" href="/mywf/company/detail/$!{fullReceiveTask.getProcessInstanceId()}/$!{fullReceiveTask.getId()}">查看结果</a></div>
+                    </div>
+                    <!-- 购买得小微服务 -->
+                    #if($fullReceiveTask.getCalledProcessInstanceId())
+                    <div class="con2">
+                        <div class="con-left">
+                            <div class="c-tag">
+                                <p class="pic"><img src="/file/download/$!{fullReceiveTask.getTaskVariables().get("employer-photo")}"></p>
+                                <p class="text">
+                                    <span class="job">服务顾问：</span>
+                                    <a class="name" href="javascript:void(0);"><span class="s1">$!{fullReceiveTask.getTaskVariables().get("employer-name")}</span> <i></i><span class="s2">高级</span></a>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- <div class="con-right"><a class="btn" href="javascript:void(0);">联系TA</a></div> -->
+                    </div>
+                    #end
+                </div>
+				#end
+				
+				#if($fullReceiveTaskList.size() > $index)<div class="line"></div>#end
+                
+				#end
+
+            </div>
+
+			
+            <div class="sublist" style="display: none;">
+			#if( $!{callid} != -1)
+                <div class="con_no">
+                    <div class="no-service">
+                        <p>您当前有$!{availableCount}次咨询业务还没有使用，快去使用吧！<a id="usezxnow" >立即使用&gt;&gt;</a></p>
+                    </div>
+                </div>
+			#else
+                <div class="box">
+                    <p class="title">
+                        <span class="t1">小微咨询服务</span>
+                    </p>
+                    <div class="zx-box">
+                        <div class="zx-ico"></div>
+                        <div class="zx-text">
+                            <span>服务范围：注册公司过程中的疑难问题</span>
+                            <span>服务时间：30分钟 (通话时长在3分钟之内时还可拨打第2次)</span>
+                            <span>服务方式：电话沟通</span>
+                            <span>服务人员：小微专业法律顾问为您解答问题</span>
+                        </div>
+                        <div class="zx-price">
+                            <span class="price">$!{zixunPrice}元</span>
+                            <a class="btn" data-value="http://mycenter.lvzheng.com/mywf/company/reg/$!{procInstId}" name="zxbuybtn" >去购买</a>
+                        </div>
+                    </div>
+                </div>
+            #end
+                #if( ${calllist} && $!{calllist.size()}>0 )
+                <div class="tab-list">
+                    <table>
+                        <tbody>
+                       
+                        <tr>
+                            <th width="18%">咨询时间</th>
+                            <th width="18%">咨询时长</th>
+                            <th width="15%">咨询服务</th>
+                            <th width="30%">咨询反馈</th>
+                             <th>操作</th>
+                        </tr>
+                        
+                         #foreach( $callone in $!{calllist})
+                        <tr>
+                            <td class="tr_odd">$!{callone.starttime}</td>
+                            <td class="tr_odd">#if (${callone.usetime}) $!{callone.usetime} s #else 0s #end</td>
+                            <td class="tr_odd">$!{callone.servicestep}</td>
+                            <td class="tr_odd">$!{callone.comments}</td>
+                          <td class="tr_odd">
+                          #if( $!{callone.voiceUrl} && $!{callone.voiceUrl} != "" )
+                          <a class="btn" href="$!{callone.voiceUrl}">听录音</a>
+                          #else
+                      		    无录音
+                          #end
+                          </td>
+                        </tr>
+                        #end
+                        
+                    </tbody></table> 
+                </div>
+                #end
+                #if( $!{callid} != -1 )
+                <div class="ser-list">
+                    <p class="name">小微咨询服务<span>服务时间：30分钟</span></p>
+                    <p class="price">
+                        <span>$!{zixunPrice}元</span>
+                        <a class="btn" href="javascript:void(0);" name="zxbuybtn" data-value="http://mycenter.lvzheng.com/mywf/company/reg/$!{procInstId}" >去购买</a>
+                    </p>
+                </div>
+                #end
+            </div>
+        </div>
+    </div>
+
+</div>
+
+#parse("views/order/zxbuybtn.html")
+<script>
+$(document).ready(function(){
+    // 城市切换
+    $('#hhDrop00').hhDrop({});
+    $('#hhDrop01').hhDrop({});  
+
+    $("#normaltab").tabso({
+        cntSelect:"#normalcon",
+        tabEvent:"click",
+        tabStyle:"normal"
+    }); 
+
+     //设置奇数行背景色
+     $(".tab-list tr:odd").find("td").addClass("tr_odd");
+     //设置偶数行背景色
+     $(".tab-list tr:even").find("td").addClass("tr_even");
+     // 鼠标移到的颜色
+     $(".tab-list tr").mouseover(function(){
+         $(this).find("td").addClass("mouse_color");
+     });
+     // 鼠标移出的颜色
+     $(".tab-list tr").mouseout(function(){
+         $(this).find("td").removeClass("mouse_color");
+     });
+
+    $('a .more').bind('click', function () { 
+        var txt = $('a.more').text(); 
+        if (txt == '展开') { 
+            $('#morediv').show(); 
+            $('a .more').text('收起').addClass('top-arr'); 
+        } else { 
+            $('#morediv').hide(); 
+            $('a .more').text('展开').removeClass('top-arr'); 
+        } 
+    }) 
+});
+
+</script>
+#parse("views/mywf/consultxv.html")
+

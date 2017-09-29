@@ -1,0 +1,10 @@
+<div class="l-nav-box">
+    <ul>
+        <li class="nav1"><a #if($!{LocationPage.menuClass} =="mycenter") class="on" #end href="/mycenter/index.html">我的主页</a></li>
+        <li class="nav2"><a #if($!{LocationPage.menuClass} =="mywf") class="on" #end href="/mywf/index.html">全部服务</a></li>
+        <li class="nav3"><a #if($!{LocationPage.menuClass} =="myorder") class="on" #end href="/order/unpayorder.html">我的订单</a></li>
+        <li class="nav4"><a #if($!{LocationPage.menuClass} =="messagecenter") class="on" #end href="/messagecenter/index.html">消息中心 #if($!{unreadmailcount} > 0)<span class="ico">$!{unreadmailcount}</span>#end</a></li>
+        <li class="nav5"><a #if($!{LocationPage.menuClass} =="myaccount") class="on" #end href="/myaccount/index.html">我的帐户</a></li>
+        <li class="nav6"><a #if($!{LocationPage.menuClass} =="coupon") class="on" #end href="/unusepreferential.html?pageno=1">优惠券 #if($!{unusedcounpons} > 0)<span class="ico">$!{unusedcounpons}</span>#end</a></li>
+    </ul>
+</div>

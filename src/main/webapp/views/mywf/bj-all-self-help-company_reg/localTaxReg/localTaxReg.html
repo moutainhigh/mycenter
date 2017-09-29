@@ -1,0 +1,73 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                <div class="hm-info">
+                    <p class="name">地税报到</p>
+                    <p class="text">按照税务管理部门规定，企业在取得营业资质并依法纳税前，需要通过税务报到来确认并激活纳税资格。</p>
+                    <p class="text">这也意味着企业完成税务报到前无法申请税控机与发票。</p>
+                    <p class="text-blue"> 地税报到需要以下几个步骤：</p>
+                    <p class="text">1、确认本公司所属地税所。</p>
+                    <p class="text">2、准备地税报到材料（详见材料清单）。</p>
+                    <p class="text">3、到地税所办理税务报到事宜，报到当时完成。</p>
+                </div>
+
+			    <div class="steps">
+                    <a href="javascript:void(0)" id="s1" class="s1-on">1. 地税查询</a>
+                    <a href="javascript:void(0)" id="s2" class="s2-un">2. 提交材料</a>
+                </div>  
+                
+                <div class="dj-online r-top">
+                	<div class="ds-sear dsbox1">
+		               	<div class="ts">
+		               		<label>小微提示：</label><p>下方需要输入的统一社会信用代码是需要“三证合一”之后的企业才可以查询的，如果你需要三证合一小微也可以帮您哦！</p>
+		               	</div>
+		               	<div class="sear-box">
+                            <label><i>* </i>统一社会信用代码</label>
+                            <span><input id="searchInput" type="text"> <a href="javascript:void(0)" onclick="searchInfo()" class="sear-btn">立即查询</a></span>
+                        </div>
+                        <div class="none-sear">
+                            <p class="ts-text">统一社会信用代码如下图，在营业执照这个部分，输入代码查询您公司所在的地税所吧〜</p>
+                        </div>
+                        
+                        <div class="sear-result">
+                            <p class="res-ts"><span>查询结果</span></p>
+                            <div class="text">
+                                <p id="companyName" class="t1"></p>
+                                <p id="companyInfo" class="t2"></p>
+                                <p id="code" class="t3"></p>
+                                <p id="address" class="t3"></p>
+                                <p id="tel" class="t3"></p>
+                            </div>
+                            
+                            <div class="none-result">
+                        		<p class="res-ts">抱歉，未查询到相关数据..</p>
+                        	</div>
+                        </div>
+                        
+                        <div class="btn-box">
+                            <a class="btn" id="clickbtn" href="javascript:void(0)">下一步</a>
+                        </div>
+                    </div>
+	               	
+	               	<div class="ds-sear dsbox2">
+	               		#parse("views/mywf/company-reg/common/localTaxReg-info.html")
+                        
+                         #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+	                    <div class="done">
+	                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn local submit">我已完成</a></p>
+	                    </div>
+	                    #else
+	                    <div class="back-btn">
+							<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+			            </div>
+                   		#end
+                    </div>
+                   
+                </div>
+            </div>
+            #parse("views/mywf/company-reg/common/common-tip.html")
+        </div>
+<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+<script type="text/javascript" src="/js/mywf/localTaxReg.js"></script>
+
+

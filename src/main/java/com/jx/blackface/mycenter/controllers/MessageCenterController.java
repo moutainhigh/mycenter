@@ -1,0 +1,87 @@
+package com.jx.blackface.mycenter.controllers;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.jx.argo.ActionResult;
+import com.jx.argo.Model;
+import com.jx.argo.annotations.Path;
+import com.jx.blackface.messagecenter.core.entity.MailBFGEntity;
+import com.jx.blackface.mycenter.common.CommonUtils;
+import com.jx.blackface.mycenter.common.LocationPage;
+import com.jx.blackface.mycenter.frame.RSBLL;
+import com.jx.blackface.mycenter.utils.PageUtils;
+import com.jx.blackface.mycenter.vo.LoginUserVO;
+
+/***
+ * 消息中心controller
+ * @author duxiaofei
+ * @date   2015年12月19日
+ */
+@Path("/messagecenter")
+public class MessageCenterController extends BaseController{
+	
+	@Path("/index.html")
+	public ActionResult gotoMyIndex(){
+		return gotoMyIndex(1);
+	}
+	
+	@Path("/index/{pageIndex}.html")
+	public ActionResult gotoMyIndex(int pageIndex){
+		int pageSize=10;
+		Model model = model();
+		LoginUserVO loginVo = CommonUtils.getLoginEntity(beat());
+		
+		String condition="reciveid="+loginVo.getUserid();
+		List<MailBFGEntity> mailEntityList = null;
+		try {
+			mailEntityList = RSBLL.getstance().getMailBFGService().getMailListbypage(condition, pageIndex, pageSize, "addtime desc");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if( mailEntityList != null && mailEntityList.size()>0 ){
+			List list=transferMessage(mailEntityList);
+			model.add("messageList", list);
+		}
+		int count=0;
+		try {
+			count = RSBLL.getstance().getMailBFGService().getMailcountBycondition(condition);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 构建分页
+		PageUtils.buildPageModel(model, pageIndex, count, pageSize, "/messagecenter/index","", ".html");
+					
+		//转到的页面路径
+		model.add("LocationPage", new LocationPage("messagecenter", "messagecenter","messagecenter"));
+		return menuview("index");
+	}
+	
+	private static List transferMessage(List<MailBFGEntity> list){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List result=new ArrayList<Map>();
+		
+		for( MailBFGEntity mail : list ){
+			Map map=new HashMap<String, String>();
+			map.put("title", mail.getTitle());
+			String content=mail.getContent();
+			int length=content.length();
+			if( length > 70 ){
+				map.put("content", content.substring(0, 70));
+				map.put("contentmore", content.substring(70, length-1));
+			}else{
+				map.put("content", mail.getContent());
+			}
+			long datelong=mail.getAddtime();
+			Date date=new Date(datelong);
+			String datestr=sdf.format(date);
+			map.put("addtime", datestr);
+			result.add(map);
+		}
+		return result;
+	}
+}

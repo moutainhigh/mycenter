@@ -1,0 +1,38 @@
+<script type="text/javascript" src=""></script>
+<script type="text/javascript">
+$("a[name='zxbuybtn']").each(function(){
+	var o = $(this);
+	o.click(function(){
+		var correntUrl=o.attr("data-value");
+		var url = "/tobuyconsult?sellid=36646075134465&sellcode=ZX-00101-953751&returnurl="+correntUrl;
+		/* if($(".rides-cs").length > 0){  //小微咨询和小微代办是同一个弹层
+			 $("a[name='showbuyceng']").click();//显示会出现问题，所以删掉了，其他地方同理
+		}else{ */ 
+			$("div").remove("#ridefloat div");
+			$.post(url,function(data){
+				$(".user-center").append(data);
+			});
+	//	}
+	});
+	
+});
+
+/**
+ * 小微代办
+ */
+$("#buysiglebutton").click(function(){
+	var o = $(this);
+	var productcode = o.attr("data-productCode");
+	var processid = o.attr("data-superProcessInstanceId");
+	var activityid = o.attr("data-superActivityId");
+	var busid = o.attr("data-busid");
+	
+	var sellerid = $("#sellerhiddenid").val(); 
+	var url = "/tobuysigle/"+productcode+"/?activityid="+activityid+"&processid="+processid+"&buzid="+busid;
+	$("div").remove("#ridefloat div");
+	$.post(url,function(data){
+		$(".user-center").append(data);
+	});
+});
+
+</script>

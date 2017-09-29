@@ -1,0 +1,46 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                <div class="hm-info">
+                    <p class="name">地税报到</p>
+                    <p class="text">按照税务管理部门规定，企业在取得营业资质并依法纳税前，需要通过税务报到来确认并激活纳税资格。</p>
+                    <p class="text">这也意味着企业完成税务报到前无法申请税控机与发票。</p>
+                    <p class="text-blue"> 地税报到需要以下几个步骤：</p>
+                    <p class="text">1、确认本公司所属地税所。</p>
+                    <p class="text">2、准备地税报到材料（详见材料清单）。</p>
+                    <p class="text">3、到地税所办理税务报到事宜，报到当时完成。</p>
+                </div>
+
+                <div class="dj-online r-top">
+	               	<div class="ts">
+		               		<label>小微提示：</label><p>下方需要输入的统一社会信用代码是需要“三证合一”之后的企业才可以查询的，如果你需要三证合一小微也可以帮您哦！</p>
+		          	</div>
+                    
+                    #parse("views/mywf/company-reg/common/localTaxReg-info.html")
+                    
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn local submit">我已完成</a></p>
+                    </div>
+                    #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                </div>
+            </div>
+            #parse("views/mywf/company-reg/common/common-tip.html")
+        </div>
+<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+<script type="text/javascript" >
+$(document).ready(function(){
+	/**
+	 * 地税报到 - 完成
+	 */
+	$(".btn.local.submit").click(function(){
+		LV.wfSignlReceiveTask();
+		window.location.href = "/mywf/company/reg/" + procInstId;
+		return true;
+	});
+})
+</script> 

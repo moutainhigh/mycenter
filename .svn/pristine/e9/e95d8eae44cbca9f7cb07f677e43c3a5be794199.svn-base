@@ -1,0 +1,201 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/internet-info.html")
+                <div class="dj-steps">
+                    <a href="javascript:void(0);" class="s1-on">1.填写设立材料</a>
+                    <a href="javascript:void(0);" class="s2-un">2.审核通知</a>
+                    <a href="javascript:void(0);" class="s3-un">3.下载网登材料</a>
+                </div>
+
+                <div class="dj-flow">
+                    <p class="f2-box">
+                        <a href="javascript:void(0);" class="on">企业基本信息</a>
+                        <a href="javascript:void(0);" class="on">完善股东信息</a>
+                        <a href="javascript:void(0);">注册地址</a>
+                        <a href="javascript:void(0);">补充信息</a>
+                    </p>
+                </div>
+                <div class="dj-online">
+                	<div class="ts">
+                        <label>小微提示：</label>
+                        <p>初创企业建议采用系统推荐的简易管理模式：执行董事、经理、监事。</p>
+                    </div>
+                    <div class="info-box">
+                    	<input type="hidden" id="enterpriseType" value="$!{enterpriseType}" />
+                        <p class="title"><span>完善股东信息</span><span class="line"></span></p>
+                        
+                        #set($partnerList = $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                        #if($partnerList && $partnerList.size() > 0)
+                        <div class="list">
+                        	<label>自然人股东：</label>
+                        	#foreach($partner in $partnerList)
+                        		#if($partner.get("isComplete")=="false")
+                        			#set($dws = "dws")
+                        			#set($dwslable = "<i>待完善</i>")
+                        		#else
+                        			#set($dws = "")
+                        			#set($dwslable = "")
+                        		#end
+                        	<p class="nbox parnter" data-id="$!{partner.get('id')}" data-roleType="naturalPartner" ><span class="pop_box1person $dws">$dwslable$!{partner.get('name')}</span></p>
+                        	#end
+                        </div>
+                        #end
+                        
+                        #set($partnerList = $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                        #if($partnerList && $partnerList.size() > 0)
+                        <div class="list">
+                        	<label>法人股东：</label>
+                        	#foreach($partner in $partnerList)
+                        		#if($partner.get("isComplete")=="false")
+                        			#set($dws = "dws")
+                        			#set($dwslable = "<i>待完善</i>")
+                        		#else
+                        			#set($dws = "")
+                        			#set($dwslable = "")
+                        		#end
+                        	<p class="nbox parnter" data-id="$!{partner.get('enterpriseId')}" data-roleType="legalPartner" ><span class="pop_box2company $dws">$dwslable$!{partner.get('name')}</span></p>
+                        	#end
+                        </div>
+                        #end
+                        
+                    </div>
+                    <div class="info-box">
+                        <p class="title"><span>主要人员信息</span><span class="line"></span></p>
+                        <div class="sf-c">
+                        	<input type="hidden" id="isDongShiMeeting" value="$!{isDongShiMeeting}" data-validate="required:true;" data-info="enterprise:main" >
+                        	<input type="hidden" id="isJianShiMeeting" value="$!{isJianShiMeeting}" data-validate="required:true;" data-info="enterprise:main" >
+                        	
+                            <p class="setdsh">是否设立董事会？
+                            	<span ><input name="isDongShiMeeting" id="isDongShiMeeting-1" type="radio" value="1" ><label for="isDongShiMeeting-1">是</label></span>
+                            	<span><input name="isDongShiMeeting" id="isDongShiMeeting-2" type="radio" value="2" ><label for="isDongShiMeeting-2">否</label></span>
+                            </p>
+                            <p class="setjsh">是否设立监事会？
+                            	<span ><input name="isJianShiMeeting" id="isJianShiMeeting-1" type="radio" value="1" ><label for="isJianShiMeeting-1">是</label></span>
+                            	<span><input name="isJianShiMeeting" id="isJianShiMeeting-2" type="radio" value="2" ><label for="isJianShiMeeting-2">否</label></span>
+                            </p>
+                        </div>
+                        <div class="add-box">
+                            <p class="name">董事<span class="dbox" id="dyses" style="display:none">（董事会人数为3-13人）</span><span class="dbox" id="dnos" style="display:none"></span></p>
+                            <div class="list" data-type="dongshi" >
+                                <a href="javascript:void(0);" class="add-name pop_box112" ></a>
+                                #foreach($roleInfo in $EnterpriseUtils.getRoleListByEnterpriseAndRoleTypes("$!{enterpriseId}","directorManager;secondDirectorManager;director;directorManager-S"))
+                                <p class="nbox mainMember" data-id="$!{roleInfo.get("id")}" data-type="$!{roleInfo.get("roleType")}" >
+                                	#if($!{roleInfo.get("roleType")} == "directorManager-S" || $!{roleInfo.get("roleType")} == "directorManager")
+	                                	<span class="big">$!{roleInfo.get("name")} </span>
+	                                	#if($!{roleInfo.get("isLegalPerson")} == "true")
+	                                	<a class="tag"><img src="/images/user/online/star.png"> 法定代表人</a>
+	                                	#else
+	                                	<a id="ctag" class="tag cd-box113" >点我设为法定代表人</a>
+	                                	#end
+	                                #else
+	                                <span>$!{roleInfo.get("name")}</span>
+	                                #end
+                                	<a href="javascript:void(0);" data-relationId="$!{roleInfo.get("roleRelationId")}" class="del mainMen"></a>
+                                </p>	
+                                #end
+                            </div>
+                        </div>
+                        <div class="add-box">
+                            <p class="name">监事<span class="jbox" id="jyses" style="display:none">（监事人数不少于3人）</span><span class="jbox" id="jnos" style="display:none">（监事人数为1-2人）</span></p>
+                            <div class="list" data-type="jianshi" >
+                                <a href="javascript:void(0);" class="add-name pop_box112" ></a>
+								#foreach($roleInfo in $EnterpriseUtils.getRoleListByEnterpriseAndRoleTypes("$!{enterpriseId}", "supervisorChairman;supervisor;supervisor-S"))
+                                <p class="nbox mainMember" data-id="$!{roleInfo.get("id")}" data-type="$!{roleInfo.get("roleType")}" >
+                                	<span>$!{roleInfo.get("name")}</span>
+                                	<a href="javascript:void(0);" data-relationId="$!{roleInfo.get("roleRelationId")}" class="del mainMen"></a>
+                                </p>
+                                #end
+                            </div>
+                        </div>
+                        <div class="add-box">
+                            <p class="name">经理<span>（注：可以选择经理为法定代表人）</span></p>
+                            <div class="list" data-type="jingli" >
+                                <a href="javascript:void(0);" class="add-name pop_box112" ></a>
+                                #foreach($roleInfo in $EnterpriseUtils.getRoleListByEnterpriseAndRoleTypes("$!{enterpriseId}", "manager;manager-S"))
+                                <p class="nbox mainMember" data-id="$!{roleInfo.get("id")}" data-type="$!{roleInfo.get("roleType")}" >
+                                	<span class="big">$!{roleInfo.get("name")} </span>
+                                	#if($!{roleInfo.get("isLegalPerson")} == "true")
+                                	<a class="tag"><img src="/images/user/online/star.png"> 法定代表人</a>
+                                	#else
+                                	<a id="ctag" class="tag cd-box113" >点我设为法定代表人</a>
+                                	#end
+                                	<a href="javascript:void(0);" data-relationId="$!{roleInfo.get("roleRelationId")}" class="del mainMen"></a>
+                                </p>
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-box">
+                        <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/$!{lastBusinessKey}" class="btn">上一步</a>
+                        <a href="javascript:void(0)" class="btn mainMember save">保存</a>
+                        <a href="javascript:void(0)" class="btn mainMember next">下一步</a>
+                    </div>
+                </div>    
+            </div>
+            
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/common-tip.html")
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+
+            <!-- 请付款 弹出框 -->
+            <div class="cd-popup cd-box111" role="alert"> 
+                <div class="cd-popup-container pay-center">
+                    <div class="pc-box">
+                        <p class="title">提示信息</p>
+                        <div class="pc-main">
+                            <div class="box-ico">
+                                <p class="t-one">请先选择“是否设立董事会”</p>
+                            </div>
+                        </div>
+                        <div class="pc-btn">
+                            <a href="javascipt:void(0);" class="btn1 confirm">确认</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <!-- 弹出框 -->
+			
+			<!-- 请付款 弹出框 -->
+            <div class="cd-popup cd-box110" role="alert"> 
+                <div class="cd-popup-container pay-center">
+                    <div class="pc-box">
+                        <p class="title">提示信息</p>
+                        <div class="pc-main">
+                            <div class="box-ico">
+                                <p class="t-one">请先选择“是否设立监事会”</p>
+                            </div>
+                        </div>
+                        <div class="pc-btn">
+                            <a href="javascipt:void(0);" class="btn1 confirm">确认</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <!-- 弹出框 -->
+			
+			
+            <!-- 请付款 弹出框 -->
+            <div class="cd-popup cd-box113" role="alert"> 
+                <div class="cd-popup-container pay-center">
+                    <div class="pc-box">
+                        <p class="title">提示信息</p>
+                        <div class="pc-main">
+                            <div class="box-ico">
+                                <p class="t-one">确认设为法定代表人？</p>
+                            </div>
+                        </div>
+                        <div class="pc-btn" data-roleId="" data-roleType="" >
+                            <a href="javascipt:void(0);" class="btn1">确认</a>
+                            <a href="javascipt:void(0);" class="btn2 cancel">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <!-- 弹出框 -->
+
+        </div>

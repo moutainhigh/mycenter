@@ -1,0 +1,114 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/internet-info.html")
+                <div class="dj-steps">
+                    <a href="javascript:void(0);" class="s1-on">1.填写设立材料</a>
+                    <a href="javascript:void(0);" class="s2-un">2.审核通知</a>
+                    <a href="javascript:void(0);" class="s3-un">3.下载网登材料</a>
+                </div>
+
+                <div class="dj-flow">
+                    <p class="f3-box">
+                        <a href="javascript:void(0);" class="on">企业基本信息</a>
+                        <a href="javascript:void(0);" class="on">完善股东信息</a>
+                        <a href="javascript:void(0);" class="on">注册地址</a>
+                        <a href="javascript:void(0);">补充信息</a>
+                    </p>
+                </div>
+                <div class="dj-online">
+                    <div class="ts">
+                        <label>小微提示：</label>
+                        <p>以下住所填写需要有实际的办公场所，不能填写家庭住址<br>没有实际经营场所的可以选择孵化器地址，详见右侧温馨提示<br>小微也可提供安全可靠的地址，有问题可咨询小微客服</p>
+                    </div>
+                    <!-- 默认自有地址 -->
+                    <input type="hidden" placeholder="地址类型" id="addressType" value="2" data-info="enterprise:main" />
+                    #set($addressInfo = $EnterpriseUtils.getAddressDataByEnterpriseId("$!{enterpriseId}"))
+                    <div class="fill-con clear">
+                        <div class="f-box clear">
+                            <label><i>*</i>住所（经营场所）:</label>
+                            <div>
+                                <input type="hidden" placeholder="住所" id="domProvince" data-validate="required:true;" value="$!{addressInfo.get("domProvince")}" data-info="addressInfo:main" />
+	                            <div class="n-select w-110" name="n-select">
+	                                <input class="n-val" type="text" value="请选择..." readonly>
+	                                <ul>
+	                                    <li data-value="110000">北京市</li>
+	                                </ul>
+	                            </div>
+                            </div>
+
+                            <div>
+	                            <input type="hidden" placeholder="住所" id="domDistrict" data-validate="required:true;" value="$!{addressInfo.get("domDistrict")}" data-select="none" data-info="addressInfo:main" />
+	                            <div class="n-select w-110" name="n-select">
+	                                <input class="n-val" type="text" value="请选择..." readonly>
+	                                <ul>
+	                                    <li data-value="110101">东城区</li>
+	                                    <li data-value="110102">西城区</li>
+	                                    <li data-value="110105">朝阳区</li>
+	                                    <li data-value="110108">海淀区</li>
+	                                    <li data-value="110107">石景山区</li>
+	                                    <li data-value="110106">丰台区</li>
+	                                    <li data-value="110112">通州区</li>
+	                                    <li data-value="110115">大兴区</li>
+	                                </ul>
+	                            </div>
+                            </div>
+                            <span class="w-text"><input type="text" class="w-252" placeholder="住所" id="domDetail" data-validate="required:true;" value="$!{addressInfo.get("domDetail")}" data-info="addressInfo:main" ></span>
+                        </div>
+                        <div class="f-box clear">
+                            <label><i>*</i>住所产权人:</label>
+                            <span class="w-text"><input type="text" class="w-535" placeholder="住所产权人" id="theOwnerName" data-validate="required:true;" value="$!{addressInfo.get("theOwnerName")}" data-info="addressInfo:main" ></span>
+                        </div>
+                        <div class="f-box clear">
+                            <label><i>*</i>住所产权类型:</label>
+                            <!-- {"1":"有房产证","2":"无房产证"} -->
+                            <input type="hidden" placeholder="住所产权类型" id="domOwnType" data-validate="required:true;" value="$!{addressInfo.get("domOwnTypeKey")}" data-info="addressInfo:main" />
+                            <div class="n-select w-200" name="n-select">
+                                <input class="n-val" type="text" value="请选择..." readonly >
+                                <ul>
+                                    <li data-value="1">有房产证</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="f-box clear">
+                            <label></label>
+                            <p class="text">可以用作企业住所登记的房屋用途种类：（1）房屋所有权证记载用途为商业/办公的，可作为企业住所登记注；（2）房屋所有权证记载用途为“工业、教育、医疗卫生、其他（涉外、宗教、监狱）”的，由产权人出具《确有配套服务需求说明》后，可作为企业住所登记注册；（3）房屋的规划批准材料（规划许可证）核发日期早于2009年10月1日，且房屋所有权证记载用途为“交通、仓储、商业、金融、信息、科研、文化、娱乐、体育、办公、综合”的，可直接作为企业住所登记注册。</p>
+                        </div>
+
+
+                        <div class="f-box clear">
+                            <label><i>*</i>住所提供方式:</label>
+                            <input type="hidden" placeholder="住所提供方式" id="getWay" data-validate="required:true;" value="$!{addressInfo.get("getWayKey")}" data-select="none" data-info="addressInfo:main" />
+                            <div class="n-select w-152" name="n-select">
+                                <input class="n-val" type="text" value="请选择..." readonly>
+                                <ul>
+                                    #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('getWay')})
+									<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+									#end
+                                </ul>
+                            </div>
+                            <label><i>*</i>营业面积:</label>
+                            <span class="w-text"><input type="text" class="w-152" placeholder="营业面积" id="useArea" data-validate="required:true;number:true;" value="$!{addressInfo.get("useArea")}" data-info="addressInfo:main" ><i>平方米</i></span>
+                        </div>
+                        <div class="f-box clear">
+                            <label><i>*</i>住所使用期限:</label>
+                            <span class="w-text ra-r"><input type="text" class="w-152" placeholder="住所使用期限" id="useAge" data-validate="required:true;int:true;" value="$!{addressInfo.get("useAge")}" data-info="addressInfo:main" ><i>年</i></span>
+                            <label><i>*</i>执照副本数:</label>
+                            <span class="w-text"><input type="text" class="w-152" placeholder="执照副本数" id="copyNo" data-validate="required:true;int:true;" value="$!{copyNo}" data-info="enterprise:main" ><i>份</i></span>
+                        </div>
+                    </div>
+                    <div class="btn-box">
+                        <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/$!{lastBusinessKey}"  class="btn">上一步</a>
+                        <a href="javascript:void(0);" class="btn address save">保存</a>
+                        <a href="javascript:void(0);" class="btn address next">下一步</a>
+                    </div>
+                </div>    
+            </div>
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/common-tip.html")
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+		</div>

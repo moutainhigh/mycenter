@@ -1,0 +1,50 @@
+<div class="r-named">
+
+	#if("$!{hiActEntity.getCalledProcessInstanceId()}" == "")
+	<p class="r-btn-box">
+		<a href="javascript:void(0);" class="btn btn1" id="consultzx" data-value="$!{returnurl}">
+			#if( ${callid} && $!{callid} != "" && $!{callid} != -1 ) 咨询小微  #else 付费咨询  #end
+		</a>
+		
+		#if(!$hiActEntity.getEndTime() && $hiActEntity.getStartTime())
+        
+        #if($hiActEntity.getAttributes().get("productCode"))
+	        #if($!{payid} > 0)
+	        <a class="btn2" target="_blank"  href="http://pay.lvzheng.com/reqpay/$!{payid}" >去支付</a>
+	        #else
+	       	<a class="btn2" href="javascript:void(0)"
+	        data-superProcessInstanceId="$!{hiActEntity.getProcessInstanceId()}" 
+	        data-superActivityId="$!{hiActEntity.getId()}" 
+	        data-productCode="$!{hiActEntity.getAttributes().get("productCode")}" 
+	        data-busid="$!{hiActEntity.getProcessVariables().get("busid")}" 
+	        id="buysiglebutton">小微代办</a>
+	        #end
+		#end
+		
+		#end
+	</p>
+	#end
+	
+	$!{businessConfig.get("tip")}
+</div>
+
+
+<script>
+$(document).ready(function(){
+    $(window).scroll(function(){
+        var a=parseInt($(window).scrollTop());
+        if(a<150){
+            $(".r-named").removeClass("listxf")
+        }
+        if(a>150){
+            $(".r-named").addClass("listxf")
+        }
+    });
+	// 右侧提示获取屏幕高度
+ 	$(window).resize(function(){
+	    $('.r-info').css('height',($(window).height() - 165));
+	}).resize();
+})
+</script>
+#parse("views/mywf/consultxv.html")
+<script type="text/javascript" src="/js/buycommon.js"></script>

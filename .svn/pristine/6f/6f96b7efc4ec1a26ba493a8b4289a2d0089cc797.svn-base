@@ -1,0 +1,63 @@
+#if($pageEntity.getPageCount() > 0)
+	<div class="page_turn" id="pageNo">
+	#set($pre = $!{pageEntity.getPageIndex()} - 1)
+	#set($next = $!{pageEntity.getPageIndex()} + 1)
+	#if($pageEntity.getPageIndex() == 1)
+		<a href="javascript:void(0);" >[首页]</a>
+		#else
+		<a href="$!{pageEntity.getCurrenturl()}/1$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">[首页]</a>
+		<a href="$!{pageEntity.getCurrenturl()}/$pre$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">[上一页]</a>
+		#end
+		#if($pageEntity.getPageCount() < 10)
+			#foreach($foo in [1..$!{pageEntity.getPageCount()}])
+				#if($foo == $!{pageEntity.getPageIndex()})
+				<a class="current">$!foo</a>
+				#else
+				<a href="$!{pageEntity.getCurrenturl()}/$foo$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$foo</a>
+				#end
+			#end
+		#else
+			#if($pageEntity.getPageIndex() > 7)
+				<a href="$!{pageEntity.getCurrenturl()}/1$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">1</a>
+				<a href="$!{pageEntity.getCurrenturl()}/2$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">2</a>
+				<a href="$!{pageEntity.getCurrenturl()}/3$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">3</a>
+				<a href="javascript:;" class="nb">…</a>
+				#set($prindex = $pageEntity.getPageIndex() - 2)
+				#if($pageEntity.getPageCount() > $pageEntity.getPageIndex() + 2)
+					#set($endindex = $pageEntity.getPageIndex() +2)
+				#else
+					#set($endindex = $pageEntity.getPageCount())
+				#end
+				#foreach($p in [$prindex..$endindex])
+					#if($p == $!pageEntity.getPageIndex())
+					<a class="current" href="$!{pageEntity.getCurrenturl()}/$!p$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$!p</a>
+					#else
+					<a href="$!{pageEntity.getCurrenturl()}/$!p$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$!p</a>
+					#end
+				#end		
+			#else
+				#foreach($foo in [1..7])
+				#if($foo == $!pageEntity.getPageIndex())
+				<a class="current">$!foo</a>
+				#else
+				<a href="$!{pageEntity.getCurrenturl()}/$!foo$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$foo</a>
+				#end
+				#end
+				<a href="javascript:;" class="nb">…</a>
+				#set($p2index = $pageEntity.getPageCount() - 2)
+				#set($p1index = $pageEntity.getPageCount() - 1)
+				<a href="$!{pageEntity.getCurrenturl()}/$!{p2index}$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$!{p2index}</a>
+				<a href="$!{pageEntity.getCurrenturl()}/$!{p1index}$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$!{p1index}</a>
+				<a href="$!{pageEntity.getCurrenturl()}/$!{pagecount}$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">$!{pagecount}</a>
+				
+			#end
+			
+		#end
+		#if($pageEntity.getPageIndex() == $pageEntity.getPageCount())
+		<a href="javascript:void(0);" >[末页]</a>
+		#else
+		<a href="$!{pageEntity.getCurrenturl()}/$next$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}" >[下一页]</a>
+		<a href="$!{pageEntity.getCurrenturl()}/$pageEntity.getPageCount()$!{pageEntity.getUrlSuffix()}$!{pageEntity.getParamValue()}">[末页]</a>
+		#end
+	</div>
+	#end

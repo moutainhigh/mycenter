@@ -1,0 +1,234 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/receive-info.html")
+                <div class="steps">
+                    <a href="javascript:void(0);" class="s1-on">1.预约工商</a>
+                    <a href="javascript:void(0);" class="s2-un">2.领取证照</a>
+                </div>
+
+                <div class="dj-online">
+                    <div class="ts">小微提示：预约过后，请按照预约时间到现场办理。预约时间只能取消 1 次（注意：石景山工商局与丰台工商局不能取消），请谨慎预约。</div>
+                    <div class="zz-info f-top">
+                        <p class="title">根据您提交的申请信息，现场提交材料相关的信息如下</p>
+                        #set($govOrgEntity = $EnterpriseUtils.getGovOrgConfig("$!{gov-regOrgCode}"))
+                        <div class="con">
+                            <span><label>业务受理机关：</label>$!{govOrgEntity.getOrgName()}</span>
+                            <span><label>联系电话：</label>$!{govOrgEntity.getLkmanTel()}</span>
+                            <span><label>名称预核文号：</label>$!{checkedNameCode}</span>
+                            <span><label>工商局地址：</label>$!{govOrgEntity.getOrgAddress()}</span>
+                        </div>
+                    </div>
+					#if(${gov-appointStatus} == "2" || ${gov-appointStatus} == "3" || ${gov-appointStatus} == "12" || ${gov-appointStatus} == "13")
+                    <div class="yy-style">
+                        <p class="title">预约方式</p>
+                        <div class="list-box">
+                            <ul>
+                                <li>
+                                    <div class="b1">
+                                        <p class="pic"></p>
+                                        <p class="name">网上预约</p>
+                                    </div>
+                                </li>
+                                <li class="tx-text">
+                                    <p>小微正在为您进行网上预约...<br>预约成功后会短信通知您。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="done">
+                        <a href="/mywf/company/reg/$!{procInstId}" class="next-btn">返回</a>
+                    </div>
+                    #elseif(${gov-appointStatus} == "20")
+                    <div class="yy-style">
+                        <p class="title">预约成功</p>
+                        <div class="list-box">
+                            <ul>
+                                <li>
+                                    <div class="b1">
+                                        <p class="pic"></p>
+                                        <p class="name">网上预约</p>
+                                        #if(!$gov-appointNum && $!{gov-regOrgCode} != "110107000" && $!{gov-regOrgCode} != "110106000")
+                                        <p class="btn"><a href="javascript:void(0);" class="pop_box2quxiao">取消预约</a></p>
+                                        #end
+                                    </div>
+                                </li>
+                                <li class="result-box">
+                                    <div class="result">
+                                        <p class="name">预约结果：</p>
+                                        <p class="info"><label>企业名称：</label><span>$!{name}</span></p>
+                                        <p class="info"><label>注册号：</label><span>$!{checkedNameCode}</span></p>
+                                        <p class="info"><label>申请业务：</label><span>设立登记</span></p>
+                                        <p class="info"><label>预约手机号：</label><span>$!{mobilePhoneNo}</span></p>
+                                        <p class="info"><label>预约时间：</label><span>您的预约被安排在$!{gov-appDate}</span></p>
+                                        <p class="info"><label>预约号码：</label><span>请您带齐申请材料，准时按您的预约时间到达登记注册大厅在取号机输入预约号$!{gov-appNo}</span></p>
+                                        <p class="text">（注意：交件的前24小时内不能取消预约，如果您不能去现场进行交件请去现场进行取消，否则您得先去工商局进行锁定并且重新网登。）</p>
+                                        <p class="text">登记注册大厅地址：$!{gov-appAddr}</p>
+                                        <p class="atten"><label>注意：</label><span>预约号与您通过网上登记服务系统申报的企业注册号关联，是您到登记注册大厅提交登记材料的唯一凭证，请您妥善保存。</span></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="done">
+                        <a href="javascript:void(0);" class="next-btn order next">下一步</a>
+                    </div>
+					#else
+					<div class="yy-style">
+                        <p class="title">预约方式</p>
+                        <div class="list-box">
+                           	#foreach($govAppoint in $EnterpriseUtils.getGovAppointList("$!{gov-regOrgCode}"))
+                           	
+                           	#if($!{govAppoint.getAppointType()} == "2")
+                            <ul>
+                                <li>
+                                    <div class="b1">
+                                        <p class="pic"></p>
+                                        <p class="name">网上预约</p>
+                                        #if($!{govAppoint.getProxyFlag()} == "1")
+                                        <p class="btn"><a href="javascript:void(0);" class="pop_box1yuehao">小微帮你免费预约</a></p>
+                                        #else
+                                        <p class="btn"><a href="$!{govAppoint.getAppointInfo()}" target="_blank" >预约网址</a> </p>
+                                        #end
+                                    </div>
+                                </li>
+                                <li class="tx-list">
+                                    <p><label>1、</label><a>点击“小微帮您预约”小微会自动帮您在网上约号。</a></p>
+                                    <p><label>2、</label><a>约号时会用经办人信息，系统会自动将您的信息匹配。</a></p>
+                                    <p><label>3、</label><a>小微会实时帮您抢最靠前的预约时间。</a></p>
+                                    #if($!{gov-regOrgCode} == "110105000")
+                                    <p><label>4、</label><a>朝阳预约后，交件人必须为股东或者董事、监事、经理。</a></p>
+                                    #end
+                                </li>
+                            </ul>
+                            #end
+                                
+                            #if($!{govAppoint.getAppointType()} == "1")
+                            <ul>
+                                <li>
+                                    <div class="b2">
+                                        <p class="pic"></p>
+                                        <p class="name">电话预约</p>
+                                        <p class="call">$!{govAppoint.getAppointInfo()}</p>
+                                    </div>
+                                </li>
+                                <li class="tx-list">
+                                    <p>
+                                    	<label>1、</label><a>请您拨打系统展示给您的登记机关预约电话，根据语音提示，输入相应内容，选择预约时间，预约成功后，登记机关会通过短信方式向您发送确认信息。</a>
+                                    </p>
+                                    <p>
+                                    	<label>2、</label><a>预约成功后即时生效，为了避免失约造成公共资源浪费，请您按预约时间提前十分钟到登记机关现场取票等待办理。</a>
+                                    </p>
+                                </li>
+                            </ul>
+                            #end
+                                
+                           	#if($!{govAppoint.getAppointType()} == "3")
+                            <ul>
+                                <li>
+                                    <div class="b3">
+                                        <p class="pic"><img src="$!{govAppoint.getAppointInfo()}"></p>
+                                        <p class="name">微信预约</p>
+                                        <p class="text">关注微信公众号<br>即可预约现场办理</p>
+                                    </div>
+                                </li>
+                                <li class="tx-list">
+                                    <p><label>1、</label><a>请您关注系统展示给您的微信，进入微信菜单的“在线服务”——“微信预约服务”。</a></p>
+                                    <p><label>2、</label><a>按企业情况选择预约类型、信息、日期等。</a></p>
+                                    <p><label>3、</label><a>预约成功后即时生效，为了避免失约造成公共资源浪费，请您按预约时间提前十分钟到登记机关现场取票等待办理。</a></p>
+                                </li>
+                            </ul>
+                           	#end
+                           
+                           	#end
+                                
+                        </div>
+                    </div>
+                   	<div class="done">
+                        <a href="javascript:void(0);" class="next-btn order next">下一步</a>
+                    </div>
+                    #end
+
+                </div>
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/receive.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+		</div>
+		<input type="hidden" id="gov-appointStatus" value="1" data-info="enterprise:main" >
+		<input type="hidden" id="gov-appointNum" value="$!{gov-appointNum}" data-info="enterprise:main" >
+		
+		<div class="cd-popup cd-box198912" role="alert" > 
+			<div class="cd-popup-container tc-box4" role="alert">
+			    <div class="con_box">
+			        <p class="title">检测到您的身份证号在丰台工商局注册过，请输入您的账户和密码</p>
+			        <div class="box">
+			            <p class="con">
+			                <label>你的核名帐号：</label>
+			               	<span class="w-text">
+			                	<input type="text" placeholder="请填写您的核名账号" id="ftAppointAccount" value="$!{ftAppointAccount}" data-validate="required:true;" data-info="enterprise:main" /> 
+			                </span>
+			            </p>
+			            <p class="con">
+			                <label>你的核名密码：</label>
+			                <span class="w-text">
+			                	<input type="text" placeholder="请填写您的核名密码" id="ftAppointPassword" value="$!{ftAppointPassword}" data-validate="required:true;" data-info="enterprise:main" /> 
+			                </span>
+			            </p>
+			        </div>    
+			        <p class="btn">
+			            <a href="javascript:void(0);" class="btn1 ftaccount submit">确认</a>
+			            <a href="javascript:void(0);" class="btn2 ftaccount cancel">取消</a>
+			        </p>
+			    </div>
+			</div>
+		</div>
+		
+		<!-- 取消预约弹出框 -->
+        <div class="cd-popup cd-box1yuehao" role="alert"> 
+            <div class="cd-popup-container yy-box">
+                <div class="con-box">
+                    <p class="title">网上预约</p>
+                    <div class="yy-con">
+                        <table>
+                            <tr>
+                                <th>预约手机号：</th>
+                                <td>
+                                	<input class="tel" type="text" id="mobilePhoneNo" value="#if($mobilePhoneNo)$!{mobilePhoneNo}#else$!{loginVo.getUserphone()}#end" data-validate="required:true;" data-info="enterprise:main" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>注意：</th>
+                                <td>
+                                    <p class="text">1、预约号是用户预约和进行取号时的唯一标识，所以请妥善保管预约号</p>
+                                    <p class="text">2、此条数据只能预约一次，预约日期未能前来办理，此条数据作废！</p>
+                                    <p class="text">3、小微会实时帮您抢最靠前的预约时间，如果您对预约时间不满意最多可以取消2次</p>
+                                </td>
+                            </tr>
+                        </table>
+	                    <p class="btn">
+	                        <a href="javascript:void(0);" class="btn appoint submit">确定预约</a>
+	                    </p>
+                    </div>
+
+                </div>
+                <a href="javascript:void(0);" class="cd-popup-close img-replace">关闭</a>
+            </div>  
+        </div> 
+        <!-- 弹出框 -->
+
+        <!-- 取消预约弹出框 -->
+        <div class="cd-popup cd-box2quxiao" role="alert"> 
+            <div class="cd-popup-container tc-box2">
+                <div class="con_box">
+                    <p class="title">确认信息</p>
+                    <p class="yy-con">确定要取消上次预约吗？?</p>
+                    <p class="btn">
+                        <a href="javascript:void(0);" class="btn1 cancelAppoint submit">确认</a>
+                        <a href="javascript:void(0);" class="btn2 cancelAppoint cancel">取消</a>
+                    </p>
+                </div>
+            </div>  
+        </div> 
+        <!-- 弹出框 -->

@@ -1,0 +1,354 @@
+<div class="ser-main-box">
+    <!-- <div class="crumbs">
+        <a class="crumb-link" href="/">首页</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="###">个人中心</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="###">我的主页</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="###">流程首页</a>
+    </div> -->
+	<br/>
+    <div class="s-flow">  
+        <ul class="tabbtn" id="normaltab">
+            <li><a>我的资料</a></li>
+            <li><a>修改绑定手机</a></li>
+            <li><a>修改密码</a></li>
+            <li><a>绑定微信</a></li>                           
+        </ul>
+        <div class="tabcon" id="normalcon">
+            <div class="sublist">
+                <div class="myinfo">
+                    <table>
+                        <tr>
+                            <th>手机：</th>
+                            <td><span class="tel">$!{loginVo.userphone}</span><!-- <a href="" class="edit"></a> --></td>
+                        </tr>
+                        <tr>
+                            <th>邮箱：</th>
+                            <td>
+                            	<input class="w-input" type="text" placeholder="请填写邮箱" id="email" value="$!{loginVo.email}">
+                            	<input  type="hidden"  id="username" value="$!{loginVo.username}"/>
+                            </td>
+                            
+                        </tr>
+                       <!--  <tr>
+                            <th>联系人：</th>
+                            <td><input class="w-input" type="text" placeholder="请填写真实姓名" id="username" value="$!{loginVo.username}"></td>
+                        </tr> -->
+                        
+                        <tr>
+                            <th>联系地址：</th>
+                            <td>
+                                <!-- <div class="n-select w-70" name="n-select">
+                                    <input class="n-val" type="text" value="北京市" readonly>
+                                    <ul>
+                                        <li data-value="1">北京市</li>
+                                        <li data-value="2">上海市</li>
+                                        <li data-value="3">深圳市</li>
+                                    </ul>
+                                </div>
+                                <div class="n-select w-70" name="n-select">
+                                    <input class="n-val" type="text" value="朝阳区" readonly>
+                                    <ul>
+                                        <li data-value="1">朝阳区</li>
+                                        <li data-value="2">海淀区</li>
+                                        <li data-value="3">东城区</li>
+                                        <li data-value="3">西城区</li>
+                                    </ul>
+                                </div> -->
+                                <input class="w-input" type="text" placeholder="请尽量填写详细" id="address" value="$!{loginVo.address}">
+                                <!-- <span class="correct"></span> -->
+                            </td>
+                        </tr>
+                    </table>
+                    <a onclick="saveUserInfo('$!{loginVo.userid}')" class="btn">保存</a>
+                </div>
+            </div>
+
+            <div class="sublist">
+                <div class="myinfo">
+                	#if($!{loginVo.authenflag} == 1)
+                    <table>
+                        <tr>
+                            <th>已绑定手机：</th>
+                            <td><span class="tel" id="tel">$!{loginVo.userphone}</span></td>
+                        </tr>
+                        <tr>
+                            <th>新手机号码：</th>
+                            <td><input class="w-input" type="text" placeholder="新手机号码" id="newPhoneNum"></td>
+                        </tr>
+                        <tr>
+                            <th>校验码：</th>
+                            <td>
+                                <input class="w-code" type="text" placeholder="请填写校验码" id="newCode">
+                                <a onclick="checkNewCode()" class="get-code">免费获取验证码</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <a onclick="saveNewPhone('$!{loginVo.userid}')" class="btn">保存</a>
+                	#else
+                    <table>
+                        <tr>
+                            <th>手机号码：</th>
+                            <td><input class="w-input" type="text" placeholder="手机号码" id="phoneNum" value="$!{loginVo.userphone}"></td>
+                        </tr>
+                        <tr>
+                            <th>校验码：</th>
+                            <td>
+                                <input class="w-code" type="text" placeholder="请填写校验码" id="code">
+                                <a onclick="checkCode('$!{loginVo.userid}')" class="get-code">免费获取验证码</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <a onclick="savePhone('$!{loginVo.userid}')" class="btn">保存</a>
+                	#end
+
+                </div>
+            </div>
+
+            <div class="sublist">
+                <div class="myinfo">
+                	#if($!{loginVo.password} != "")
+                    <table>
+                        <tr>
+                            <th>当前登录密码：</th>
+                            <td><input class="w-code" type="password" id="currentPass" value="$!{loginVo.password}" readonly="readonly"></td>
+                        </tr>
+                        <tr>
+                            <th>新修改密码：</th>
+                            <td>
+                                <input class="w-code" type="password" placeholder="新修改密码" id="UpdatePass">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>确认新密码：</th>
+                            <td>
+                                <input class="w-code" type="password" placeholder="确认新密码" id="UpdatePass2">
+                            </td>
+                        </tr>
+                    </table>
+                    <a onclick="updatePassWord('$!{loginVo.userid}')" class="btn">保存</a>
+                	#elseif($!{loginVo.password} == "")
+                    <table>
+                        <tr>
+                            <td colspan="2"><span class="tx">您还没有密码，请设置密码</span></td>
+                        </tr>
+                        <tr>
+                            <th>设置新密码：</th>
+                            <td>
+                                <input class="w-code" type="password" id="newAddPass">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>确认新密码：</th>
+                            <td>
+                                <input class="w-code" type="text" placeholder="确认新密码" id="newAddPass2">
+                            </td>
+                        </tr>
+                    </table>
+                    <a onclick="addPassWord('$!{loginVo.userid}')" class="btn">保存</a>
+                	#end
+
+                </div>
+            </div>
+
+            <div class="sublist">
+            	#if("$!{loginVo.openid}" == "")
+                <div class="wx-box">
+                    <p class="t1">扫描下方二维码立即绑定微信</p>
+                    <p class="t2">－ 关注小微公众号实时查询您的任务进度 －</p>
+                    <p class="t3"><img src="/images/user/sm_ewm.png"></p>
+                </div>
+            	#else
+                <div class="wx-succ">
+                    <p class="succ">
+                        <span class="t1">恭喜您已绑定成功！</span>
+                        <span class="t2">您下次可以直接登录微信来查看您任务的进度哦！</span>
+                    </p>
+                </div>
+            	#end
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/sendPhoneCode.js"></script>
+<script type="text/javascript" src="/js/jquery.md5.js"></script>
+<script type="text/javascript">
+//发送手机号验证码(更换手机)
+function checkCode(){
+	var phoneNum = $("#phoneNum").val();
+	jQuery.sendMessage(phoneNum);
+}
+//发送手机验证码(绑定手机)
+function checkNewCode(){
+	var phoneNum = $("#newPhoneNum").val();
+	jQuery.sendMessage(phoneNum);
+}
+
+//更换手机号
+function saveNewPhone(userid){
+	var code = $("#newCode").val();
+	var phoneNum = $("#newPhoneNum").val();
+	//校验验证码
+	if(jQuery.checkPhoneCode(phoneNum,code)){
+		$.ajax({
+			url : "/myaccount/updatePhone/" + userid,
+			method : "post",
+			data : {"phoneNum":phoneNum},
+			success : function(data){
+				if(data.success){
+					alert("更换成功!");
+					window.location.reload();
+				}else{
+					alert("更换失败请刷新页面重试!");
+				}
+			}
+		}); 
+	}
+}
+//绑定手机号
+function savePhone(userid){
+	var code = $("#Code").val();
+	var phoneNum = $("#phoneNum").val();
+	//校验验证码
+	if(jQuery.checkPhoneCode(phoneNum,code)){
+		$.ajax({
+			url : "/myaccount/setPhone/" + userid,
+			method : "post",
+			data : {"phoneNum":phoneNum},
+			success : function(data){
+				if(data.success){
+					alert("绑定成功!");
+					window.location.reload();
+				}else{
+					alert("绑定失败请刷新页面重试!");
+				}
+			}
+		});
+	}
+}
+
+//未设置过密码 设置密码
+function addPassWord(userid){
+	var pass = $("#newAddPass").val();
+	var pass2 = $("#newAddPass2").val();
+	if(pass == ""){
+		alert("密码不能为空!");
+		return false;
+	}
+	if(pass2 == ""){
+		alert("确认密码不能为空!");
+		return false;
+	}
+	if(pass != pass2){
+		alert("两次输入的密码不一致!");
+		return false;
+	}
+	
+	$.ajax({
+		method:"post",
+		url:"/myaccount/setNewPass/" + userid,
+		data:{"pass":$.md5(pass)},
+		success:function(data){
+			if(data.success == "true"){
+				alert("设置密码成功!");
+				window.location.reload();
+			}
+		},
+		error:function(){
+			alert("设置密码失败");
+		}
+	});
+}
+
+
+//修改密码
+function updatePassWord(userid){
+	var currentPass = $("#currentPass").val();
+	var pass = $("#UpdatePass").val();
+	var pass2 = $("#UpdatePass2").val();
+	/* if(currentPass == ""){
+		alert("当前密码不能为空!");
+		return false;
+	} */
+	if(pass == ""){
+		alert("密码不能为空!");
+		return false;
+	}
+	if(pass2 == ""){
+		alert("确认密码不能为空!");
+		return false;
+	}
+	if(currentPass == pass || currentPass == pass2){
+		alert("新密码不能与当前密码一致!");
+		return false;
+	}
+	
+	if(pass != pass2){
+		alert("两次输入的密码不一致!");
+		return false;
+	}
+
+	$.ajax({
+		method:"post",
+		url:"/myaccount/updatePass/" + userid,
+		data:{"pass":$.md5(pass)},
+		success:function(data){
+			if(data.success == "true"){
+				alert("设置密码成功!");
+				window.location.reload();
+			}
+		},
+		error:function(){
+			alert("设置密码失败");
+		}
+	});
+}
+
+function CheckMail(mail) {
+	 var filter  = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+	 if (filter.test(mail)){ 
+		 return true;
+	 }else {
+		 return false;
+	 }
+}
+
+//保存用户资料
+function saveUserInfo(userid){
+	var email = $("#email").val();
+	var username = $("#username").val();
+	var address = $("#address").val();
+	if(!CheckMail(email)){
+		alert("请输入正确的邮箱格式!");
+		return false;
+	}
+	
+	$.ajax({
+		method:"post",
+		url:"/myaccount/saveUserInfo/"+userid,
+		data:{"email":email,"username":username,"address":address},
+		success:function(data){
+			if(data.success == "true"){
+				alert("保存成功!");
+				window.location.reload();
+			}
+		},
+		error:function(){
+			alert("保存失败!");
+		}
+	});
+}
+
+
+$(function(){
+	$("#normaltab").tabso({
+        cntSelect:"#normalcon",
+        tabEvent:"click",
+        tabStyle:"normal"
+    }); 
+
+});
+</script>

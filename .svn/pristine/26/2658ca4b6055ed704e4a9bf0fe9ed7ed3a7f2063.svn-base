@@ -1,0 +1,207 @@
+package com.jx.blackface.mycenter.controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jx.argo.ActionResult;
+import com.jx.argo.annotations.Path;
+import com.jx.blackface.mycenter.annotaion.CheckLogin;
+import com.jx.blackface.mycenter.common.CommonUtils;
+import com.jx.blackface.mycenter.common.LocationPage;
+import com.jx.blackface.mycenter.common.PagerTool;
+import com.jx.blackface.mycenter.frame.RSBLL;
+import com.jx.blackface.orderplug.buzs.OrderBuz;
+import com.jx.blackface.orderplug.vo.OrderBFVo;
+import com.jx.blackface.orderplug.vo.PayOrderBFVo;
+
+@Path("/order")
+@CheckLogin
+public class UserPageController extends BaseController {
+
+	@Path("/index.html")
+	public ActionResult index(){
+		long uid = getLoginuserid();
+		
+		return view("index");
+	}
+	@Path("/unpayorder.html")
+	public ActionResult unpayorder(){
+		long uid = getLoginuserid();
+		beat().getModel().add("listtype", "unpaylist");
+		String pn = beat().getRequest().getParameter("pageno");
+		PagerTool pt = new PagerTool();
+		pt.setUrl("/order/unpayorder.html");
+		int pageindex = 1;
+		int ps = 10;
+		int ordercount = 0;
+		int pagecount = 0;
+		List<PayOrderBFVo> bfl = null;
+		if(null != pn && !"".equals(pn)){
+			pageindex = Integer.parseInt(pn);
+		}
+		pt.setPageindex(pageindex);
+		if(uid > 0){
+			try {
+				ordercount = OrderBuz.ob.getUserUnpaycount(uid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(ordercount > 0){
+				pagecount = ordercount%ps > 0?ordercount/ps+1:ordercount/ps;
+				if(pageindex > pagecount){
+					pageindex = pagecount;
+					pt.setPageindex(pagecount);
+				}
+				pt.setPagecount(pagecount);
+			}
+			try {
+				bfl = OrderBuz.ob.getUserUnpaylist(uid,pageindex,ps,"addtime desc");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(null != bfl && bfl.size() > 0){
+				pt.setContentlist(bfl);
+				beat().getModel().add("unpaylist", bfl);
+			}
+			
+		}
+		beat().getModel().add("pageEntity", pt);
+		beat().getModel().add("LocationPage", new LocationPage("myorder", "order","myorder"));
+		return menuview("index");
+	}
+	@Path("/payedorder.html")
+	public ActionResult payedorder(){
+		long uid = getLoginuserid();
+		PagerTool pt = new PagerTool();
+		beat().getModel().add("listtype", "orderlist");
+		String pn = beat().getRequest().getParameter("pageno");
+		pt.setUrl("/order/payedorder.html");
+		int pageindex = 1;
+		if(null != pn && !"".equals(pn)){
+			pageindex = Integer.parseInt(pn);
+		}
+		pt.setPageindex(pageindex);
+		int pagecount = 0;
+		int pagesize = 10;
+		List<OrderBFVo> olist = null;
+		String condition = "userid="+uid+" and paystate=1";
+		if(uid > 0){
+			int ordernumber = 0;
+			try {
+				ordernumber = RSBLL.getstance().getOrderBFGService().getOrderCountBycondition(condition);//OrderBuz.ob.getordercountbycondition(""+uid);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(ordernumber > 0){
+				pagecount = ordernumber%pagesize == 0?ordernumber/pagesize:ordernumber/pagesize+1;
+				if(pageindex > pagecount){
+					pageindex = pagecount;
+					pt.setPageindex(pagecount);
+				}
+				pt.setPagecount(pagecount);
+			}
+			
+			try {
+				olist = OrderBuz.ob.getOrderVolistBypage(condition,pageindex,pagesize,"paytime desc");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(null != olist && olist.size() > 0){
+				pt.setContentlist(olist);
+			}
+			beat().getModel().add("pageEntity", pt);
+		}
+		beat().getModel().add("LocationPage", new LocationPage("myorder", "order","myorder"));
+		return menuview("index");
+	}
+	
+	@Path("/cancelorder.html")
+	public ActionResult canceledorder(){
+		long uid = getLoginuserid();
+		beat().getModel().add("listtype", "cancellist");
+		String pn = beat().getRequest().getParameter("pageno");
+		PagerTool pt = new PagerTool();
+		pt.setUrl("/order/cancelorder.html");
+		int pageindex = 1;
+		int ps = 10;
+		int ordercount = 0;
+		int pagecount = 0;
+		List<PayOrderBFVo> cancelMap = new ArrayList<PayOrderBFVo>();
+		if(null != pn && !"".equals(pn)){
+			pageindex = Integer.parseInt(pn);
+		}
+		pt.setPageindex(pageindex);
+		if(uid > 0){
+			try {
+				ordercount = OrderBuz.ob.getUserCanceledcount(uid);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(ordercount > 0){
+				pagecount = ordercount%ps > 0?ordercount/ps+1:ordercount/ps;
+				if(pageindex > pagecount){
+					pageindex = pagecount;
+					pt.setPageindex(pagecount);
+				}
+				pt.setPagecount(pagecount);
+			}
+			try {
+				cancelMap = OrderBuz.ob.getUserCancellist(uid,pageindex,ps,"addtime desc");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(!cancelMap.isEmpty()){
+				pt.setContentlist(cancelMap);
+				beat().getModel().add("cancellist", cancelMap);
+			}
+		}
+		beat().getModel().add("pageEntity", pt);
+		beat().getModel().add("LocationPage", new LocationPage("myorder", "order","myorder"));
+		return menuview("index");
+	}
+	
+	@Path("/orderlist.html")
+	public ActionResult orderlist(){
+		long uid = CommonUtils.getLoginuserid(beat());
+		String pn = beat().getRequest().getParameter("pageno");
+		int pageindex = 1;
+		if(null != pn && !"".equals(pn)){
+			pageindex = Integer.parseInt(pn);
+		}
+		int ps = 10;
+		int ordercount = 0;
+		try {
+			ordercount = OrderBuz.ob.getUserorderCount(uid);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pagecount = 0;
+		if(ordercount > 0){
+			pagecount = ordercount%ps > 0?ordercount/ps+1:ordercount/ps;
+		}
+		try {
+			OrderBuz.ob.getUserOrderlist(uid, pageindex, ps, "");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		PagerTool pt = new PagerTool();
+		pt.setPagecount(pagecount);
+		pt.setPageindex(Integer.parseInt(pn));
+		beat().getModel().add("pagetool", pt);
+		return menuview("index");
+	}
+	@Path("/maillist.html")
+	public ActionResult maillist(){
+		
+		return menuview("mailist");
+	}
+	
+	
+	
+}

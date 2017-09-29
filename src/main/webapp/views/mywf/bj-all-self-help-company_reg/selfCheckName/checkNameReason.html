@@ -1,0 +1,181 @@
+<div class="named-box">
+    <div class="l-named">
+        #parse("views/mywf/company-reg/common/rename-info.html")
+        <div class="steps checkNameReason">
+            <a href="javascript:void(0);" data-href=".named-show" data-class="s1" class="s1-over">1. 信息预览</a>
+            <a href="javascript:void(0);" data-href=".named-notice" data-class="s2" class="s2-on">2. 审核通知</a>
+        </div> 
+
+        <div class="named-show named-div" style="display: none;" >
+            <div class="named-tab1">
+                <table>
+                    <tr>
+                        <th colspan="2">名称信息</th>
+                    </tr>
+                    <tr>
+                        <td class="one">企业类型：</td>
+                        <td class="two">$!{enterpriseType}</td>
+                    </tr>
+                    <tr>
+                        <td class="one">名称全称：</td>
+                        <td class="two">$!{name}</td>
+                    </tr>
+                    <tr>
+                        <td class="one">行政区划：</td>
+                        <td class="two">北京</td>
+                    </tr>
+                    <tr>
+                        <td class="one">字号：</td>
+                        <td class="two">$!{shopName}</td>
+                    </tr>
+                    <tr>
+                        <td class="one">行业特点：</td>
+                        <td class="two">$!{industryCharacteristics}</td>
+                    </tr>
+                    <tr>
+                        <td class="one">组织形式：</td>
+                        <td class="two">$!{organizationType}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="named-tab2">
+                <table>
+                    <tr>
+                        <th>序号</th>
+                        <th>股东名称</th>
+                        <th>股东类型</th>
+                    </tr>
+                    #set($index = 1)
+                    #foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                    <tr>
+                        <td class="one">$!{index}</td>
+                        <td class="two">$!{naturalPartner.get('name')}</td>
+                        <td>自然人股东（内）</td>
+                    </tr>
+                     #set($index = $index + 1)
+                    #end
+                    #foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                    <tr>
+                        <td class="one">$!{index}</td>
+                        <td class="two">$!{legalPartner.get('name')}</td>
+                        <td>单位股东（内）</td>
+                    </tr>
+                    #set($index = $index + 1)
+                    #end
+                    
+                </table>
+            </div>
+        </div>
+
+		<div class="named-notice named-div dj-online">
+			#if($!{govSelfCheckNameFlag} == "1")
+			<div class="ts">
+           		<label>小微提示：</label><p>注意该公司地址只能用海淀中关村国家自主创新示范区。</p>
+           	</div>
+			#end
+			
+			#if($!{checkNameStatusKey} == 1 && $!{checkNameGovStatus} != 20)
+		    <div class="hm-ts">
+		        <p class="ts-text">小微正在获取您的核名信息，请耐心等待....</p>
+		    </div>
+		    <div class="back-btn">
+				<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+            </div>
+			#elseif($!{checkNameStatus} == 5 && $!{checkNameGovStatus} == 20)
+			<div class="hm-ts">
+		        <p class="ts-text">系统未检测出你的核名信息，请重新核名</p>
+		    </div>
+		    <div class="back-btn">
+				<a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/selfCheckName" class="btn">修改</a>
+            </div>
+			#else
+		    <div class="name-box">
+		        <p class="name">$!{name}</p>
+		        <p class="text">业务类型：<span>名称预先核准</span></p>
+		        <p class="text">业务状态：<span>$!{gov-nameStateCo}</span></p>
+		        <p class="text">名称预核文号：<span>$!{checkedNameCode}</span></p>
+		    </div>
+		    <!-- 核名中 -->
+		    <!-- 审核通过 start -->
+			#if($!{checkNameStatusKey} == 1)
+		    <div class="other-info">
+		        <p class="state-box">
+		            <span class="state"><label>审批状态：</label>已核准</span>
+		            <span class="time"><label>有效期至：</label>$!{gov-savePerTo}</span>
+		        </p>
+		        <div class="text-box">
+		            <p class="text">您申请的名称已经审核通过。<span>您无需领取纸质的名称预先核准通知书，可以凭该名称相关材料继续申请设立登记。</span></p>
+		            <p class="text">如果您需要纸质的名称预先核准通知书办理前置审批等相关手续，请持本人身份证（原件及正反面复印件一份）到核准名称的登记机关现场领取。</p>
+		            <p class="text">在设立登记之前，预先核准的名称不得用于经营活动，不得转让。</p>
+		            <p class="text">预先核准的名称有效期届满自动失效。在有效期届满前30日，申请人可向登记机关申请延长一次有效期，有效期延长不超过6个月。</p>
+		        </div>
+		        <div class="bot-box">
+		            <p>审批机关：$!{gov-checkOrg}</p>
+		            <p>审批时间：$!{gov-checkDate}</p>
+		        </div>
+		    </div>
+		    <div class="back-btn">
+				<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+            </div>
+<!-- 		<div class="named-tab">
+		        <table>
+		            <tr>
+		                <th colspan="4">审批历史记录</th>
+		            </tr>
+		            <tr class="name">
+		                <td width="90px">审批状态</td>
+		                <td width="230px">审批机关</td>
+		                <td width="230px">审批意见</td>
+		                <td>审批时间</td>
+		            </tr>
+		            <tr>
+		                <td>退回修改</td>
+		                <td>北京工商行政管理局门头沟分局</td>
+		                <td>活板是指印刷术，与行业用语连用，易与行业混淆，形成无字号名称。</td>
+		                <td>2015-09-02 08:33:23</td>
+		            </tr>
+		            <tr>
+		                <td>退回修改</td>
+		                <td>北京工商行政管理局门头沟分局</td>
+		                <td>活板是指印刷术，与行业用语连用，易与行业混淆，形成无字号名称。</td>
+		                <td>2015-09-02 08:33:23</td>
+		            </tr>
+		        </table>
+		    </div> -->
+		    
+		    <!-- 审核未通过  start -->
+		    #elseif($!{checkNameStatusKey} == 4)
+            <div class="other-info">
+                <div class="text-box">
+                    <p class="state">审批状态：<span>$!{gov-checkResult}</span></p>
+                    <p class="text">公司名称：$!{name}</p>
+                    <p class="text">业务类型：名称预先核准</p>
+                    <p class="sc">审查意见：<span>$!{gov-checkMemo}</span></p>
+                </div>
+                <div class="bot-box">
+                    <p>审批机关：$!{gov-checkOrg}</p>
+                    <p>审批时间：$!{gov-checkDate}</p>
+                </div>
+                #if($!{gov-nameStateCo} != "不予受理")
+                <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/selfCheckName" class="btn">修改</a>
+                #end
+			</div>
+			#else
+			<div class="other-info">
+				<div class="wait-box">
+            		<p class="state">审批状态：<span>已提交待审核</span></p>
+               		<p class="tx">您申请的名称正在审查中，请耐心等待！</p>
+				</div>
+			</div>
+			<div class="back-btn">
+				<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+            </div>
+		    #end
+		    
+			#end
+		</div>
+    </div>
+    #parse("views/mywf/company-reg/common/common-tip.html")
+    <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+	<script type="text/javascript" src="/js/mywf/heMing.js"></script> 
+</div>

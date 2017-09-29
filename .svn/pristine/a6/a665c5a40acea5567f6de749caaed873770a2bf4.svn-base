@@ -1,0 +1,77 @@
+
+<div class="ser-main-box">
+    <div class="container">
+        <ul class="tabs-nei">
+            <div class="active"><a href="#tab1">消息列表</a></div>
+           <!--  <div><a href="#tab2">政策消息</a></div> -->
+        </ul>
+        <div class="tab_container">
+            <div id="tab1" class="tab-content" style="display: block; ">
+                <div class="con3">
+                    <ul>
+                      #foreach( ${message} in ${messageList} )
+                      	<li>
+                      	
+                      	 	<p class="t1">$!{message.title}</p>
+			                <p class="t2">$!{message.content}
+			                #if($!{message.contentmore})
+			                <span id="morediv">$!{message.contentmore}</span><a class="more" >展开</a>
+			                #end
+			                </p>
+			                <p class="t3">$!{message.addtime}</p>
+                        </li>
+                      #end
+                    </ul>
+                </div>
+                 #parse("views/common/fenye.html")
+                 #if( !${messageList} )
+                 <!-- 无消息样式 -->
+                 <div class="none-ts">
+                     <p class="ts">还没有来自小象的消息哦~</p>
+                 </div>
+                 <!-- end -->
+                 #end
+            </div>
+            <div id="tab2" class="tab-content" style="display: none; ">
+                <div class="con3">
+                    <ul>
+                        <li class="dot">
+                            <p class="t1">小微通知</p>
+                            <p class="t2">订单更新：您已支付成功</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                        <li>
+                            <p class="t1">小微通知</p>
+                            <p class="t2">流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                        <li>
+                            <p class="t1">小微通知</p>
+                            <p class="t2">订单更新：您已支付成功</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                        <li>
+                            <p class="t1">小微通知</p>
+                            <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                        <li>
+                            <p class="t1">小微通知</p>
+                            <p class="t2">订单更新：您已支付成功</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                        <li>
+                            <p class="t1">小微通知</p>
+                            <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                            <p class="t3">2015-04-27 16:59</p>
+                        </li>
+                    </ul>
+                </div>
+                #parse("views/common/fenye.html")
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

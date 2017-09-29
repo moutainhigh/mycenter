@@ -1,0 +1,136 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/internet-info.html")
+                <div class="dj-steps">
+                    <a href="javascript:void(0);" class="s1-on">1.填写设立材料</a>
+                    <a href="javascript:void(0);" class="s2-un">2.审核通知</a>
+                    <a href="javascript:void(0);" class="s3-un">3.下载网登材料</a>
+                </div>
+                <div class="dj-flow">
+                    <p class="f4-box">
+                        <a href="javascript:void(0);" class="on">企业基本信息</a>
+                        <a href="javascript:void(0);" class="on">完善股东信息</a>
+                        <a href="javascript:void(0);" class="on">注册地址</a>
+                        <a href="javascript:void(0);" class="on">补充信息</a>
+                    </p>
+                </div>
+                <div class="dj-online">
+                    <div class="ts">
+                        <label>小微提示：</label>
+                        <p>以下信息属于登记机关、税务机关留存的联络数据，请您准确填写。</p>
+                    </div>
+                    
+                    <div class="fill-con clear">
+                        <div class="f-box ">
+                            <div class="w-list rang-l">
+                                <table>
+                                    <tr>
+                                        <th><i>*</i>企业固定电话：</th>
+                                        <td>
+                                        	<input type="text" class="w-182" id="fixedPhone" value="$!{fixedPhone}" placeholder="电话，例：010-12345678" data-validate="required:true;landlinePhone:true;" data-info="enterprise:main" />
+                                        </td>
+                                        <th><i>*</i>邮政编码：</th>
+                                        <td>
+                                        	<input type="text" class="w-182" id="zipCode" value="$!{zipCode}" placeholder="邮政编码（6位）"data-validate="required:true;postCode:true;" data-info="enterprise:main" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><i>*</i>邮箱：</th>
+                                        <td>
+                                        	<input type="text" class="w-182" id="addresseeEmail" value="$!{addresseeEmail}" placeholder="邮箱" data-validate="required:true;email:true;" data-info="enterprise:main" />
+                                        </td>
+                                        <th><i>*</i>章程：</th>
+                                        <td>
+                                        	<span class="w-text">
+                                        		<input type="text" class="w-182" id="artiOfCorpCnt" value="$!{artiOfCorpCnt}" placeholder="章程" data-validate="required:true;int:true;" data-info="enterprise:main" /><i>/份</i>
+                                        	</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        #set($roleInfo = $EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", "contacts"))
+                        <div class="f-box clear is-visible" data-info="partnerInfo" data-roleType="contacts" data-relationId="$!{roleInfo.get('roleRelationId')}" >
+                        	<input type="hidden" id="id" value="$!{roleInfo.get('id')}" data-info="partnerInfo:main" />
+                        	<input type="hidden" id="idType" value="1" data-info="partnerInfo:main" />
+                            <label><i>*</i>联系人：</label>
+                            <span class="w-text">
+                                <input type="text" placeholder="姓名" class="w-167" id="name" value="$!{roleInfo.get('name')}" data-validate="required:true;" data-info="partnerInfo:main" />
+                                <input type="text" placeholder="身份证号码" class="w-167" id="idNum" value="$!{roleInfo.get('idNum')}" data-validate="required:true;identity:true;" data-info="partnerInfo:main" />
+                                <input type="text" placeholder="电话" class="w-100" id="phoneNum" value="$!{roleInfo.get('phoneNum')}" data-validate="required:true;telPhone:true;" data-info="partnerInfo:main" />
+                            </span>
+                        </div>
+                        
+                        #set($roleInfo = $EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", "finance"))
+                        <div class="f-box clear is-visible" data-info="partnerInfo" data-roleType="finance" data-relationId="$!{roleInfo.get('roleRelationId')}" >
+                        	<input type="hidden" id="id" value="$!{roleInfo.get('id')}" data-info="partnerInfo:main" />
+                        	<input type="hidden" id="idType" value="1" data-info="partnerInfo:main" />
+                            <label><i>*</i>财务负责人：</label>
+                            <span class="w-text">
+                            <div class="pnum-hover">
+                                <input type="text" placeholder="姓名" class="w-167" id="name" value="$!{roleInfo.get('name')}" data-validate="required:true;" data-info="partnerInfo:main" />
+                                <p class="tag-pnum">
+	                       			<i></i>
+	                       			<span>财务负责人不能为董事、监事和经理。</span>
+                       			</p>
+                       		</div>
+                                <input type="text" placeholder="身份证号码" class="w-167" id="idNum" value="$!{roleInfo.get('idNum')}" data-validate="required:true;identity:true;" data-info="partnerInfo:main" />
+                                <input type="text" placeholder="电话" class="w-100" id="phoneNum" value="$!{roleInfo.get('phoneNum')}" data-validate="required:true;telPhone:true;" data-info="partnerInfo:main" />
+                            </span>
+                        </div>
+                        
+                        <div class="f-box clear">
+                            <label><i>*</i>企业人数：</label>
+                            <div class="w-list">
+                                <table>
+                                    <tr>
+                                        <th>总人数：</th>
+                                        <td>
+                                        	<div class="pnum-hover">
+                                        		<input type="text" class="w-100" placeholder="总人数" data-validate="required:true;int:true;" id="staffTotalNum" value="$!{staffTotalNum}" data-info="enterprise:main" >
+                                       			<p class="tag-pnum">
+                                       			<i></i>
+                                       			<span>企业人数只用于工商局统计没有实际作用，填写企业预计人数即可。</span>
+                                       			</p>
+                                       		</div>
+                                       		</td>
+                                        <th>本地人数：</th>
+                                        <td><input type="text" class="w-100" placeholder="本地人数" data-validate="required:true;int:true;" id="staffLocalNum" value="$!{staffLocalNum}" data-info="enterprise:main" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th>外地人数：</th>
+                                        <td><input type="text" class="w-100" placeholder="外地人数" data-validate="required:true;int:true;" id="staffOutNum" value="$!{staffOutNum}" data-info="enterprise:main" ></td>
+                                        <th>女性人数：</th>
+                                        <td><input type="text" class="w-100" placeholder="女性人数" data-validate="required:true;int:true;" id="staffFemaleNum" value="$!{staffFemaleNum}" data-info="enterprise:main" ></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        #set($roleInfo = $EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", "legalPerson"))
+                        <div class="f-box clear is-visible" data-info="partnerInfo" data-roleType="legalPerson" data-relationId="$!{roleInfo.get('roleRelationId')}" >
+                        	<input type="hidden" id="id" value="$!{roleInfo.get('id')}" data-info="partnerInfo:main" />
+                            <label><i>*</i>法人电话：</label>
+                            <span class="w-text">
+                            	<input type="text" class="w-400" id="phoneNum" placeholder="法人电话" value="$!{roleInfo.get("phoneNum")}" data-validate="required:true;telPhone:true;" data-info="partnerInfo:main" />
+                            </span>
+                        </div>
+                        
+                    </div>
+                    <div class="btn-box">
+                        <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/$!{lastBusinessKey}" class="btn">上一步</a>
+                        <a href="javascript:void(0);" class="btn other save">保存</a>
+                        <a href="javascript:void(0);" class="btn other next">下一步</a>
+                        <!-- <a href="javascript:void(0);" class="btn other submit">提交</a> -->
+                        
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/common-tip.html")
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+		</div>

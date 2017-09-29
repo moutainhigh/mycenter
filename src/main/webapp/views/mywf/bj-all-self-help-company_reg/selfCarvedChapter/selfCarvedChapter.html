@@ -1,0 +1,61 @@
+        <div class="named-box">
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/carved-info.html")
+                <div class="dj-online r-top">
+                	<div class="ts">小微提示：为您推荐安全有效的刻章地址，朝阳区霞光里15号霄云中心A座108（朝阳工商分局对面）</div>
+                    <div class="tab">
+                        <table>
+                            <tr>
+                                <th width="90px">序号</th>
+                                <th width="280px">印章刻制所需材料</th>
+                                <th >注意事项</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>《营业执照副本原件》</td>
+                                <td>需取得营业执照</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>《法定代表人身份证复印件》</td>
+                                <td class="matter">需提供清晰的正反两面复印件。<br>公安机关对身份证复印件的清晰度要求较高，请您确保复印件的质量。</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td class="download" >《刻章委托书》<a class="download" href="http://mycenter.lvzheng.com/file/download/38080016019457" ></a></td>
+                                <td class="matter">法定代表人签署的《刻章委托书》，<br>由刻章公司到公安机关进行印章备案。</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击 <a href="javascript:void(0);" class="btn carved submit">我已完成</a></p>
+                    </div>
+                    #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                    
+                </div>
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/carved.js"></script> 
+            
+		</div>
+<script type="text/javascript" >
+$(document).ready(function(){
+	/**
+	 * 刻章 - 完成
+	 */
+	$(".btn.carved.submit").click(function(){
+		LV.wfSignlReceiveTask();
+		window.location.href = "/mywf/company/reg/" + procInstId;
+		return true;
+	});
+})
+</script> 		
+		
+		

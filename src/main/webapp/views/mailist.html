@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的主页</title>
+<meta name="description" content="注册公司找小微律政,小微律政拥有专业的律师和会计团队,小微律政专注为创业公司及中小微企业提供代办公司注册,商标注册,代理记账,社保公积金开户,公司变更,合同拟定,公司章程等一站式企业服务，小微律政服务流程每一步都无微不至。"/>
+<meta name="keywords" content="小微律政公司介绍,小微律政怎么样" />
+#parse("views/common/toproof.html")
+<script>
+$(function(){
+    // 城市切换
+    $('#hhDrop00').hhDrop({});
+    $('#hhDrop01').hhDrop({});  
+
+    // tab切换
+     
+    $(".tab-content").hide(); 
+    $("ul.tabs-nei div:first").addClass("active").show(); 
+    $(".tab-content:first").show(); 
+    $("ul.tabs-nei div").click(function() {
+        $("ul.tabs-nei div").removeClass("active"); 
+        $(this).addClass("active"); 
+        $(".tab-content").hide(); 
+        var activeTab = $(this).find("a").attr("href"); 
+        $(activeTab).fadeIn(); 
+        return false;
+    });
+
+
+    // 展开收起
+    $('a.more').bind('click', function () { 
+        var txt = $('a.more').text(); 
+        if (txt == '展开') { 
+            $('#morediv').show(); 
+            $('a.more').text('收起').addClass('top-arr'); 
+        } else { 
+            $('#morediv').hide(); 
+            $('a.more').text('展开').removeClass('top-arr'); 
+        } 
+    }) 
+});
+</script>
+</head>
+
+<body>
+<div class="user-center">
+    <div class="top-box">
+        #parse("views/common/toproof.html")
+    </div>
+
+    <div class="u-banner">
+        <div class="box">
+            <a class="logo"><img src="/images/user/logo.png" width="130px"></a>
+            <a class="name" href="/index.html">用户中心</a>
+            <a class="back" href="http://www.lvzheng.com">返回小微首页</a>
+        </div>
+    </div>
+    
+    <div class="u-main">
+        #parse("views/common/leftmenu.html")
+
+        <div class="ser-main-box">
+            
+            <div class="container">
+                <ul class="tabs-nei">
+                    <div class="active"><a href="#tab1">消息列表</a></div>
+                    <div><a href="#tab2">政策消息</a></div>
+                </ul>
+                <div class="tab_container">
+                    <div id="tab1" class="tab-content" style="display: block; ">
+                        <div class="con3">
+                            <ul>
+                                <li class="dot">
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料已存放，
+                                    <span id="morediv">请到档案组案结束国税报到流程息存放档案结束国税报到流程息及流程信息也已整理在文档中，详见文档中工作簿，请@庞菁协助流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料已存放，请到档案组存放档案结束国税报到流程息及流程信息也已整理在文档中。 </span><a class="more">展开</a>
+                                    </p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">系统消息</p>
+                                    <p class="t2">流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料已存放，请到档案组案结束国税报到流程息存放档案结束国税报到流程息及流程信息也已整理在文档中，详见文档中工作簿，请@庞菁协助流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料已存放，请到档案组存放档案结束国税报到流程息及流程信息也已整理在文档中。 </p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                            </ul>
+                        </div>
+                         #parse("views/common/fenye.html")
+                    </div>
+                    <div id="tab2" class="tab-content" style="display: none; ">
+                        <div class="con3">
+                            <ul>
+                                <li class="dot">
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">流程中需要的业务信未完成外勤完成国税报到归档环节点击“完成”提示：</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">订单更新：您已支付成功</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                                <li>
+                                    <p class="t1">小微通知</p>
+                                    <p class="t2">未完成外勤完成国税报到归档环节点击“完成”提示：档案组未确认相关材料</p>
+                                    <p class="t3">2015-04-27 16:59</p>
+                                </li>
+                            </ul>
+                        </div>
+                        #parse("views/common/fenye.html")
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="u-bottom">
+         #parse("views/common/bottom.html")
+    </div>
+
+</div>
+</body>
+
+</html>

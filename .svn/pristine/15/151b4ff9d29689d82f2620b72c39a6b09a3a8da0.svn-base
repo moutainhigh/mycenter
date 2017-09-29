@@ -1,0 +1,37 @@
+<script type="text/javascript" src="http://sms.lvzheng.com/js/call.js"></script> 
+<script type="text/javascript">
+<!--小微咨询-->
+$(document).ready(function(){
+	$('#consultzx').bind('click', function () { 
+		var correntUrl=$(this).attr("data-value");
+		$.ajax({
+			url:"/mywf/getConsult",
+			type:'post',    
+		    dataType:'json',
+		    success:function(result){
+		    	if(result.callid == -1){//还没有服务  进入下单
+		    		var url = "/tobuyconsult?sellid=36646075134465&sellcode=ZX-00101-953751&returnurl="+correntUrl;
+		    		$("div").remove("#ridefloat div");
+	    			$.post(url,function(data){
+	    				$(".user-center").append(data);
+	    			});
+		    	}else{//有服务，调用咨询js
+		    		 makecall(result.callid);
+		    	}
+		    }
+		
+		});
+	});
+
+	$('#usezxnow').bind('click', function () { 
+		makecall($!{callid});
+	});
+
+	
+});
+
+function callflush(){
+	location.reload(true);
+}
+</script>
+

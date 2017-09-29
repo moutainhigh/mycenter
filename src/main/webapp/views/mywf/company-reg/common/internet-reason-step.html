@@ -1,0 +1,7 @@
+                <div class="dj-steps">
+                    <a #if($!{businessKey} == "previewCompanyInfo") href="javascript:void(0)" #else href="/mywf/company/detail/$!{procInstId}/$!{taskId}/setupReason" #end #if($!{businessKey} == "setupReason") class="s1-on" #elseif($!{businessKey} == "previewCompanyInfo") class="s1-on" #else class="s1-over" #end >1.填写设立材料</a>
+                    
+                    <a #if($!{businessKey} == "previewCompanyInfo") href="javascript:void(0)" #else href="/mywf/company/detail/$!{procInstId}/$!{taskId}/checkReason" #end #if($!{businessKey} == "checkReason") class="s2-on" #elseif($!{businessKey} == "previewCompanyInfo") class="s2-un" #else class="s2-over" #end>2.审核通知</a>
+                    
+                    <a #if($!{businessKey} == "previewCompanyInfo") href="javascript:void(0)" #elseif($!{setupStatus} == 1) href="/mywf/company/detail/$!{procInstId}/$!{taskId}/setupDownload" #end #if($!{businessKey} == "setupDownload") class="s3-on" #elseif($!{businessKey} == "previewCompanyInfo") class="s3-un" #else class="s3-un" #end>3.下载网登材料</a>
+                </div>

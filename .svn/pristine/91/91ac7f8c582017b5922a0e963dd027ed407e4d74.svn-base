@@ -1,0 +1,191 @@
+<div class="named-box">
+    <div class="l-named">
+        #parse("views/mywf/company-reg/common/rename-info.html")
+        <div class="steps">
+            <a href="javascript:void(0);" class="s1-on">1. 我要起名</a>
+            <a href="javascript:void(0);" class="s2-un">2. 审核通知</a>
+        </div> 
+        <div class="named-info">
+            <div class="two-box">
+                <span class="n1">我要起名</span>
+                <span class="n2">股东信息</span>
+            </div>
+        </div>
+        <div id="submitDataDiv" style="display: none;" >
+        	<!-- 核名工商状态：1，未提交工商 -->
+			<input type="hidden" id="checkNameGovStatus" value="1" data-info="enterprise:main"  />
+			<input type="hidden" id="checkNameStatus" value="3" data-info="enterprise:main"  />
+        </div>
+        <div class="named-fill">
+            <div class="step2-add">
+                <div class="s2-che">
+                    <input id="partnerNumFlag" type="hidden" value="$!{partnerNumFlag}" placeholder="股东个数" data-validate="required:true;" data-info="enterprise:main" />
+                    <span class="star">*</span>您的股东有几个：
+                    <span class="lab-box" ><input type="radio" name="partnerClick" id="one" value="1" ><label for="one">一个</label></span>
+                    <span class="lab-box" ><input type="radio" name="partnerClick" id="two" value="2" ><label for="two">两个或以上</label></span>
+                </div>
+                
+                <!-- 一人投资 -->
+                <div class="ch-add-box" id="ones" style="display:block;">
+                    <div class="add-box">
+                        #set($naturalPartner = $!{EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                        #set($legalPartner = $!{EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                        <div class="show">
+                          	<input id="partnerType" type="hidden" value="$!{partnerType}" data-select="true" placeholder="股东类型" data-validate="required:true;" data-info="enterprise:main" />
+                            <div class="n-select w-220" name="n-select">
+                                <input class="n-val" type="text" value="请选择..." readonly>
+                                <ul>
+                                    <li data-value="20" data-div="naturalPartnerDiv" >自然人股东（内）</li>
+                                    <li data-value="10" data-div="legalPartnerDiv" >单位股东（内）</li>
+                                </ul>
+                            </div>
+                            <input class="w-input-220" type="text" placeholder="股东姓名或名称" id="ones-partnerName" value="$!{naturalPartner.get('name')}$!{legalPartner.get('name')}" /> 
+                        </div>
+                        <div class="show" id="naturalPartnerDiv" name="partnerType" data-info="partnerInfo" data-roleType="naturalPartner" data-relationId="$!{naturalPartner.get('roleRelationId')}" >
+                            <div class="n-select w-220" name="n-select">
+                                <input class="n-val" type="text" value="中华人民共和国居民身份证" readonly />
+                                <ul>
+                                    <li data-value="1">中华人民共和国居民身份证</li>
+                                </ul>
+                            </div>
+                            <input type="hidden" id="id" value="$!{naturalPartner.get('id')}" data-info="partnerInfo:main" />
+                   			<input type="hidden" placeholder="股东名称" id="name" value="$!{naturalPartner.get('name')}" data-validate="required:true;" data-info="partnerInfo:main" />
+                            <input class="w-input-220" type="text" placeholder="股东证件" id="idNum" value="$!{naturalPartner.get('idNum')}" data-validate="required:true;identity:true;" data-info="partnerInfo:main"  /> 
+                        </div>
+						<div class="show" id="legalPartnerDiv" name="partnerType" data-info="partnerInfo" data-roleType="legalPartner" data-relationId="$!{legalPartner.get('roleRelationId')}" >
+                            <div class="n-select w-220" name="n-select">
+                                <input class="n-val" type="text" value="营业执照号" readonly />
+                                <ul>
+                                    <li data-value="1" >营业执照号</li>
+                                </ul>
+                            </div>
+                            <input type="hidden" id="id" value="$!{legalPartner.get('id')}" data-info="partnerInfo:main" />
+                   			<input type="hidden" placeholder="公司名称" id="name" value="$!{legalPartner.get('name')}" data-validate="required:true;" data-info="partnerInfo:main" />
+                            <input class="w-input-220" type="text" placeholder="营业执照号" id="businessLicenseNum" value="$!{legalPartner.get('businessLicenseNum')}" data-validate="required:true;" data-info="partnerInfo:main"  /> 
+                        </div>
+                    </div>
+                </div>
+
+				<!-- 多人投资 -->
+                <div class="ch-add-box" id="twos" style="display:none;">
+                    <div class="add-box">
+                        <div class="show">
+                        <input id="twosPartnerType" type="hidden" value="" />
+                            <div class="n-select w-220" name="n-select">
+                                <input class="n-val" type="text" value="请选择..."  readonly />
+                                <ul>
+                                    <li data-value="20" data-role="naturalPartner" >自然人股东（内）</li>
+                                    <li data-value="10" data-role="legalPartner" >单位股东（内）</li>
+                                </ul>
+                            </div>
+                            <input class="w-input-220" type="text" id="add_gd_name" placeholder="股东姓名或名称" /> 
+                        </div>
+                        <a href="javascript:void(0);" class="add-btn" id="add_gd">增加</a>
+                    </div>
+	                 
+                    <span id="gd_area" >
+                   		#foreach($naturalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                   		<div class="add-show" data-info="partnerInfo" data-roleType="naturalPartner" data-relationId="$!{naturalPartner.get('roleRelationId')}" >
+                   			<input type="hidden" id="id" value="$!{naturalPartner.get('id')}" data-info="partnerInfo:main" />
+                   			<input type="hidden" id="name" value="$!{naturalPartner.get('name')}" data-info="partnerInfo:main" />
+                   			<p class="text">自然人股东（内）：$!{naturalPartner.get('name')}</p>
+                   			<a href="javascript:void(0);" class="del" onclick="del_gd(this)"></a>
+                   		</div>
+                  		#end
+                  		#foreach($legalPartner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                   		<div class="add-show" data-info="partnerInfo" data-roleType="legalPartner" data-relationId="$!{legalPartner.get('roleRelationId')}" >
+                   			<input type="hidden" id="id" value="$!{legalPartner.get('id')}" data-info="partnerInfo:main" />
+                   			<input type="hidden" id="name" value="$!{legalPartner.get('name')}" data-info="partnerInfo:main" />
+                   			<p class="text">单位股东（内）：$!{legalPartner.get('name')}</p>
+                   			<a href="javascript:void(0);" class="del" onclick="del_gd(this)"></a>
+                   		</div>
+                  		#end
+                    </span>
+                </div>
+				
+                <div class="acc-box">
+                    <input id="registUserStatus" type="hidden" value="2" placeholder="是否有核名账号" data-validate="required:true;" data-info="enterprise:main" />
+                    <div class="s2-che" style="display: none;" >
+                        <span class="star">*</span>您是否已有核名账号：
+                        <span class="lab-box"><input type="radio" name="accClick" id="accYes" value="1" ><label for="accYes">是</label></span>
+                        <span class="lab-box"><input type="radio" name="accClick" id="accNo" value="2" ><label for="accNo">否</label></span>
+                    </div>
+                    <!-- 有账号 -->
+<!--                     <div class="acc" id="accYesDiv" >
+                        <span class="tab-tx-y">* 请准确输入您已在登记机关官方网站注册的用户名与密码，系统将帮助您向登记机关提交企业名称申请。</span>
+                        <p>
+                        	<label><span class="star">*</span>您的核名账号是：</label>
+                        	<input class="w-input-310" type="text"  placeholder="请填写您的核名账号" id="checkNameAccount" value="$!{checkNameAccount}" data-validate="required:true;" data-info="enterprise:main" />
+                        </p>
+                        <p>
+                        	<label><span class="star">*</span>您的核名密码为：</label>
+                        	<input class="w-input-310" type="password"  placeholder="请填写您的核名密码" id="checkNamePassword" value="$!{checkNamePassword}" data-validate="required:true;" data-info="enterprise:main" />
+                        </p>
+                    </div> -->
+                    
+                    <!-- 没有账号 -->
+                    <div class="acc" id="accNoDiv" style="display: none;" >
+                        <span class="tab-tx-y">* 请准确输入您的居民身份证号码，系统将会帮助您成为登记机关官方网站上的注册用户，并帮助您向登记机关提交企业名称申请。</span>
+						<p>
+                        	<label><span class="star">*</span>您的姓名是：</label>
+                        	<input class="w-input-310" type="text" placeholder="请填写您的姓名" id="registUserName" value="$!{registUserName}" data-validate="required:true;" data-info="enterprise:main" />
+                        </p>
+                        <p>
+                        	<label><span class="star">*</span>您的身份证号：</label>
+                        	<input class="w-input-310" type="text" placeholder="请填写您的身份证号" id="registUserCerNo" value="$!{registUserCerNo}" data-validate="required:true;identity:true;" data-info="enterprise:main" />
+                        </p>
+                    </div>
+                    
+                </div>
+                <div class="btn-box">
+                    <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/$!{lastBusinessKey}" class="btn-g last">上一步</a>
+                    <a href="javascript:void(0);" class="btn-g save" >暂存</a>
+                    <a href="javascript:void(0);" class="btn pop_box1111 collection submit" >提交</a>
+                </div>
+            </div>
+		</div>
+		<div class="cd-popup cd-box13233" role="alert" style="display: none;" > 
+			<div class="cd-popup-container tc-box4" role="alert">
+			    <div class="con_box">
+			        <p class="title">系统检测到您的身份证号在工商局注册过，请输入您的账户和密码</p>
+			        <div class="box">
+			            <p class="con">
+			                <label>你的核名帐号：</label>
+			               	<span class="w-text">
+			                	<input type="text" placeholder="请填写您的核名账号" id="checkNameAccount" value="$!{checkNameAccount}" data-validate="required:true;" data-info="enterprise:main" /> 
+			                </span>
+			            </p>
+			            <p class="con">
+			                <label>你的核名密码：</label>
+			                <span class="w-text">
+			                	<input type="text" placeholder="请填写您的核名密码" id="checkNamePassword" value="$!{checkNamePassword}" data-validate="required:true;" data-info="enterprise:main" /> 
+			                </span>
+			            </p>
+			        </div>    
+			        <p class="btn">
+			            <a href="javascript:void(0);" class="btn1 account submit">确认</a>
+			            <a href="javascript:void(0);" class="btn2 account cancel">取消</a>
+			        </p>
+			    </div>
+			</div>
+		</div>
+       <!-- 确认、提交弹出框 -->
+        <div class="cd-popup pop_box1111" role="alert"> 
+            <div class="cd-popup-container tc-box3">
+                <div class="con_box">
+                    <p class="title">申请提交结果</p>
+                    <p class="con">确定要提交吗？?</p>
+                    <p class="text">还需等待人工审核结果，人工审核一般需要1-3个工作日</p>
+                    <p class="btn">
+                        <a href="javascript:void(0);" class="btn1 collect alter submit">确认</a>
+                        <a href="javascript:void(0);" class="btn2 collect alter cancel">取消</a>
+                    </p>
+                </div>
+            </div> 
+        </div> 
+	</div>
+	#parse("views/mywf/company-reg/common/common-tip.html")
+	<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+	<script type="text/javascript" src="/js/mywf/heMing.js"></script> 
+	<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+</div>

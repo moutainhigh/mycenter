@@ -1,0 +1,301 @@
+
+
+        <div class="ser-main-box">
+			<br/>
+            <div class="s-flow">  
+                <ul class="tabbtn" id="normaltab">
+                    <li #if($listtype == "alllist") class="current" #end><a href="/order/getAllOrderList.html">全部订单</a></li>
+                    <li #if($listtype == "unpaylist") class="current" #end><a href="/order/unpayorder.html">待支付</a></li>
+                    <li #if($listtype == "orderlist") class="current"  #end><a href="/order/payedorder.html">已支付</a></li>                          
+                    <li #if($listtype == "cancellist") class="current"  #end><a href="/order/cancelorder.html">已取消</a></li>                          
+                </ul>
+                <div class="tabcon" id="normalcon">
+                <!-- 所有订单 -->
+                #if($listtype == "alllist")
+                	#if($!{allPayOrderList})
+                    <div class="sublist"> <!-- 新增全部订单 -->
+                        <div class="pay-list">
+                            <table class="tabtitle">
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th>城市</th>
+                                    <th>区域</th>
+                                    <th>单价(元)</th>
+                                    <th>数量</th>
+                                    <th>已优惠</th>
+                                    <th>总额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </table>
+                            #foreach($payOrderMap in $!{allPayOrderList})
+                            <table>
+                                <tr class="bar">
+                                    <td colspan="8">
+                                        <span class="time">下单时间：$!{payOrderMap.addtime}</span>
+                                        <span class="num">订单编号：$!{payOrderMap.payid}</span>
+                                    </td>
+                                </tr>
+                                
+                                #foreach($orderMap in  $!{payOrderMap.get($!{payOrderMap.payid})})
+                                #set($foo = $velocityCount )
+                                <tr>
+                                    <td #if($!{orderMap.packageFlag} == "true") class="bg" #end>
+                                        #if($!{orderMap.packageFlag} == "true") <span class="yhtag">优惠商品包</span> #end 
+                                        <a class="name">$!{orderMap.sell_product_name}</a>
+                                    </td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.cityname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.aeasname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.sell_overprice}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>1</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>#if($orderMap.discount > 0) $!{orderMap.discount} #end</td>
+                                    
+                                    #if($!{foo} == 1)
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}"><span class="yhnum">$!{payOrderMap.paycount}</span></td>
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}">
+                                    	#if($!{payOrderMap.paystate} == 0 )
+                                        	<a href="http://pay.lvzheng.com/reqpay/$!{payOrderMap.payid}" class="paybtn">付款</a>
+                                        	<a href="javascript:void(0);" class="qxbtn" name="cancelpayorder" val-data="$!{payOrderMap.payid}">取消订单</a>
+                                        #elseif($!{payOrderMap.paystate} == 1 )
+                                        	已付款
+                                       	#elseif($!{payOrderMap.paystate} == 2 )
+                                       		已退款
+                                       	#elseif($!{payOrderMap.paystate} == 9 )
+                                       		已取消
+                                    	#end
+                                    </td>
+                                    #end
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                        </div>
+                    </div>
+                    	#parse("views/common/fenye_order.html")
+                    #else
+                    	#parse("views/common/noservice.html")
+                    #end
+				#end
+				
+                #if($listtype == "unpaylist")
+                	#if($!{allPayOrderList})
+                    <div class="sublist"> <!-- 未支付订单 -->
+                        <div class="pay-list">
+                            <table class="tabtitle">
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th>城市</th>
+                                    <th>区域</th>
+                                    <th>单价(元)</th>
+                                    <th>数量</th>
+                                    <th>已优惠</th>
+                                    <th>总额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </table>
+                            #foreach($payOrderMap in $!{allPayOrderList})
+                            <table>
+                                <tr class="bar">
+                                    <td colspan="8">
+                                        <span class="time">下单时间：$!{payOrderMap.addtime}</span>
+                                        <span class="num">订单编号：$!{payOrderMap.payid}</span>
+                                    </td>
+                                </tr>
+                                #foreach($orderMap in  $!{payOrderMap.get($!{payOrderMap.payid})})
+                                #set($foo = $velocityCount )
+                                
+                                <tr>
+                                    <td #if($!{orderMap.packageFlag} == "true") class="bg" #end>
+                                        #if($!{orderMap.packageFlag} == "true") <span class="yhtag">优惠商品包</span> #end 
+                                        <a class="name">$!{orderMap.sell_product_name}</a>
+                                    </td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.cityname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.aeasname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.sell_overprice}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>1</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>#if($orderMap.discount > 0) $!{orderMap.discount} #end</td>
+                                    
+                                    #if($!{foo} == 1)
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}"><span class="yhnum">$!{payOrderMap.paycount}</span></td>
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}">
+                                    	#if($!{payOrderMap.paystate} == 0 )
+                                        	<a href="http://pay.lvzheng.com/reqpay/$!{payOrderMap.payid}" class="paybtn">去支付</a>
+                                        	<a href="javascript:void(0);" class="qxbtn" name="cancelpayorder" val-data="$!{payOrderMap.payid}">取消订单</a>
+                                    	#end
+                                    </td>
+                                    #end
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                        </div>
+                    </div>
+                    	#parse("views/common/fenye_order.html")
+                	#else
+                        #parse("views/common/noservice.html")
+                	#end
+				#end
+				
+				
+				#if($listtype == "orderlist")
+                	#if($!{allPayOrderList})
+                    <div class="sublist"> <!-- 已支付订单 -->
+                        <div class="pay-list">
+                            <table class="tabtitle">
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th>城市</th>
+                                    <th>区域</th>
+                                    <th>单价(元)</th>
+                                    <th>数量</th>
+                                    <th>已优惠</th>
+                                    <th>总额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </table>
+                            #foreach($payOrderMap in $!{allPayOrderList})
+                            <table>
+                                <tr class="bar">
+                                    <td colspan="8">
+                                        <span class="time">下单时间：$!{payOrderMap.addtime}</span>
+                                        <span class="num">订单编号：$!{payOrderMap.payid}</span>
+                                    </td>
+                                </tr>
+                                
+                                #foreach($orderMap in  $!{payOrderMap.get($!{payOrderMap.payid})})
+                                #set($foo = $velocityCount )
+                                <tr>
+                                    <td #if($!{orderMap.packageFlag} == "true") class="bg" #end>
+                                        #if($!{orderMap.packageFlag} == "true") <span class="yhtag">优惠商品包</span> #end 
+                                        <a class="name">$!{orderMap.sell_product_name}</a>
+                                    </td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.cityname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.aeasname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.sell_overprice}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>1</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>#if($orderMap.discount > 0) $!{orderMap.discount} #end</td>
+                                    
+                                    #if($!{foo} == 1)
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}"><span class="yhnum">$!{payOrderMap.paycount}</span></td>
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}">
+                                    	#if($!{payOrderMap.paystate} == 1 )
+                                    		已付款
+                                    	#end
+                                    </td>
+                                    #end
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                        </div>
+                    </div>
+                    	#parse("views/common/fenye_order.html")
+                	#else
+                        #parse("views/common/noservice.html")
+                	#end
+				#end
+
+ 				#if($listtype == "cancellist")
+                	#if($!{allPayOrderList})
+                    <div class="sublist"> <!-- 取消订单 -->
+                        <div class="pay-list">
+                            <table class="tabtitle">
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th>城市</th>
+                                    <th>区域</th>
+                                    <th>单价(元)</th>
+                                    <th>数量</th>
+                                    <th>已优惠</th>
+                                    <th>总额</th>
+                                    <th>操作</th>
+                                </tr>
+                            </table>
+                            #foreach($payOrderMap in $!{allPayOrderList})
+                            <table>
+                                <tr class="bar">
+                                    <td colspan="8">
+                                        <span class="time">下单时间：$!{payOrderMap.addtime}</span>
+                                        <span class="num">订单编号：$!{payOrderMap.payid}</span>
+                                    </td>
+                                </tr>
+                                
+                                #foreach($orderMap in  $!{payOrderMap.get($!{payOrderMap.payid})})
+                                #set($foo = $velocityCount )
+                                <tr>
+                                    <td #if($!{orderMap.packageFlag} == "true") class="bg" #end>
+                                        #if($!{orderMap.packageFlag} == "true") <span class="yhtag">优惠商品包</span> #end 
+                                        <a class="name">$!{orderMap.sell_product_name}</a>
+                                    </td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.cityname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.aeasname}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>$!{orderMap.sell_overprice}</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>1</td>
+                                    <td  #if($!{orderMap.packageFlag} == "true") class="bg" #end>#if($orderMap.discount > 0) $!{orderMap.discount} #end</td>
+                                    
+                                    #if($!{foo} == 1)
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}"><span class="yhnum">$!{payOrderMap.paycount}</span></td>
+                                    <td rowspan="$!{payOrderMap.get($!{payOrderMap.payid}).size()}">
+                                    	#if($!{payOrderMap.paystate} == 9 )
+                                       		已取消
+                                    	#end
+                                    </td>
+                                    #end
+                                </tr>
+                                #end
+                            </table>
+                            #end
+                        </div>
+                    </div>
+                    	#parse("views/common/fenye_order.html")
+                	#else
+                        #parse("views/common/noservice.html")
+                	#end
+				#end
+                </div>
+            </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("tr[name='ordercontent']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			var pid = obj.attr("val-data");
+			//obj.css("cursor","pointer");
+			window.location.href = "/orderdetail/"+pid;
+		});
+	});
+	$("tr[name='ordercancel']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			var pid = obj.attr("val-data");
+			//obj.css("cursor","pointer");
+			window.location.href = "/canceldetail/"+pid;
+		});
+	});
+	$("a[name='cancelpayorder']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			event.stopPropagation(); 
+			if(confirm("是否确定取消订单？")){
+				var pid = obj.attr("val-data");
+				var url = "/refound/"+pid;
+				ajreq(url,"",cancelcallback);
+			}
+			
+		});
+	});
+	var cancelcallback = function(data){
+		if(data.ret == "ok"){
+			alert("订单成功取消！");
+		}else{
+			alert("取消失败！"+data.msg);
+		}
+		window.location.reload();
+	}
+	
+	
+});
+
+
+</script>
+        </div>
+##parse("views/myorder/order.html")

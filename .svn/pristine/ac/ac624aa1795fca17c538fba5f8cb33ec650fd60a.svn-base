@@ -1,0 +1,103 @@
+        <div class="ser-main-box">
+            <div class="crumbs">
+                <a class="crumb-link" href="/">首页</a>
+                <i class="crumb-line">></i>
+                <a class="crumb-link" href="/">个人中心</a>
+                <i class="crumb-line">></i>
+                <a class="crumb-link" href="/order/unpayorder.html">我的订单</a>
+                <i class="crumb-line">></i>
+                <a class="crumb-link" href="javascript:void(0);">支付详情</a>
+            </div>
+            <div class="order-status-s">
+                <p class="sta-title">当前支付状态：
+                #if($!{payorder.paystate} == 1)
+                <span class="succ">支付成功</span>
+                #elseif($!{payorder.paystate} == 0)
+                <span class="wait">待支付</span>
+                #elseif($!{payorder.paystate} == 9)
+                <span class="wait">已取消</span>
+                #end
+                </p>
+                
+                <p class="sta-tx">小微提示您</p>
+                #if($!{payorder.paystate} == 9)
+                <p class="sta-text">您已经取消购买商品的订单，如有疑问请咨询我们小微客服帮您解答</p>
+                <p class="sta-text"></p>
+                #else
+                <p class="sta-text">小微在支付成功后一周退款通道将自动关闭，如有疑问请咨询我们小微客服帮您解答</p>
+                <p class="sta-text">小微会及时以短信、微信、邮件的形式通知您流程的进度</p>
+                #end
+            </div>
+            <div class="s-flow">  
+                <ul class="tabbtn" id="normaltab">
+                    <li class="current"><a>订单消息</a></li>                        
+                </ul>
+                <div class="tabcon" id="normalcon">
+                    <div class="sublist">
+                        <p class="tablist-info">
+                            <span>订单编号：$!{payorder.payid}</span>
+                            <!-- <span>商品编号：012100885367889</span> -->
+                            <span>下单时间：$!{payorder.addDatestr}</span>
+                            #if($!{payorder.paystate} == 1)
+                            <span>付款时间：$!{payorder.paydatestr}</span>
+                            #end
+                        </p>
+                        <div class="tab-list">
+                            <table>
+                                <tr>
+                                    <th width="20%">商品名称</th>
+                                    <th width="20%">商品说明</th>
+                                    <th width="15%">单价(元)</th>
+                                    <th width="10%">应付金额</th>
+                                    <th width="10%">优惠</th>
+                                    <th>实付金额</th>
+                                </tr>
+                                #foreach($order in $orderlist)
+                                <tr>
+                                    <td>$!{order.productname}</td>
+                                    <td>－</td>
+                                    <td>$!{order.sellerprice}</td>
+                                    <td>$!{order.orderprice}</td>
+                                    <td>$!{order.couponMoney}</td>
+                                    <td>$!{order.paycount}</td>
+                                </tr>
+                               #end
+                            </table>
+                        </div>
+                        <p class="pay-total">
+                           #if($!{payorder.paystate} == 1) 
+                           <span>支付方式： <a class="wx-pay">$!{payorder.paychanelstr}</a></span>
+                           #end
+                           #if($!{payorder.paystate} != 9) 
+                            <span>实付款：<a class="pay-num">$!{payorder.paycount}</a>元</span>
+                            #end
+                        </p>
+                        #if($!{payorder.paystate} == 0)
+						 <p class="pay-total">
+                            <a href="http://pay.lvzheng.com/reqpay/$!{payorder.payid}" class="pay-btn pop_box1">立即支付</a>
+                        </p>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 请付款 弹出框 -->
+        <div class="cd-popup cd-box1" role="alert"> 
+            <div class="cd-popup-container pay-center">
+                <div class="pc-box">
+                    <p class="title">确认信息</p>
+                    <div class="pc-main">
+                        <div class="box-ico">
+                            <p class="t1">确定要取消该订单吗？</p>
+                            <p class="t2">取消后您可以在取消订单里查看</p>
+                        </div>
+                    </div>
+                    <div class="pc-btn">
+                        <a href="" class="btn1">确认</a>
+                        <a href="" class="btn2">取消</a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- 弹出框 -->

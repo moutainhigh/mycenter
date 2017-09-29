@@ -1,0 +1,218 @@
+/**
+ * 
+ */
+
+package com.jx.blackface.mycenter.controllers;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.StringUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
+
+import com.alibaba.fastjson.JSONObject;
+import com.jx.argo.ActionResult;
+import com.jx.argo.annotations.Path;
+import com.jx.argo.controller.AbstractController;
+import com.jx.blackface.mycenter.frame.RSBLL;
+import com.jx.blackface.mycenter.utils.ActionResultUtils;
+import com.jx.blackface.mycenter.utils.AliOSSUtils;
+import com.jx.blackface.mycenter.utils.ImageUtil;
+import com.jx.service.workflow.entity.LvFileEntity;
+
+
+
+/**
+ * simple introduction
+ *
+ * <p>detailed comment</p>
+ * @author chuxuebao 2015年8月18日
+ * @see
+ * @since 1.0
+ */
+@Path("file")
+public class FileController extends AbstractController {
+	
+//	@Path("upload")
+//	public ActionResult uploadFile(){
+//		return uploadAction("");
+//	}
+//	
+//	@Path("upload/{companyId:[\\w-]+}")
+//	public ActionResult uploadFile(String companyId){
+//		return uploadAction(companyId);
+//	}
+//
+//	/**
+//	 * @return
+//	 */
+//	private ActionResult uploadAction(String companyId) {
+//		ArgoRequest request = (ArgoRequest)request();
+//		Upload upload = request.getUpload("fileupload");
+//		InputStream inputStream = null;
+//		try {
+//			inputStream = upload.getInputStream();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		if(inputStream != null){
+//			String fileName = upload.getFileName();
+//			LvFileEntity lvFileEntity = new LvFileEntity();
+//			lvFileEntity.setFileName(fileName);
+//			lvFileEntity.setCompanyId(companyId);
+//			Employee employee = LoginUtil.getEmployee(request);
+//			if(employee != null){
+//				lvFileEntity.setOperateUserId(employee.getEmpid() + "");
+//			}
+//			try {
+//				String objectKey = AliOSSUtils.pubObject(inputStream);
+//				lvFileEntity.setAliyunBucket(AliOSSUtils.bucketName);
+//				lvFileEntity.setAliyunFileKey(objectKey);
+//				long fileId = RSBLL.getstance().getFileService().insert(lvFileEntity);
+//				// 上传成功；
+//				JSONObject reObj = new JSONObject();
+//				reObj.put("fileId", fileId + "");
+//				reObj.put("fileName", fileName);
+//				return ActionResultUtils.renderJson(reObj);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		// 上传失败
+//		return ActionResultUtils.renderJson("");
+//	}
+	
+	@Path("download/{fileIds:[\\w-;]+}")
+	public ActionResult downloadFile(String fileIds){
+		if(StringUtils.isBlank(fileIds)){
+			return ActionResultUtils.renderJson("failed");
+		}
+		// 判断是否需要打包下载
+		List<Long> fileList = new ArrayList<Long>();
+		
+		String[] fileIdArray = StringUtils.split(fileIds, ";");
+		if(fileIdArray != null && fileIdArray.length > 0){
+			for(String fileId:fileIdArray){
+				if(StringUtils.isBlank(fileId)){
+					continue;
+				}
+				try{
+					fileList.add(Long.parseLong(fileId));
+				}catch(Exception e){
+					e.printStackTrace();
+					continue;
+				}
+			}
+		}
+		if(fileList != null && fileList.size() == 1){
+			// 单个下载
+			LvFileEntity fileEntity = getObject(fileList.get(0));
+			if(fileEntity != null){
+				byte[] byteArray = fileEntity.getFileData();
+				String maxLength = request().getParameter("maxLength");
+				if(StringUtils.isNotBlank(maxLength)){
+					// 图片压缩
+					ByteArrayOutputStream outImgStream = new ByteArrayOutputStream();
+					ByteArrayInputStream input = new ByteArrayInputStream(byteArray);
+					ImageUtil.resize(input, outImgStream, Integer.valueOf(maxLength));
+					if(outImgStream != null){
+						byteArray = outImgStream.toByteArray();
+					}
+				}
+				if(byteArray != null && byteArray.length > 0 ){
+					return ActionResultUtils.renderFile(byteArray, fileEntity.getFileName());
+				}
+			}
+		}else if(fileList.size() > 1){
+			// 打包下载
+			ByteArrayOutputStream outImgStream = new ByteArrayOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(outImgStream);
+			List<String> fileNameList = new ArrayList<String>();
+			for(long fileId:fileList){
+				LvFileEntity fileEntity = getObject(fileId);
+				String fileName = fileEntity.getFileName();
+				if(fileNameList.contains(fileName)){
+					fileName = "1" + fileName;
+				}
+				fileNameList.add(fileName);
+				try {
+					ZipEntry e = new ZipEntry(fileName);
+					e.setTime(System.currentTimeMillis());
+					zos.putNextEntry(e);
+					zos.write(fileEntity.getFileData());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(zos != null){
+				zos.setEncoding("UTF-8");
+				try {
+					zos.closeEntry();  
+					zos.close();  
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			Date date=new Date();  
+			return ActionResultUtils.renderFile(outImgStream.toByteArray(), "file" + date.getTime()+".zip");
+		}
+
+		return ActionResultUtils.renderJson("");
+	}
+	private LvFileEntity getObject(long fileId){
+		LvFileEntity lvFileEntity = null;
+		try {
+			lvFileEntity = RSBLL.getstance().getFileService().loadByIdNoData(fileId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		InputStream input = null;
+		if(lvFileEntity != null){
+			try {
+				input = AliOSSUtils.getObject(lvFileEntity.getAliyunFileKey());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		try {
+			lvFileEntity.setFileData(IOUtils.toByteArray(input));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			if(input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return lvFileEntity;
+	}
+	
+	@Path("get/info/{fileId:\\d+}")
+	public ActionResult getInfoFile(long fileId){
+		LvFileEntity lvFileEntity = null;
+		try {
+			lvFileEntity = RSBLL.getstance().getFileService().loadByIdNoData(fileId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 上传成功；
+		JSONObject reObj = new JSONObject();
+		if(lvFileEntity != null){
+			reObj.put("fileId", lvFileEntity.getId());
+			reObj.put("fileName", lvFileEntity.getFileName());
+		}
+		return ActionResultUtils.renderJson(reObj);
+	}
+}

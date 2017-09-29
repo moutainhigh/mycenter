@@ -1,0 +1,61 @@
+<div class="ser-main-box">
+<br/>
+    <div class="s-flow">  
+        <ul class="tabbtn" id="normaltab">
+            <li #if($!{cptype} == "unuseconpouselist")class="current"  #end><a #if($!{cptype} == "usedconpouselist") href="/unusecoupon.html" #end>优惠券 #if($count > 0)<span class="ico">$!{count}</span>#end</a></li>
+            <li #if($!{cptype} == "usedconpouselist")class="current"#end><a #if($!{cptype} == "unuseconpouselist") href="/usedcouponlist.html" #end)>历史记录</a></li>                          
+        </ul>
+        <div class="tabcon" id="normalcon">
+            <div class="sublist" #if($cptype == "usedconpouselist")style="display:none"#end>
+                #if($pagetool.contentlist.size() > 0)
+                <div class="cou-list">
+                    <ul>
+                       #foreach($cv in $pagetool.contentlist)
+                        <li class="blue gq">
+                            <p class="price">￥<span>$!{cv.money}</span></p>
+                            <p class="info">
+                                <span class="t1">$!{cv.counponsname}</span>
+                                <span class="t2">$!{cv.datestr}</span>
+                                <!-- <span class="t3">全平台可用</span> -->
+                                <!-- <span class="t4"><a>公司注册</a><a>代理记账</a></span> -->
+                            </p>
+                        </li>
+                        #end
+                    </ul>
+                </div>
+                #parse("views/common/fenye_order.html")
+               #else
+                <div class="no-cou">
+                    <p class="t1">您还没有优惠券~</p>
+                    <p class="t2">微信扫二维码领取优惠券，领取之后 <a href="#">刷新页面</a> 可查看我的优惠券</p>
+                    <p class="t3"><img src="/images/user/sm_ewm.png"></p>
+                </div>
+			#end
+            </div>
+
+            <div class="sublist" #if($cptype == "unuseconpouselist")style="display:none"#end>
+                <div class="tab-list">
+                    <table>
+                        <tr>
+                            <th width="25%">优惠券种类</th>
+                            <th width="25%">状态</th>
+                            <th width="25%">优惠面额</th>
+                            <th width="25%">变更时间</th>
+                        </tr>
+                        #foreach($cv in $pcontent.contentlist)
+                        <tr>
+                            <td>$!{cv.counponsname}</td>
+                            <td>$!{cv.statestr}</td>
+                            <td>$!{cv.money}</td>
+                            <td>$!{cv.changedatestr}</td>
+                        </tr>
+                        #end
+                    </table>
+                </div>
+				 #parse("views/common/fenye_order.html")
+            </div>
+
+        </div>
+    </div>
+
+</div>

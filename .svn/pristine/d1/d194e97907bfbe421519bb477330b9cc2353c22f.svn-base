@@ -1,0 +1,142 @@
+        <!-- 经营范围弹出框 -->
+        <div class="cd-popup pop_box113126" role="alert"> 
+            <div class="cd-popup-container">
+
+                <div class="jy-box">
+                    <p class="search">
+                        <label>请查找您想要的经营范围：</label>
+                        <input type="text" id="searchKey" class="w_text_280" />
+                        <a href="javascript:void(0);" class="btn">搜索</a>
+                    </p>
+                    <div class="check_on">
+                        <p class="t1">已选：</p>
+                        <div class="child_area">
+                            <div class="b_choiceArea">
+                                <ul id="scopeBusiness"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main">
+                        <div class="left"></div>
+                         <div class="right" >
+                            <div class="sh-box  type" bindShowArea="scopeBusiness" namespace="businessType">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="btn-box">
+                        <a href="javascript:void(0);" class="btn businessAreaSelect save">保存</a>
+                        <a href="javascript:void(0);" class="btn-g businessAreaSelect cancel">取消</a>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+        <!-- 弹出框 -->
+
+<script type="text/javascript">
+
+/**
+* 动态加载展示主营业务
+* @param operatingRange
+*/
+function mainBusinessRangeShow(lv2MainBus){
+	if(lv2MainBus == undefined || lv2MainBus == ""){
+		$(".jy-box .main .sh-box.type").html("");
+		return;
+	}
+	var lv2MainBusList = lv2MainBus.mainBusinessList;
+	var html = "";
+	
+	var scopeArray = new Array()
+	var num = 1;
+	$.each(lv2MainBusList, function(index, obj){
+		var scope = "";
+		if(obj.scope == undefined || obj.scope == ""){
+			scope = obj.codeName;
+		}else{
+			scope = obj.scope;
+		}
+		if(scopeArray.indexOf(scope) == -1){
+			scopeArray.push(scope);
+			html += "<p><input type=\"checkbox\"  name=\"chkItem\" value=\"" + obj.code + "\" /><span>"+ (num++) +"</span><label>" + scope + "</label></p>";
+		}
+	});
+	$(".jy-box .main .sh-box.type").html(html);
+	initOperatingRangeEvent();
+	initSelectedOperatingRange();
+}
+
+
+$(document).ready(function(){
+	var lv1MainBusList = LV.getL1MainBusiness();
+	if(lv1MainBusList == undefined || lv1MainBusList == ""){
+		return;
+	}
+	var html = "";
+	for(var i = 0; i < lv1MainBusList.length; i++ ){
+		html += "<dl class=\"l-type-list\"><dt>" + lv1MainBusList[i]["codeName"] + "</dt>";
+		var businessList = lv1MainBusList[i].businessList;			
+		if(businessList == undefined || businessList == ""){
+			html += "</dl>";
+			continue;
+		}
+		for(var j=0;j<businessList.length;j++){
+			html += "<dd data-id=\"" + businessList[j]["code"] +" \" ><a class=\"c-off\" href=\"javascript:void(0);\" >" + businessList[j]["codeName"] + "</a></dd>";
+		}
+		html += "</dl>";
+	}
+	$(".jy-box .main .left").html(html);
+	// 经营范围一级类，事件初始化
+	$(".jy-box .main .left dd").click(function(){
+        $(this).siblings().addClass("list").removeClass("type_on");
+        $(this).addClass("type_on").removeClass("list");
+        var parentCode = $(this).attr("data-id");
+        var searchKey = $("#searchKey").val();
+		var lv2MainBus = LV.getMainBusiness(parentCode, "", searchKey);
+		mainBusinessRangeShow(lv2MainBus);
+    });
+	
+	
+    // 选择主营业务 左列表点击显示子类
+    $(".left dd").hide();
+    $(".left dt").click(function(){
+        $(".left dt").css({"background-color":"#fff"})
+        $(this).css({"background-color": "#DAEBF7"});
+        $(this).parent().find('dd').removeClass("menu_chioce");
+        $(".menu_chioce").slideUp(); 
+        $(this).parent().find('dd').slideToggle();
+        $(this).parent().find('dd').addClass("menu_chioce");
+    });
+    
+    // 子类选择颜色
+    $(".l-type-list a").each(function(){
+        $(this).click(function(){
+            $(".l-type-list a").addClass("c-off").removeClass("c-on");
+            $(this).addClass("c-on").removeClass("c-off");
+        });
+    });
+
+    $(".l-type-list a").click(function(){
+        var index = $(".l-type-list a").index(this);
+        $('div.sh-box').eq(index).show().siblings().hide();
+    }); 
+	
+    $(".left dt:first").click();
+    $(".l-type-list a:first").click();
+    $(".jy-box .main .left dd:first").click();
+    
+    // 搜索按钮
+    $(".jy-box .search .btn").click(function(){
+    	var parentCode = $("a.c-on").parent().attr("data-id");
+    	var searchKey = $("#searchKey").val();
+		var lv2MainBus = LV.getMainBusiness(parentCode, "", searchKey);
+		mainBusinessRangeShow(lv2MainBus);
+    });
+})
+
+</script>
+        
+        
+        
+        

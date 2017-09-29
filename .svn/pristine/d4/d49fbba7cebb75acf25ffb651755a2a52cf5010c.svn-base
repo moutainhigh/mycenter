@@ -1,0 +1,147 @@
+
+<script type="text/javascript" src="/js/box.js"></script>
+<script type="text/javascript" src="/js/jquery.tabs.js"></script>
+<script type="text/javascript" src="/js/mywf/index.js"></script>
+<div class="ser-main-box">
+	<a href="javascript:void(0);" class="tab-ad"  ><img class="pop_box1zhuce" src="/images/user/tab_ad.jpg"></a>
+<div class="s-flow">  
+                <ul class="tabbtn" id="normaltab">
+                    <li class="free"><a>免费自助办理</a></li>
+                    <li class="vendor" ><a>付费代理办理</a></li>        
+                </ul>
+                <div class="tabcon" id="normalcon">
+	    <div class="sublist">
+	     #if($pageHisProcList && $pageHisProcList.size() > 0)
+	    <div class="tab-list r-top">
+        <table>
+            <tr>
+                <th width="12%">服务名称</th>
+                <th width="10%">服务状态</th>
+                <th width="10%">当前环节</th>
+                <th width="20%">公司名称</th>
+                <th width="12%">开始时间</th>
+                <th width="12%">完成时间</th>
+                <th width="10%" >服务详情</th>
+            </tr>
+            #set($state={"active":"进行中", "suspended":"暂停"})
+            #foreach($pageHisProc in $pageHisProcList)
+            <tr>
+                <td>$!{pageHisProc.getName()}</td>
+                <td>#if($state.get($pageHisProc.getProcessSuspensionState()))$!{state.get($pageHisProc.getProcessSuspensionState())}#else服务完成#end</td>
+                <td>$!{pageHisProc.getCurrentActivityName()}</td>
+                <td>$!{pageHisProc.getProcessVariables().get("enterpriseName")}</td>
+                <td>#if($pageHisProc.getStartTime())$!{simpleDateFormat.format($pageHisProc.getStartTime())} #end</td>
+                <td>#if($pageHisProc.getEndTime())$!{simpleDateFormat.format($pageHisProc.getEndTime())} #end</td>
+                <td><a href="/mywf/company/reg/$!{pageHisProc.getId()}" class="btn">查看</a></td>
+            </tr>
+            #end
+        </table> 
+	    </div>
+	    #parse("/views/common/fenye.html")
+	    #else
+    
+	    <div class="con_no">
+	        <div class="no-service">
+	            <p>您还没有购买的服务， 小微向您推荐的服务：
+	            	<a class="pop_box1zhuce" href="/mywf/wf/openWorkflow/bj-all-self-help-company_reg">0元注册</a> 
+	            	<a href="http://www.lvzheng.com/reg_bj.html">VIP全套服务</a>
+	            </p>
+	        </div>
+	    </div>
+	
+		#end
+	</div>
+    
+    
+    
+    <div class="sublist">
+       <div class="tab-list">
+           <table>
+               <tr>
+                   <th width="25%">服务名称</th>
+                   <th width="25%">服务状态</th>
+                   <th width="25%">开始时间</th>
+                   <th width="25%">完成时间</th>
+               </tr>
+	            #foreach($vendorServ in $pageVendorServList)
+	            <tr>
+	                <td>$!{vendorServ.get("serviceName")}</td>
+	                <td>$!{vendorServ.get("status")}</td>
+	                <td>$!{vendorServ.get("starttime")}</td>
+	                <td>$!{vendorServ.get("endtime")}</td>
+	            </tr>
+	            #end
+	        </table> 
+	    </div>
+	    #parse("/views/common/fenye.html")
+    </div>
+    </div>
+    </div>
+	</div>    
+	
+
+<!-- 确认 弹出框 -->
+<div class="cd-popup cd-box1zhuce" role="alert"> 
+    <div class="cd-popup-container pay-center">
+        <div class="pc-box">
+            <p class="title">确认信息</p>
+            <div class="pc-main">
+                <div class="box-ico">
+                    <p class="t3">您是否需要注册一个新的公司？</p>
+                </div>
+            </div>
+            <div class="pc-btn">
+                <a href="javascript:void(0);" class="btn1 allservice add submit">确认</a>
+                <a href="javascript:void(0);" class="btn2 allservice add cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</div> 
+<!-- 弹出框 -->
+
+<script type="text/javascript">
+$(document).ready(function(){
+	#if($!{tabIndex})
+		$(".vendor").addClass("current").siblings().removeClass("current");
+		var index = $(".tabbtn li").index($(".vendor"));
+		$("#normalcon").children().eq(index).siblings().css("display","none");
+	#else
+		$(".free").addClass("current").siblings().removeClass("current");
+		var index = $(".tabbtn li").index($(".free"));
+		$("#normalcon").children().eq(index).siblings().css("display","none");
+	#end
+	$(".btn1.allservice.add.submit").click(function(){
+		$(this).parents(".cd-popup[role='alert']").removeClass('is-visible');
+		window.location.href = "/mywf/wf/openWorkflow/bj-all-self-help-company_reg";
+		return true;
+	});
+	
+	$(".btn2.allservice.add.cancel").click(function(){
+		$(this).parents(".cd-popup[role='alert']").removeClass('is-visible');
+	});
+	
+	$('.pop_box1zhuce').on('click', function(event){
+		event.preventDefault();
+		$('.cd-box1zhuce').addClass('is-visible');
+	});
+	//close popup
+	$('.cd-box1zhuce').on('click', function(event){
+		if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-box1zhuce') ) {
+			event.preventDefault();
+			$(this).removeClass('is-visible');
+		}
+	});
+	//close popup when clicking the esc keyboard button
+	$(document).keyup(function(event){
+    	if(event.which=='27'){
+    		$('.cd-box1zhuce').removeClass('is-visible');
+	    }
+    });
+})
+
+</script>
+
+
+
+
+

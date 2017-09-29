@@ -1,0 +1,72 @@
+#if($pageEntity.pagecount > 1)
+<div class="page_turn" id="pageNo">
+#if($pageEntity.pageindex > 1)
+<a href="$!{pageEntity.url}" >[首页]</a>
+#set($pre = $!pageEntity.pageindex - 1)
+<a href="$!{pageEntity.url}/?pageno=$!{pre}" >[上一页]</a>
+#end
+#if($pageEntity.pagecount < 10)
+	#foreach($foo in [1..$!{pageEntity.pagecount}])
+		#if($foo == $pageEntity.pageindex)
+		<a class="current">$!foo</a>
+		#else
+		<a href="$!{pageEntity.url}/?pageno=$!{foo}">$!foo</a>
+		#end
+	#end
+#elseif($pageEntity.pagecount >= 10)
+
+	#if($!pageEntity.pageindex < 6)
+		#foreach($foo in [1..6])
+			#if($foo == $pageEntity.pageindex)
+			<a class="current">$!foo</a>
+			#else
+			<a href="$!{pageEntity.url}/?pageno=$!{foo}">$!foo</a>
+			#end
+		#end
+		<a href="$!{pageEntity.url}/?pageno=7">7</a>
+		<a href="$!{pageEntity.url}/?pageno=8">8</a>
+		..
+		#set($preb = $pageEntity.pagecount - 3)
+		#foreach($ff in [$preb..$pageEntity.pagecount])
+			<a href="$!{pageEntity.url}/?pageno=$!{ff}">$!ff</a>
+		#end
+	#elseif($pageEntity.pagecount - $pageEntity.pageindex < 5)
+		<a href="$!{pageEntity.url}/">1</a>
+		<a href="$!{pageEntity.url}/?pageno=2">2</a>
+		<a href="$!{pageEntity.url}/?pageno=3">3</a>
+		..
+		#set($preb = $pageEntity.pagecount - 6)
+		#foreach($too in [$preb..$pageEntity.pagecount])
+			#if($too == $pageEntity.pageindex)
+			<a class="current">$!too</a>
+			#else
+			<a href="$!{pageEntity.url}/?pageno=$!{too}">$!too</a>
+			#end
+		#end
+	#else
+		<a href="$!{pageEntity.url}/">1</a>
+		<a href="$!{pageEntity.url}/?pageno=2">2</a>
+		..
+		#set($mb = $pageEntity.pageindex - 2)
+		#set($med = $pageEntity.pageindex + 2)
+		#foreach($mn in [$mb..$med])
+			#if($mn == $pageEntity.pageindex)
+			<a class="current">$!mn</a>
+			#else
+			<a href="$!{pageEntity.url}/?pageno=$!{mn}">$!mn</a>
+			#end
+		#end
+		..
+		#set($em1 = $pageEntity.pagecount - 1)
+		#foreach($moo in [$em1..$pageEntity.pagecount])
+		<a href="$!{pageEntity.url}/?pageno=$!{moo}">$!moo</a>
+		#end
+	#end
+#end
+#if($pageEntity.pagecount > $pageEntity.pageindex)
+#set($next = $!pageEntity.pageindex + 1)
+<a href="$!{pageEntity.url}/?pageno=$!{next}" >[下一页]</a>
+<a href="$!{pageEntity.url}/?pageno=$!{pageEntity.pagecount}" >[末页]</a>
+#end
+</div>
+#end

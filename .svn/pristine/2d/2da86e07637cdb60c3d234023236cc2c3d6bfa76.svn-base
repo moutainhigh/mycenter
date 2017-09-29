@@ -1,0 +1,78 @@
+        <div class="named-box">
+
+            <div class="l-named">
+				#parse("views/mywf/company-reg/common/internet-info.html")
+                <div class="dj-steps">
+                    <a href="javascript:void(0);" class="s1-on">1.填写设立材料</a>
+                    <a href="javascript:void(0);" class="s2-un">2.审核通知</a>
+                    <a href="javascript:void(0);" class="s3-un">3.下载网登材料</a>
+                </div>
+
+                <div class="dj-flow">
+                    <p class="f1-box">
+                        <a href="javascript:void(0);" class="on">企业基本信息</a>
+                        <a href="javascript:void(0);">完善股东信息</a>
+                        <a href="javascript:void(0);">注册地址</a>
+                        <a href="javascript:void(0);">补充信息</a>
+                    </p>
+                </div>
+                <div class="dj-online">
+                    <div class="ts">
+                        <label>小微提示：</label>
+                        <p>请准确填写以下表单部分，其中的内容将会记载于您的营业执照中。</p>
+                    </div>
+					<div class="box">
+                        <label> 公司名称：</label>
+                        <span class="w-text">$!{name}</span>
+                    </div>
+                    
+                    <div class="box">
+                        <label><i>*</i> 注册年限：</label>
+                        <div class="w-text">
+                        	<input type="hidden" placeholder="注册年限" id="doBusinessDuration" data-validate="required:true;int:true;" value="$!{doBusinessDuration}" data-select="none" data-info="enterprise:main" />
+                            <div class="n-select w-220" name="n-select">
+                                <input class="n-val" type="text" value="请选择年限" readonly>
+                                <ul>
+                                    <li data-value="5">5年</li>
+                                    <li data-value="10">10年</li>
+                                    <li data-value="20">20年</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- <div class="box">
+                        <label><i>*</i> 注册年限：</label>
+                        <div class="w-text t-hover">
+                            <input class="w-text" type="text" placeholder="注册年限" id="doBusinessDuration" value="$!{doBusinessDuration}" data-validate="required:true;int:true;" data-info="enterprise:main" ><i>年</i>
+                            <p class="tag-ceng"><i></i><span>经营期限由股东确定，输入具体年限即可。</span></p>
+                        </div>
+                    </div> -->
+                    
+                    
+                    <div class="box">
+                        <label><i>*</i> 经营范围：</label>
+                        <div class="con">
+                            <p class="ts-text">请根据您希望经营的方向，选择合适的经营范围，经营范围的核定政策时有改变，最终核定结果以登记机关核定为准</p>
+                            <p class="fw-text">请查找您想要的经营范围：<a href="javascript:void(0);" class="btn pop_box113126" id="operatingRangeSelectBtn" >增加</a></p>
+                            <p class="yx-area">
+                            	<span class="yx">已选：</span>
+                            	<textarea id="operatingRange" placeholder="经营范围" data-validate="required:true;" data-info="enterprise:main" >$!{operatingRange}</textarea>
+							</p>
+                        </div>
+                        <!-- <p class="b-text">涉及到许可的项目，请填写许可信息。如果需要修改许可经营范围，可以通过修改【许可经营项目】信息中的【对应许可经营范围】实现。</p> -->
+                    </div>
+                    <div class="btn-box">
+                        <a href="javascript:void(0);" class="btn basinfo save">保存</a>
+                        <a href="javascript:void(0);" class="btn basinfo submit">下一步</a>
+                    </div>
+                </div>
+                
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			#parse("views/mywf/company-reg/common/businessAreaSelect.html")
+        </div>

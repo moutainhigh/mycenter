@@ -1,0 +1,9 @@
+log4j.additivity.mycenterweb=false
+log4j.logger.mycenterweb=INFO,mycenterweb
+log4j.appender.mycenterweb=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.mycenterweb.File=/opt/gaea/logs/webview/mycenter.access.log
+log4j.appender.mycenterweb.Append=true
+log4j.appender.mycenterweb.Threshold=INFO
+log4j.appender.mycenterweb.layout=org.apache.log4j.PatternLayout
+log4j.appender.mycenterweb.layout.ConversionPattern=%m%n
+

@@ -1,0 +1,54 @@
+<div class="tab">
+         <table>
+             <tr>
+                 <th width="90px">序号</th>
+                 <th width="300px">地税报到所需材料</th>
+                 <th>注意事项</th>
+             </tr>
+             <tr>
+                 <td class="one">1</td>
+                 <td class="two">《营业执照副本》</td>
+                 <td>需准备营业执照副本原件</td>
+             </tr>
+             <tr>
+                 <td class="one">2</td>
+                 <td class="two">《企业公章》</td>
+                 <td>现场需要填写申请表格并加盖公章</td>
+             </tr>
+             <tr>
+                 <td class="one">3</td>
+                 <td class="two">《法定代表人身份证》</td>
+                 <td>法定代表人身份证复印件</td>
+             </tr>
+             <tr>
+                 <td class="one">4</td>
+                 <td class="two">《财务负责人身份证》</td>
+                 <td>财务负责人身份证复印件</td>
+             </tr>
+             <tr>
+                 <td class="one">5</td>
+                 <td class="two">《企业登记住所房屋租赁协议》</td>
+                 <td>协议原件</td>
+             </tr>
+             <tr>
+                 <td class="one">6</td>
+                 <td class="two">租赁房屋发票</td>
+                 <td>发票原件</td>
+             </tr>
+             <tr>
+                 <td class="one">7</td>
+                 <td class="two">《企业登记住所房屋所有权证》</td>
+                 <td>企业登记住所房屋所有权证复印件<br>（视主管地税所要求提供）</td>
+             </tr>
+             <tr>
+                 <td class="one">8</td>
+                 <td class="two">经办人身份证</td>
+                 <td>居民身份证原件</td>
+             </tr>
+             <tr>
+                 <td class="one">9</td>
+                 <td class="two">《其他必要材料》</td>
+                 <td class="matter">1、法定代表人和财务负责人的联系方式<br>2、国税部门要求提供或填写的其他必要材料与表格</td>
+             </tr>
+         </table>
+</div>

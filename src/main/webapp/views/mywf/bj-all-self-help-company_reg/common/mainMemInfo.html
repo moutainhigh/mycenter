@@ -1,0 +1,126 @@
+            <!-- 添加主要人员信息 董事 弹出框 -->
+            <div class="cd-popup pop_box112" role="alert" style="display: none;" data-info="partnerInfo" data-roleType="" > 
+                <div class="cd-popup-container">
+                    <div class="gd-box">
+                        <p class="title">添加主要人员信息</p>
+                        <div class="gd-list">
+                            <table>
+                            	<input type="hidden" id="id" data-info="partnerInfo:main" />
+                                <tr>
+                                    <th><i>＊</i>姓名：</th>
+                                    <td>
+                                        <div class="td-box" >
+                                            <input class="w-text w-180" type="text" placeholder="姓名" id="name" data-validate="required:true;" data-info="partnerInfo:main" >
+                                            <div id="naturalPartSelect">
+	                                            <div class="td-ul">
+	                                                <ul>
+								                        #set($partnerList = $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+							                        	#foreach($partner in $partnerList)
+							                        	<li data-id="$!{partner.get('id')}" data-type="$!{partner.get('roleType')}" >$!{partner.get('name')}</li>
+							                        	#end
+	                                                </ul>
+	                                            </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><i>＊</i>证件类型：</th>
+                                    <td>
+                                        <input type="hidden" placeholder="证件类型" id="idType" value="1" data-info="partnerInfo:main" />
+                                    	中华人民共和国居民身份证
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>证件号码：</th>
+                                    <td>
+                                    	<input type="text" class="w-text w-180" id="idNum" placeholder="证件号码" data-validate="required:true;identity:true" data-info="partnerInfo:main" />
+                                    </td>
+                                    <th><i>＊</i>性别：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="性别" id="sex" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+                                    	<div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('sex')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>户籍登记地址：</th>
+                                    <td colspan="3">
+                                    	<div>
+	                                    	<input type="hidden" placeholder="户籍登记地址" id="residenceProv" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="请选择..." readonly>
+	                                            <ul>
+	                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('residenceProv')})
+													<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+													#end
+	                                            </ul>
+	                                        </div>
+                                        </div>
+                                        <div>
+	                                        <input type="hidden" placeholder="户籍登记地址" id="residenceCity" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="" readonly>
+	                                            <ul></ul>
+	                                        </div>
+                                        </div>
+                                        <input type="text" placeholder="户籍登记地址" class="w-text w-260" id="residenceAddress" data-validate="required:true;" data-info="partnerInfo:main" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>国别和地区：</th>
+                                    <td>
+                                        <input type="hidden" placeholder="国籍" id="contry" value="156" data-info="partnerInfo:main" />
+                                    	中华人民共和国
+                                    </td>
+                                    <th><i>＊</i>职务：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="职务" id="roleType" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+                                        <div class="n-select w-160" name="n-select" />
+                                            <input class="n-val" type="text" value="请选择"  readonly>
+                                            <ul></ul>
+                                        </div>
+                                        
+                                        <input type="hidden" placeholder="产生方式" id="posBrForm" data-validate="required:true;" data-select="none" data-info="partnerInfo:ext" />
+                                		<input type="hidden" placeholder="任职期限" id="offYears" data-validate="required:true;" data-select="none" data-info="partnerInfo:ext" />
+                                
+                                    </td>
+                                </tr>
+                                
+                                <!-- <tr>
+                                    <th><i>＊</i>产生方式：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="产生方式" id="posBrForm" data-validate="required:true;" data-select="none" data-info="partnerInfo:ext" />
+                                        <div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul></ul>
+                                        </div>
+                                    </td>
+                                    <th><i>＊</i>任职期限：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="任职期限" id="offYears" data-validate="required:true;" data-select="none" data-info="partnerInfo:ext" />
+                                        <div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                            	#foreach($index in [1..3])
+												<li data-value="$!{index}" >$!{index}年</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr> -->
+                            </table>
+                        </div>
+                        <div class="btn-box">
+                            <a href="javascript:void(0);" class="btn meminfo save">保存</a>
+                            <a href="javascript:void(0);" class="btn-g meminfo concal" >取消</a>
+<!--                             <a href="javascript:void(0);" class="btn meminfo continue">保存并继续</a>
+ -->                        </div>
+                    </div>
+                </div> 
+            </div> 
+            <!-- 弹出框 -->

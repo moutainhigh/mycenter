@@ -1,0 +1,203 @@
+
+
+<div class="ser-main-box">
+    <div class="crumbs">
+        <a class="crumb-link" href="/">首页</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="">个人中心</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="">我的主页</a>
+        <i class="crumb-line">></i>
+        <a class="crumb-link" href="">优惠券</a>
+    </div>
+
+    <div class="s-flow">
+        <ul class="tabbtn" id="normaltab">
+            <li #if($!{cptype} == "work")class="current"  #end><a href="/unusepreferential.html" >有效券 #if($count > 0)<span class="ico">$!{count}</span>#end</a></li>
+            <li #if($!{cptype} == "used")class="current"  #end><a href="/usedpreferential.html" >已使用</a></li>
+            <li #if($!{cptype} == "over")class="current"  #end><a href="/overpreferential.html" >已过期</a></li>
+        </ul>
+        <div class="tabcon" id="normalcon">
+            <div class="sublist" #if($cptype != "work")style="display:none"#end>
+                #if($pagetool.contentlist.size() > 0)
+                <div class="coupon-box">
+
+                    #foreach($cv in $pagetool.contentlist)
+                    <div class="list">
+                        #if($cv.type == 0)
+                        <div class="cou-info red">
+                            #if($!{cv.invalidLastDate} > 0 && $!{cv.invalidLastDate} <= 5)
+                            <p class="time">
+                                <span class="t2">仅剩$!{cv.invalidLastDate}天过期</span>
+                            </p>
+                            #end
+                            #if($!{cv.invalidLastDate} == 0)
+                            <p class="time">
+                                <span class="t2">今天过期</span>
+                            </p>
+                            #end
+                            <p class="type">满减券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="cond">[ 满${cv.limit}可用 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #elseif($cv.type == 2)
+                        <div class="cou-info blue">
+                            #if($!{cv.invalidLastDate} > 0 && $!{cv.invalidLastDate} <= 5)
+                            <p class="time">
+                                <span class="t2">仅剩$!{cv.invalidLastDate}天过期</span>
+                            </p>
+                            #end
+                            #if($!{cv.invalidLastDate} == 0)
+                            <p class="time">
+                                <span class="t2">今天过期</span>
+                            </p>
+                            #end
+                            <p class="type">折扣券</p>
+                            <p class="money">$!{cv.quotaName}折</p>
+                            <p class="cond">[ 最高抵扣${cv.limit}元 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #else
+                        <div class="cou-info purple">
+                             #if($!{cv.invalidLastDate} > 0 && $!{cv.invalidLastDate} <= 5)
+                            <p class="time">
+                                <span class="t2">仅剩$!{cv.invalidLastDate}天过期</span>
+                            </p>
+                            #end
+                            #if($!{cv.invalidLastDate} == 0)
+                            <p class="time">
+                                <span class="t2">今天过期</span>
+                            </p>
+                            #end
+                            <p class="type">抵用券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #end
+                        <div class="cou-text">
+                            <p class="t1"><label>适用商品：</label><span title="$!{cv.suitProduct}">$!{cv.suitProduct}</span></p>
+                            <p class="t1"><label>适用区域：</label><span title="$!{cv.suitArea}">$!{cv.suitArea}</span></p>
+                        </div>
+                        <div class="cou-btn">
+                        
+                            <a href="http://www.lvzheng.com/" class="sy-btn">去使用</a>
+                        </div>
+                    </div>
+                    #end
+
+                </div>
+                #parse("views/common/fenye_order.html")
+                #else
+                <!--  <div class="no-cou">
+                     <p class="t1">您还没有优惠券~</p>
+                     <p class="t2">微信扫二维码领取优惠券，领取之后 <a href="#">刷新页面</a> 可查看我的优惠券</p>
+                     <p class="t3"><img src="/images/user/sm_ewm.png"></p>
+                 </div> -->
+                #end
+            </div>
+            <div class="sublist" #if($cptype != "used")style="display:none"#end >
+                #if($pagetool.contentlist.size() > 0)
+                <div class="coupon-box">
+
+                    #foreach($cv in $pagetool.contentlist)
+                    <div class="list">
+                        #if($cv.type == 0)
+                        <div class="cou-info gray">
+                            <p class="type">满减券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="cond">[ 满${cv.limit}可用 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #elseif($cv.type == 2)
+                        <div class="cou-info gray">
+                            <p class="type">折扣券</p>
+                            <p class="money">$!{cv.quotaName}折</p>
+                            <p class="cond">[ 最高抵扣${cv.limit}元 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #else
+                        <div class="cou-info gray">
+                            <p class="type">抵用券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #end
+                        <div class="cou-text">
+                            <p class="t1"><label>订单编号：</label><span>${cv.payid}</span></p>
+                            <p class="t1"><label>使用日期：</label><span>$!{simpleDateFormat.format($cv.modifyDate)}</span></p>
+                        </div>
+                        <div class="ysy"></div>
+                    </div>
+                    #end
+                </div>
+
+                #parse("views/common/fenye_order.html")
+                #end
+                <!-- <div class="coupon-box">
+                    <div class="list">
+                        <div class="cou-info gray">
+                            #if($!{cv.betweenDay} <= 3)
+                            <p class="time">
+                                <span class="t2">仅剩$!{cv.betweenDay}天过期</span>
+                            </p>
+                            #end
+                            <p class="type">抵用券</p>
+                            <p class="money">￥100</p>
+                            <p class="date">2016-04-05--2016-04-25</p>
+                        </div>
+                        <div class="cou-text">
+                            <p class="t1"><label>订单编号：</label><span>18993482838488</span></p>
+                            <p class="t1"><label>使用日期：</label><span>2015-02-04</span></p>
+                        </div>
+                        <div class="ysy"></div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="sublist" #if($cptype != "over")style="display:none"#end>
+                #if($pagetool.contentlist.size() > 0)
+                <div class="coupon-box">
+
+                    #foreach($cv in $pagetool.contentlist)
+                    <div class="list">
+                        #if($cv.type == 0)
+                        <div class="cou-info gray">
+                            <p class="type">满减券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="cond">[ 满${cv.limit}可用 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #elseif($cv.type == 2)
+                        <div class="cou-info gray">
+                            <p class="type">折扣券</p>
+                            <p class="money">$!{cv.quotaName}折</p>
+                            <p class="cond">[ 最高抵扣${cv.limit}元 ]</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #else
+                        <div class="cou-info gray">
+                            <p class="type">抵用券</p>
+                            <p class="money">￥${cv.quota}</p>
+                            <p class="date">$!{simpleDateFormat.format($cv.effectDate)}--$!{simpleDateFormat.format($cv.invalidDate)}</p>
+                        </div>
+                        #end
+                        <div class="cou-text">
+                            <p class="t1"><label>适用商品：</label><span title="$!{cv.suitProduct}">$!{cv.suitProduct}</span></p>
+                            <p class="t1"><label>适用区域：</label><span title="$!{cv.suitArea}">$!{cv.suitArea}</span></p>
+                        </div>
+                        <div class="ygq"></div>
+                    </div>
+                    #end
+
+                </div>
+
+                #parse("views/common/fenye_order.html")
+                #end
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,179 @@
+<div class="c-main-box">
+   <div class="box">
+       <p class="title">
+           <span class="t1">账户信息</span>
+           <a class="t2" href="/myaccount/index.html" >全部信息</a>
+       </p>
+       <div class="con1">
+           <a href="/myaccount/index.html" class="user">$!{loginVo.userphone}</a>
+           <!-- <a href="" class="vip"><span class="ceng"><b>购买全套服务即可享受VIP，可点击进入</b><i></i></span></a> -->
+           <!-- <a href="" class="vip-on"></a> 已成为vip状态-->
+           <a href="/myaccount/index.html" $!{wxClass} title="微信"></a>
+           <a href="/myaccount/index.html" $!{phoneClass} title="手机"></a>
+          <!--  <a href="/myaccount/index.html" title="邮箱"></a> -->
+           <a href="" class="line"></a>
+           #if($!{couponCount})
+           <a href="/unusepreferential.html" class="quan">优惠券 <span>$!{couponCount}张</span></a>
+           #end
+           <!-- <a href="" class="num"><span class="s1">300元</span> <i></i><span class="s2">30元即将到期</span></a> -->
+
+       </div>
+   </div>
+   #if($!{doingServerList.size()} > 0)
+	   <div class="box">
+	       <p class="title">
+	           <span class="t1">进行中的服务</span>
+	           <a class="t2" href="/mywf/index.html" >全部服务</a>
+	       </p>
+	       <div class="con2">
+	           <table>
+	               <tr>
+	                   <th width="20%">服务内容</th>
+	                   <th width="20%">开始时间</th>
+	                   <th width="15%">当前环节</th>
+	                   <th width="30%">公司名称</th>
+	                   <th width="15%">服务详情</th>
+	               </tr>
+	           </table> 
+	           <!-- <a href="http://www.baidu.com" target="_blank">
+	               <table class="list">   
+	                   <tr>
+	                       <td width="20%">公司注册</td>
+	                       <td width="20%">2015-12-04</td>
+	                       <td width="15%"><span class="hm">核名</span></td>
+	                       <td width="30%">北京商贸北京商贸北京</td>
+	                       <td width="15%"><a href="" class="btn">查看</a></td>
+	                   </tr>
+	               </table> 
+	           </a> -->
+	           #foreach($doingServer in $!{doingServerList})
+	           		#if($doingServer.getProcessVariables().get("isAgencyProc"))<!-- 代办任务 -->
+	           			<a href="/mywf/getTaskDetail.html?procInstId=$!{doingServer.getId()}&serviceName=$!{doingServer.getProcessVariables().get('serviceName')}&proDefId=$!{doingServer.getProcessDefinitionId()}#if($!{doingServer.getDeleteReason()})&deleteReasonFlag=true#end">
+			               <table class="list">   
+			                   <tr>
+			                       <td width="20%">$!{doingServer.getProcessVariables().get("serviceName")}</td>
+			                       <td width="20%">$!{doingServer.getProcessVariables().get("handleStartTime")}</td>
+			                       <td width="15%"><span class="hm">$!{doingServer.getProcessVariables().get("curHandleNodeText")}</span></td>
+			                       <td width="30%">$!{doingServer.getProcessVariables().get("enterpriseName")}</td>
+			                       <td width="15%"><a href="/mywf/getTaskDetail.html?procInstId=$!{doingServer.getId()}&serviceName=$!{doingServer.getProcessVariables().get('serviceName')}&proDefId=$!{doingServer.getProcessDefinitionId()}#if($!{doingServer.getDeleteReason()})&deleteReasonFlag=true#end" class="btn">查看</a></td>
+			                   </tr>
+			               </table> 
+			            </a>
+	           		#else
+	           			<a href="/mywf/company/reg/$!{doingServer.getId()}">
+			               <table class="list">   
+			                   <tr>
+			                       <td width="20%">$!{doingServer.name}</td>
+			                       <td width="20%">#if($doingServer.getStartTime())$!{simpleDateFormat.format($doingServer.getStartTime())} #end</td>
+			                       <td width="15%"><span class="hm">$!{doingServer.getCurrentActivityName()}</span></td>
+			                       <td width="30%">$!{doingServer.getProcessVariables().get("enterpriseName")}</td>
+			                       <td width="15%"><a href="/mywf/company/reg/$!{doingServer.getId()}" class="btn">查看</a></td>
+			                   </tr>
+			               </table> 
+			            </a>
+	           		#end
+	            
+	           #end
+	           
+	       </div>
+	   </div>
+   #else
+	   <div class="box">
+	       <p class="title">
+	           <span class="t1">进行中的服务</span>
+	       </p>
+	       #parse("views/common/noservice.html")
+	   </div>
+   #end
+   
+   #if($!{userUnpaylist})
+	   <div class="box">
+	       <p class="title">
+	           <span class="t1">待支付订单</span>
+	           <a class="t2" href="/order/unpayorder.html">全部订单</a>
+	       </p>
+	       <div class="con2">
+	           <table>
+	               <tr>
+	                   <th width="21%">订单编号</th>
+	                   <th width="21%">下单时间</th>
+	                   <th width="19%">商品名称</th>
+	                   <th width="18%">订单价格</th>
+	                   <th>操作</th>
+	               </tr>
+	           </table> 
+	           #foreach($userPayList in $!{userUnpaylist})
+		            <a href="/orderdetail/$!{userPayList.payid}"> 
+		               <table class="list">   
+		                   <tr>
+		                       <td width="21%">$!{userPayList.payid}</td>
+		                       <td width="21%">$!{userPayList.addDatestr}</td>
+		                       <td width="19%">$!{userPayList.servicestr}</td>
+		                       <td width="18%"><span class="price">$!{userPayList.orderpric}</span>元</td>
+		                       <td><a href="http://pay.lvzheng.com/reqpay/$!{userPayList.payid}" class="btn">去支付</a><a href="/orderdetail/$!{userPayList.payid}" class="xqbtn">详情</a></td>
+		                   </tr>
+		               </table> 
+		            </a> 
+	           #end
+	       </div>
+	   </div>
+   #end
+   #if($!{messageList.size()} > 0)
+   <div class="box">
+       <p class="title">
+           <span class="t1">最新消息</span>
+           <a class="t2" href="/messagecenter/index.html">全部消息</a>
+       </p>
+       <div class="con3">
+           <ul>
+	           #foreach($message in $!{messageList})
+	               <li #if($!{message.readstate} == 0)class="dot"#end data-value="$!{message.mailid}">
+	                   <p class="t1">$!{message.title}</p>
+	                    <p class="t2">$!{message.content}
+			                #if($!{message.contentmore})
+			                <span class="morediv" id="morediv">$!{message.contentmore}</span><a class="more" >展开</a>
+			                #end
+			                </p>
+	                   <p class="t3">$!{message.addtime}</p>
+	               </li>
+	            
+	           #end
+           </ul>
+       </div>
+   </div>
+   #end
+   
+
+   <!-- <div class="box">
+   	热销套餐
+    	#parse("views/common/hotmeal.html")
+   </div> -->
+</div>
+	
+<div class="r-main-box">
+	#if($!{doingServerList})
+		#if($!{employerE})
+		<!-- 人员信息 -->
+	    <div class="card-box">
+	   	 #parse("views/common/personcard.html")
+	    </div>
+		#end
+	#end
+
+<!-- 还可以办理的推荐服务 -->
+    <div class="other">
+    	#parse("views/common/otherServer.html")
+    </div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	$(".con3").find("li").on("click",function(){
+		var messageId = $(this).attr("data-value");
+		$(this).removeClass();
+		jQuery.ajax({
+			url:"/mycenter/readMessage/"+ messageId,
+			method:"post"
+		});
+	});
+});
+</script>

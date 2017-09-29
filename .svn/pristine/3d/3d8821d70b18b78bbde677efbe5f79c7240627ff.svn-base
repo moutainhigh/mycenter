@@ -1,0 +1,104 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                <div class="hm-info">
+                    <p class="name">国税报到</p>
+                    <p class="text">按照税务管理部门规定，企业在取得营业资质并依法纳税前，需要通过税务报到来确认并激活纳税资格。</p>
+                    <p class="text">这也意味着企业完成税务报到前无法申请税控机与发票。</p>
+                    <p class="text-blue">国税报到可能需要以下几个步骤：</p>
+                    <p class="text">1、确认本企业已取得企业银行开户许可证。</p>
+                    <p class="text">2、确认本公司所属国税所。</p>
+                    <p class="text">3、准备国税报到材料（详见材料清单）。</p>
+                    <p class="text">4、到国税所办理税务报到事宜，报到当时完成。</p>
+                </div>
+
+                <div class="dj-online r-top">
+	               	<div class="ts">
+	               		<label>小微提示：</label><p>如何确认本企业的国税主管所——根据企业登记住所确认企业所属街道办事处或乡人民政府，登陆相应国家税务局官方网站的“税务厅所”查询本企业所属街乡所对应的国税主管所。</p>
+	               	</div>
+                    <div class="tab">
+                            <table>
+                                <tr>
+                                    <th width="90px">序号</th>
+                                    <th width="300px">国税报到所需材料</th>
+                                    <th>注意事项</th>
+                                </tr>
+                                <tr>
+                                    <td class="one">1</td>
+                                    <td class="two">《营业执照副本》</td>
+                                    <td>需准备营业执照副本原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">2</td>
+                                    <td class="two">《企业公章》</td>
+                                    <td>现场需要填写申请表格并加盖公章</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">3</td>
+                                    <td class="two">《企业章程》</td>
+                                    <td>与营业执照申请法定文书中的章程一致即可</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">4</td>
+                                    <td class="two">《法定代表人身份证》</td>
+                                    <td>法定代表人身份证原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">5</td>
+                                    <td class="two">《财务负责人身份证》</td>
+                                    <td>财务负责人身份证复印件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">6</td>
+                                    <td class="two">《银行开户许可证原件》</td>
+                                    <td>企业设立银行基本账户的银行开户许可证原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">7</td>
+                                    <td class="two">《税款代扣代缴三方协议》</td>
+                                    <td class="matter">1、三方协议第一联提交税务所<br>2、税务部门、企业基本户银行、企业均需加盖公章</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">8</td>
+                                    <td class="two">《经办人身份证原件》</td>
+                                    <td>办理国税报到的办理人需携带身份证原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">9</td>
+                                    <td class="two">《其他必要材料》</td>
+                                    <td class="matter">1、法定代表人和财务负责人的联系方式<br>2、国税部门要求提供或填写的其他必要材料与表格</td>
+                                </tr>
+                            </table>
+                    </div>
+                    
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn national submit">我已完成</a></p>
+                    </div>
+                    #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                    
+                </div>
+                
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+		</div>
+<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+<script type="text/javascript" >
+$(document).ready(function(){
+	/**
+	 * 国税报到 - 完成
+	 */
+	$(".btn.national.submit").click(function(){
+		LV.wfSignlReceiveTask();
+		window.location.href = "/mywf/company/reg/" + procInstId;
+		return true;
+	});
+})
+
+</script> 
+		
+		

@@ -1,0 +1,180 @@
+<div class="rides-cs" id="ridefloat">
+<div class="floatL">
+            <a class="open-btn" style="top: 20px; display: none;" name="showbuyceng" href="javascript:void(0);">展开</a>
+            <a class="colse-btn" style="top: 20px;" href="javascript:void(0);" name="getinbuyceng">收缩</a>
+        </div>
+        
+        
+<div class="floatR view-box" style="display: block;"><!-- 右侧购买层1 -->
+<form id="zixunbuy" method="post" action="/agentorder">
+
+<input type="hidden" name="activityid" id="activityid" value="$!{activityid}"/>
+<input type="hidden" name="processid" id="processid" value="$!{processid}"/>
+<input type="hidden" name="buzid" id="buzid" value="$!{buzid}"/>
+<input type="hidden" name="selleridstr" id="selleridinput" value="$!{sellerid}"/>
+<input type="hidden" name="productid" id="buydivproductid" value="$!{product.product_id}"/>
+            <div class="title-box">
+                <span class="t1">购买商品</span>
+                <span class="t2">购买<i>&gt;</i>支付<i>&gt;</i>服务</span>
+            </div>
+            <div class="buy-box">
+                <div class="list">
+                    <span class="t1">商品名称</span>
+                    <span class="t2">$!{product.sell_product_name}</span>
+                </div>
+                 <div class="list">
+                    <span class="t1">金额</span>
+                    <span class="t2 red" name="pricespan">￥$!{product.sell_overprice}</span>
+                    <input type="hidden" name="sigleoverprice" value="$!{product.sell_overprice}" id="sigleoverprice"/>
+                </div>
+                <div class="list">
+                    <div class="t1">服务区域</div>
+                    <div class="t2">
+                        <div class="z-area">
+                            <p class="city">北京</p>
+                            <div class="n-select cw-60" name="n-selectzx">
+                                <input class="n-val" name="buylocalchoice" type="text" value="朝阳区" readonly="">
+                                <ul name='localul' style="display: none;">
+                                #foreach($local in $!locallist)
+                                    <li  data-value="$!{local.areaid}">$!{local.name}</li>
+                                   #end 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="list">
+                    <div class="t1">优惠券</div>
+                    <div class="t2">
+                        <div class="yh-area">
+  							<input type="hidden" name="ucid" id="ucid" value="$!{uclistfist.tucid}"/>
+                            <div class="n-select cw-120" name="n-selectzx">
+                                <input class="n-val" type="text" name="uname" id="sigleusercounpseinput" #if($!{uclist.size()} > 0) data-cmoney="$!{uclistfist.cmoney}" value="￥$!{uclistfist.cmoney}" #else data-cmoney="$!{uclistfist.cmoney}" value="暂无优惠券" #end readonly="">
+                                <ul style="display: none;" name='counps'>
+                                   #foreach($userCoupons in $!{uclist})
+                                		<li data-value="$!{userCoupons.tucid}" data-cmoney="$!{userCoupons.cmoney}" >￥$!{userCoupons.cmoney}</li>
+                                	#end
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+           
+                <div class="buy-box">
+				    <div class="list">
+				        <span class="t1">应收金额</span>
+				       
+				        <span class="t2 red" id="overprice">￥$!{neepay}</span>
+				    </div>
+				</div>
+           
+            <div class="buy-btn pop_box1">
+                <a href="javascript:void(0);" name="zxbuybtnsubmit">确认购买</a>
+            </div>
+            </form>
+        </div>
+        <script type="text/javascript">
+/*         
+        $("input[name='buylocalchoice']").click(function(){
+        	choicelocal(this);
+        });
+        $("ul[name='localul'] li").each(function(){
+    		$(this).click(function(){
+    			var lid = clicklocal(this);
+    			var url = "/querysellerid/"+$("#buydivproductid").val()+"/"+lid;
+    			ajreq(url,"",queryprice);
+    		});
+    	});
+        
+        $("input[name='uname']").click(function(){
+        	choicelocal(this);
+        });
+        $("ul[name='counps'] li").each(function(){
+    		$(this).click(function(){
+    			var lid = clicklocal(this);
+    			var a = $(this).html();
+    			var datavalue = $(this).attr("data-value");
+    		    $("#sigleusercounpseinput").val(a);//显示选择的区域名
+    		    $("#sigleusercounpseinput").attr("data-cmoney",$(this).attr("data-cmoney"));//显示选择的区域名
+    		    
+    		    $(this).parents('[name="n-selectzx"]').prev().val(datavalue);
+    		    
+    		    countshoudprice();
+    		});
+    	});
+         */
+        //---------------------前端样式---
+        var countshoudprice = function(){
+        	var op = $("#sigleoverprice").val() - $("#sigleusercounpseinput").attr("data-cmoney");
+		    if(op <= 0){
+		    	 op = $("#sigleoverprice").val();
+		    }
+		    $("#overprice").text("￥"+parseFloat(op).toFixed(2));
+        }
+        $('[name="n-selectzx"]').click(function(e){
+      	  $('[name="n-selectzx"]').find('ul').hide();
+      	  $(this).find('ul').show();
+      	  e.stopPropagation();
+     	});
+     	$('[name="n-selectzx"] li').hover(function(e){
+     	  $(this).toggleClass('on');
+     	  e.stopPropagation();
+     	});
+     	$('[name="n-selectzx"] li').click(function(e){
+     	  var val = $(this).text();
+     	  var dataVal = $(this).attr("data-value");
+     	  $(this).parents('[name="n-selectzx"]').find('input').val(val);
+     	  
+     	  var ulname=$(this).parents('[name="n-selectzx"]').find('ul').attr("name");
+     	  if( ulname == 'localul'){
+     		 var url = "/querysellerid/"+$("#buydivproductid").val()+"/"+dataVal;
+ 			 ajreq(url,"",queryprice);
+     	  }else{
+     		 $(this).parents('[name="n-selectzx"]').prev().val(dataVal);
+     	  }
+     	  
+     	 
+     	  $('[name="n-selectzx"] ul').hide();
+     	  e.stopPropagation();
+     	});
+     	$(document).click(function(){
+     	  $('[name="n-selectzx"] ul').hide();
+     	});
+     	//-----------------------------
+        
+       
+        var queryprice = function(data){
+        	if(data.ret == "ok"){
+        		//var o =	$("#quantity");
+        		var v = data.price;
+        		var localname = $("ul[name='localul'] li[data-value='"+data.localid+"']").text();
+        		$("input[name='buylocalchoice']").val(localname);
+        		$("#selleridinput").val(data.sellerid);
+        		$("span[name='pricespan']").text("￥"+v);
+        		$("ul[name='localul']").hide();
+        		$("#sigleoverprice").val(data.price);
+        		countshoudprice();
+        	}else{
+        		alert("查询出现错误，请稍后再试！");
+        	}
+        }
+        
+        
+        $("a[name='zxbuybtnsubmit']").click(function(){
+        	$("#zixunbuy").submit();
+        });
+        $("a[name='getinbuyceng']").click(function(){
+        	$("div.floatR").hide();
+        	$(this).hide();
+        	$("a[name='showbuyceng']").show();
+        });
+        $("a[name='showbuyceng']").click(function(){
+        	$("div.floatR").show();
+        	$(this).hide();
+        	$("a[name='getinbuyceng']").show();
+        });
+        </script>
+        </div>

@@ -1,0 +1,53 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/receive-info.html")
+                <div class="steps">
+                    <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/selfReceiveLicense" class="s1-over">1.预约工商</a>
+                    <a href="javascript:void(0);" class="s2-on">2.领取证照</a>
+                </div>
+
+                <div class="dj-online">
+                    <div class="zz-info">
+                     	#set($govOrgEntity = $EnterpriseUtils.getGovOrgConfig("$!{gov-regOrgCode}"))
+                        <div class="con">
+                            <span><label>业务受理机关：</label>$!{govOrgEntity.getOrgName()}</span>
+                            <span><label>联系电话：</label>$!{govOrgEntity.getLkmanTel()}</span>
+                            <span><label>工商局地址：</label>$!{govOrgEntity.getOrgAddress()}</span>
+                        </div>
+                    </div>
+
+                    <div class="tab r-top">
+                        <table>
+                            <tr>
+                                <th width="90px">序号</th>
+                                <th width="280px">领照所需材料</th>
+                                <th >注意事项</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>《受理通知书》/《准许通知书》</td>
+                                <td class="matter">请您按照通知书载明的时间到登记机关领取营业执照，并请当场核对营业执照的内容。</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>身份证原件</td>
+                                <td class="matter">受理通知书签署人的身份证原件</td>
+                            </tr>
+                        </table>
+                    </div>
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn receive submit">我已完成</a></p>
+                    </div>
+                    #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                </div>
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/receive.js"></script> 
+		</div>

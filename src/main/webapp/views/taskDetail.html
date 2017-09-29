@@ -1,0 +1,204 @@
+<script>
+$(function(){
+    // 城市切换
+    $('#hhDrop00').hhDrop({});
+    $('#hhDrop01').hhDrop({});  
+
+    $("#normaltab").tabso({
+        cntSelect:"#normalcon",
+        tabEvent:"click",
+        tabStyle:"normal"
+    }); 
+
+    $(function(){
+        //设置奇数行背景色
+        $(".tab-list tr:odd").find("td").addClass("tr_odd");
+        //设置偶数行背景色
+        $(".tab-list tr:even").find("td").addClass("tr_even");
+        // 鼠标移到的颜色
+        $(".tab-list tr").mouseover(function(){
+            $(this).find("td").addClass("mouse_color");
+        });
+        // 鼠标移出的颜色
+        $(".tab-list tr").mouseout(function(){
+            $(this).find("td").removeClass("mouse_color");
+        });
+        
+        //找出当前环节，并修改样式
+        var curHandleNodeKey = "$!{curHandleNodeKey}";
+        if(curHandleNodeKey != undefined && curHandleNodeKey != ''){
+        	//li
+	        var index = $('.handleNode_UL').find("li.fwqx_ul_li[data-value="+curHandleNodeKey+"]").index();
+	        if(index != -1){//=-1则表示没有匹配到满足条件的
+	        	index = index + 1;
+		        $('.handleNode_UL').find("li:lt("+index+")").each(function(i,element){
+		        	if(typeof($(element).attr('data-value'))!="undefined"){
+	        			$(element).find('.fwqx_ul_spn1').addClass('active');
+		        		$(element).find('.fwqx_ul_spn2').addClass('on');
+		        	}
+		        });
+	        }
+        }
+        
+        //设置最后一个节点的样式
+        var lastLi = $('.handleNode_UL').find('li:last-child');
+        var dataValue = $(lastLi).attr('data-value');
+        if(dataValue == curHandleNodeKey){//如果最后一个节点就是当前任务节点
+        	$(lastLi).find('.fwqx_ul_spn1').removeClass('active');
+        	$(lastLi).find('.fwqx_ul_spn1').addClass('last');
+			$(lastLi).find('.fwqx_ul_spn2').addClass('on');
+        }else{
+        	$(lastLi).find('.fwqx_ul_spn1').removeClass('active');
+        	$(lastLi).find('.fwqx_ul_spn2').removeClass('on');
+        	$(lastLi).find('.fwqx_ul_spn1').addClass('last-off');
+        }
+    });
+
+    $('a.more').bind('click', function () { 
+        var txt = $('a.more').text(); 
+        if (txt == '展开') { 
+            $('#morediv').show(); 
+            $('a.more').text('收起').addClass('top-arr'); 
+        } else { 
+            $('#morediv').hide(); 
+            $('a.more').text('展开').removeClass('top-arr'); 
+        } 
+    });
+
+
+    $('[name="n-select"]').click(function(e){
+        $('[name="n-select"]').find('ul').hide();
+        $(this).find('ul').show();
+        e.stopPropagation();
+    });
+    $('[name="n-select"] li').hover(function(e){
+        $(this).toggleClass('on');
+        e.stopPropagation();
+    });
+    $('[name="n-select"] li').click(function(e){
+        var val = $(this).text();
+        var dataVal = $(this).attr("data-value");
+        $(this).parents('[name="n-select"]').find('input').val(val);
+        $('[name="n-select"] ul').hide();
+        e.stopPropagation();
+    });
+    $(document).click(function(){
+        $('[name="n-select"] ul').hide();
+    });
+
+});
+</script>
+
+
+
+
+    
+        <div class="ser-main-box">
+            <div class="crumbs">
+                <a class="crumb-link" href="/mywf/index.html">全部服务</a>
+                <i class="crumb-line">></i>
+                <a class="crumb-link" href="javascript:window.location.reload()">服务详情</a>
+               
+            </div>
+            <div class="box_fwqx">
+               <h3>服务名称：$!{serviceName}</h3>
+               <div class="fwqx_dj_flow ">
+               		#if($handleNodeKeyList) 
+	                    <ul class="fwqx_dj_ul handleNode_UL">
+	                    	#foreach($elem in $handleNodeKeyList) 
+	                   			<li data-value="$elem" class="fwqx_ul_li">
+			                        <span class="fwqx_ul_spn1 "></span>
+			                        <span class="fwqx_ul_spn2 ">$handleNodeMap.get($elem)</span>
+			                     </li>
+	                    	#end
+	                       
+	                      <!-- <li data-value="$elem" class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 active"></span>
+	                         <span class="fwqx_ul_spn2 on">$handleNodeMap.get($elem)</span>
+	                      </li>
+	                      
+	                     <li class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 active"></span>
+	                         <span class="fwqx_ul_spn2">核名结果</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">提交网登</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">网登结果</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li">
+	                       <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">预约工商</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">工商交件</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li">
+	                         <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">领取证照</span>
+	
+	                      </li>
+	                      <li class="fwqx_ul_li wt1">
+	                         <span class="fwqx_ul_spn1 "></span>
+	                         <span class="fwqx_ul_spn2">刻制印章</span>
+	
+	                      </li> -->
+	                     </ul>
+                    #end
+                </div>
+                <div class="fwxq_db_box fwxq_db_padding">
+                        <h4>服务追踪助手</h4>
+                        <ol>
+                         <li class="wt1">处理时间</li>
+                         <li class="wt2">处理状态</li>
+                         <li class="wt3">处理备注</li>
+                        </ol>
+                        <div class="flow">
+                            <ul>
+                            	#if($hisTaskNodes)
+                            		#foreach($hisEntity in $hisTaskNodes)
+                            			#if($!{velocityCount} == 1)
+	                            			<li class="line"></li>
+			                                <li class="list on">
+			                                    <span class="time">$hisEntity.datatime</span>
+			                                    <span class="text1 plr">$hisEntity.handleStateText #if($!{deleteReasonFlag}) <span style="color: red">(服务终止) </span>#end</span>
+			                                    <span class="text plr">$hisEntity.handleNoteText</span>
+			                                </li>
+		                                #else
+		                                	<li class="line"></li>
+			                                <li class="list">
+			                                    <span class="time">$hisEntity.datatime</span>
+			                                    <span class="text1 plr">$hisEntity.handleStateText</span>
+			                                    <span class="text plr">$hisEntity.handleNoteText</span>
+			                                </li>
+		                                #end
+                            		#end
+                            	#end
+                                <!-- <li class="line"></li>
+                                <li class="list">
+                                    <span class="time">2015-12-14  09:20:21</span>
+                                    <span class="text1 plr">采集核名信息</span>
+                                    <span class="text plr">您的核名已提交工商审核</span>
+                                </li>
+                                <li class="line"></li>
+                                <li class="list on">
+                                    <span class="time">2015-12-14  09:20:21</span>
+                                    <span class="text1 plr">您的核名已核准</span>
+                                    <span class="text plr">您的服务我们已接收，您您注意接收手机来电</span>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
+            </div>
+
+          
+        </div>

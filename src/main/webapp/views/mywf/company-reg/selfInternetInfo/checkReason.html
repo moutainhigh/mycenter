@@ -1,0 +1,79 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                 #parse("views/mywf/company-reg/common/internet-info.html")
+                
+                 #parse("views/mywf/company-reg/common/internet-reason-step.html")
+                 
+                #if($!{setupStatus} == "1")
+				<div class="named-notice">
+                    <div class="name-box">
+                        <p class="name">$!{name}</p>
+                        <p class="text">业务类型：<span>设立</span></p>
+                        <p class="text">业务状态：<span>$!{gov-busiState}</span></p>
+                        <p class="text">审查机关：<span>$!{gov-regOrg}</span></p>
+                    </div>
+                    
+                    <div class="other-info">
+                        <p class="state-box">
+                            <span class="state"><label>审批状态：</label>$!{gov-busiState}</span>
+                        </p>
+                        <div class="bot-box">
+                            <p>审批机关：$!{gov-regOrg}</p>
+                            <p>审批时间：$!{gov-noticeDate}</p>
+                            <p>审批意见：$!{gov-context}</p>
+                        </div>
+                    </div>
+					<div class="back-btn">
+						<a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/setupDownload" class="btn">下一步</a>
+		            </div>
+                </div>
+				#elseif($!{setupStatus} == "4")
+                <div class="named-notice">
+                    <div class="name-box">
+                        <p class="name">$!{name}</p>
+                        <p class="text">业务类型：<span>设立</span></p>
+                        <p class="text">业务状态：<span>$!{gov-busiState}</span></p>
+                        <p class="text">审查机关：<span>$!{gov-regOrg}</span></p>
+                    </div>
+                    <div class="other-info">
+                        <div class="text-box">
+                            <p class="state">审批状态：<span>退回修改</span></p>
+                            <p class="sc">审查意见：<span>$!{gov-context}</span></p>
+                        </div>
+                        <div class="bot-box">
+                            <p>审批机关：$!{gov-regOrg}</p>
+                            <p>审批时间：$!{gov-noticeDate}</p>
+                        </div>
+                        <a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/selfInternetInfo" class="btn">修改</a>
+                    </div>
+                </div>
+				#else
+                <div class="named-notice">
+                    <div class="name-box">
+                        <p class="name">$!{name}</p>
+                        <p class="text">业务类型：<span>设立</span></p>
+                        <p class="text">业务状态：<span>已提交待审核</span></p>
+                        <p class="text">审查机关：<span>$!{gov-regOrg}</span></p>
+                    </div>
+                    <div class="other-info">
+                        <div class="wait-box">
+                            <p class="state">审批状态：<span>已提交待审核</span></p>
+                            <p class="tx">您的工商信息登记正在审查中，请耐心等待！</p>
+                        </div>
+                    </div>
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                </div>
+				#end
+            </div>
+
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/common-tip.html")
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+		</div>

@@ -1,0 +1,349 @@
+            <!-- 完善股东信息 弹出框 -->
+            <div class="cd-popup cd-box1person" role="alert" style="display: none;" data-info="partnerInfo" data-roleType="naturalPartner" > 
+                <div class="cd-popup-container">
+                    <div class="gd-box">
+                        <p class="title">完善股东信息</p>
+                        <div class="gd-list">
+                            <table>
+                            	<input type="hidden" placeholder="股东出资额" id="capitalSize" data-validate="required:true;" data-info="partnerInfo:ext" />
+                            	<input type="hidden" id="id" data-info="partnerInfo:main" />
+                                <tr>
+                                    <th><i>＊</i>姓名：</th>
+                                    <td><span data-id="name" ></span></td>
+                                    <th><i>＊</i>证件类型：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="证件类型" id="idType" value="1" data-info="partnerInfo:main" />
+                                    	中华人民共和国居民身份证
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>证件号码：</th>
+                                    <td>
+                                    	<input type="text" class="w-text w-180" id="idNum" placeholder="证件号码" data-validate="required:true;identity:true" data-info="partnerInfo:main" >
+                                    </td>
+                                    <th><i>＊</i>性别：</th>
+                                    <td>
+                                    	<input type="hidden" placeholder="性别" id="sex" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+                                    	<div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('sex')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+									</td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>户籍登记地址：</th>
+                                    <td colspan="3">
+                                    	<div>
+	                                    	<input type="hidden" placeholder="户籍登记地址" id="residenceProv" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="请选择..." readonly>
+	                                            <ul>
+	                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('residenceProv')})
+													<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+													#end
+	                                            </ul>
+	                                        </div>
+                                        </div>
+                                        <div>
+	                                        <input type="hidden" placeholder="户籍登记地址" id="residenceCity" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="" readonly>
+	                                            <ul>
+	                                                
+	                                            </ul>
+	                                        </div>
+                                        </div>
+                                        <input type="text" placeholder="户籍登记地址" class="w-text w-260" id="residenceAddress" data-validate="required:true;" data-info="partnerInfo:main" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>民族：</th>
+                                    <td>
+                                   		<input type="hidden" placeholder="民族" id="folk" data-validate="required:true;" data-info="partnerInfo:main" />
+                                        <div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('folk')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <th><i>＊</i>国籍：</th>
+                                   	<td>
+                                    	<input type="hidden" placeholder="国籍" id="contry" value="156" data-info="partnerInfo:main" />
+                                    	中华人民共和国
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+                        <div class="gd-tab">
+                            <table>
+                                <tr>
+                                    <th width="120px">出资额（万元）</th>
+                                    <th width="120px">出资方式</th>
+                                    <th width="120px">股权激励</th>
+                                    <th width="160px">出资时间</th>
+                                    <th>删除</th>
+                                </tr>
+                                <tr name="capitalArea" data-info="payInfo" >
+                                	<input type="hidden" id="payId" data-info="payInfo:main" >
+                                    <td><input type="text" class="w-text w-120" placeholder="出资额" id="paySize" data-validate="required:true;" data-info="payInfo:main" ></td>
+                                    <td>
+                                    	<input type="hidden" placeholder="出资方式" id="capitalMethod" data-validate="required:true;" data-select="none" data-info="payInfo:main" />
+                                        <div class="n-select w-110" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('capitalMethod')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    	<input type="hidden" placeholder="实施股权激励" id="techStockFlag" data-validate="required:true;" data-select="none" data-info="payInfo:main" />
+                                        <div class="n-select w-110" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                            	<li data-value="1">不实施</li>
+                                            	<li data-value="2">技术成果入股</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    	<input type="text" id="capitalDate" class="time w-text w-120" placeholder="出资日期" data-validate="required:true;" data-info="payInfo:main" />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="3" class="total">出资总额:<span id="capitalSize" data-id="capitalSize" ></span>万元 (币种：人民币)</td>
+                                    <td colspan="2" class="btn"><a href="javascript:void(0);" id="add-cze1">添加</a></td>
+                                </tr>
+                            </table>
+                            <p class="text">注意： 如果股东是多种方式出资或多次出资，请逐行填写，且所有股东出资总额需与注册资本一致。出资时间不能早于名称预选核准时间，不能晚于经营期限截至时间！</p>
+                        </div>
+                        <div class="btn-box">
+                            <a href="javascript:void(0);" class="btn partner save" >保存</a>
+                            <a href="javascript:void(0);" class="btn-g concal" >取消</a>
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+            <!-- 弹出框 -->
+			
+			
+            <!-- 修改非自然人股东信息 弹出框 -->
+            <div class="cd-popup cd-box2company" role="alert" style="display: none;" data-info="partnerInfo" data-roleType="legalPartner" > 
+                <div class="cd-popup-container">
+                    <div class="gd-box">
+                        <p class="title">修改单位股东信息</p>
+                        <div class="gd-list">
+                            <table>
+                            	<input type="hidden" placeholder="股东出资额" id="capitalSize" data-validate="required:true;" data-info="partnerInfo:ext" />
+                            	<input type="hidden" id="enterpriseId" data-info="partnerInfo:main" />
+                                <tr>
+                                    <th><i>＊</i>单位名称：</th>
+                                    <td><span data-id="name" ></span></td>
+                                    <th><i>＊</i>单位类型：</th>
+                                    <td>
+                                    	<input id="enterpriseType" type="hidden" data-select="none" placeholder="单位类型" data-validate="required:true;" data-info="partnerInfo:main" />
+                                        <div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly >
+                                            <ul>
+                                                #foreach($lvEnterpriseDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('enterpriseType')})
+												<li data-value="$!{lvEnterpriseDicDataEntity.getDataValue()}">$!{lvEnterpriseDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>证件类型：</th>
+                                    <td>
+                                    	<input id="businessLicenseType" type="hidden" data-select="none" placeholder="证件类型" data-validate="required:true;" data-info="partnerInfo:main" />
+                                        <div class="n-select w-160" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('businessLicenseType')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <th><i>＊</i>证件号码：</th>
+                                    <td>
+                                    	<input type="text" class="w-text w-180" placeholder="证件号码" id="businessLicenseNum" data-validate="required:true;" data-info="partnerInfo:main" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>法人代表：</th>
+                                    <td>
+                                        <input type="text" class="w-text w-180" placeholder="法人代表" id="legalPerson" data-validate="required:true;" data-info="partnerInfo:ext" />
+                                    </td>
+                                    <th><i>＊</i>国别和地区：</th>
+                                    <td>
+                                        <input type="hidden" placeholder="国别和地区" id="contry" value="156" data-info="partnerInfo:main" />
+                                		中华人民共和国
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i>＊</i>住所：</th>
+                                    <td colspan="3">
+                                    	<div>
+											<input type="hidden" placeholder="住所" id="residenceProv" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="请选择..." readonly>
+	                                            <ul>
+	                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('residenceProv')})
+													<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+													#end
+	                                            </ul>
+	                                        </div>
+                                        </div>
+                                        <div>
+	                                        <input type="hidden" placeholder="住所" id="residenceCity" data-validate="required:true;" data-select="none" data-info="partnerInfo:main" />
+	                                        <div class="n-select w-90" name="n-select">
+	                                            <input class="n-val" type="text" value="" readonly>
+	                                            <ul>
+	                                                
+	                                            </ul>
+	                                        </div>
+                                        </div>
+                                        <input type="text" placeholder="住所" class="w-text w-260" id="residenceAddress" data-validate="required:true;" data-info="partnerInfo:main" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="gd-tab">
+                            <table>
+                                <tr>
+                                    <th width="120px">出资额（万元）</th>
+                                    <th width="120px">出资方式</th>
+                                    <th width="120px">股权激励</th>
+                                    <th width="160px">出资时间</th>
+                                    <th>删除</th>
+                                </tr>
+                                <tr name="capitalArea" data-info="payInfo" >
+                                	<input type="hidden" id="payId" data-info="payInfo:main" >
+                                    <td><input type="text" class="w-text w-120" placeholder="出资额" id="paySize" data-validate="required:true;" data-info="payInfo:main" ></td>
+                                    <td>
+                                    	<input type="hidden" placeholder="出资方式" id="capitalMethod" data-validate="required:true;" data-select="none" data-info="payInfo:main" />
+                                        <div class="n-select w-110" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul>
+                                                #foreach($lvDicDataEntity in $!{DicUtils.getEnterpriseDicDataList('capitalMethod')})
+												<li data-value="$!{lvDicDataEntity.getDataKey()}">$!{lvDicDataEntity.getDataValue()}</li>
+												#end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    	<input type="hidden" placeholder="实施股权激励" id="techStockFlag" data-validate="required:true;" data-select="none" data-info="payInfo:main" />
+                                        <div class="n-select w-110" name="n-select">
+                                            <input class="n-val" type="text" value="请选择..." readonly>
+                                            <ul></ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    	<input type="text" id="capitalDate" class="time w-text w-120" placeholder="出资日期" data-validate="required:true;" data-info="payInfo:main" />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="3" class="total">出资总额:<span id="capitalSize" data-id="capitalSize" ></span>万元 (币种：人民币)</td>
+                                    <td colspan="2" class="btn"><a href="javascript:void(0);" id="add-cze1">添加</a></td>
+                                </tr>
+                            </table>
+                            <p class="text">注意： 如果股东是多种方式出资或多次出资，请逐行填写，且所有股东出资总额需与注册资本一致。出资时间不能早于名称预选核准时间，不能晚于经营期限截至时间！</p>
+                        </div>
+                        <div class="btn-box">
+                            <a href="" class="btn partner save">保存</a>
+                            <a href="" class="btn-g">取消</a>
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+            <!-- 弹出框 -->
+            
+<script type="text/javascript" >
+function initParnter(roleType){
+	var roleTypeDiv = $("[data-roleType='" + roleType + "'][role='alert']");
+    $(roleTypeDiv).find("#add-cze1").unbind("click").click(function(){      
+		var capitalArea = $(roleTypeDiv).find("[name='capitalArea']:first").clone();
+		$(capitalArea).find("td:last").append("<a href=\"javascript:void(0);\" class=\"del\" onclick=\"$(this).parents('tr').remove();changePaySize('" + roleType + "');LV.enterprisePartnerPayDel();\" ></a>");
+		$(capitalArea).find("input").val("");
+		$(roleTypeDiv).find("[name='capitalArea']:last").after(capitalArea);
+		initCapitalArea(roleType);
+    });
+    var dataVal = $(roleTypeDiv).find("#residenceProv").val();
+    var dicData = LV.getDicData("enterpriseDicData", dataVal);
+	var areaHtml = "";
+	$.each(dicData, function(value, text){
+		areaHtml += "<li data-value=\"" + value + "\">" + text + "</li>"
+	});
+	$(roleTypeDiv).find("#residenceCity").next().find("ul").html(areaHtml);
+    initCapitalArea(roleType);
+}
+
+function initCapitalArea(roleType){
+	var roleTypeDiv = $("[data-roleType='" + roleType + "'][role='alert']");
+	var capitalArea = $(roleTypeDiv).find("[name='capitalArea']");
+	$(capitalArea).find('.time').datetimepicker({
+    	format:'Y-m-d',
+	    onGenerate:function( ct ){
+	      $(this).find('.xdsoft_date.xdsoft').addClass('xdsoft_disabled');
+	    },
+	    onSelectDate:function(ct, $i){
+	    	// 选择的结果
+	    	$(this).find("#capitalDate").val(ct.dateFormat('Y-m-d'));
+	    },
+	    timepicker:false
+	});
+	LV.initSelect(capitalArea);
+	
+	$(capitalArea).find("#paySize").keyup(function(){
+		changePaySize(roleType);
+	}).change(function(){
+		changePaySize(roleType);
+	});	
+}
+
+function changePaySize(roleType){
+	var roleTypeDiv = $("[data-roleType='" + roleType + "'][role='alert']");
+	var regCapital = 0;
+	$(roleTypeDiv).find("[id='paySize']").each(function(index, ele){
+		regCapital = Number(regCapital).add($(ele).val());
+	});
+	$(roleTypeDiv).find("input[id='capitalSize']").val(regCapital);
+	$(roleTypeDiv).find("span[id='capitalSize']").text(regCapital);
+}
+
+
+$(document).ready(function(){
+	
+});
+</script>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            

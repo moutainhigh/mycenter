@@ -1,0 +1,404 @@
+package com.jx.blackface.mycenter.controllers;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.json.JSONObject;
+
+import com.jx.argo.ActionResult;
+import com.jx.argo.annotations.Path;
+import com.jx.blackface.gaea.sell.entity.LvzProductEntity;
+import com.jx.blackface.gaea.sell.entity.LvzSellProductEntity;
+import com.jx.blackface.gaea.usercenter.annotaion.CheckUserLogin;
+import com.jx.blackface.gaea.usercenter.entity.BFAreasEntity;
+import com.jx.blackface.gaea.usercenter.entity.UserCounponsBFGEntity;
+import com.jx.blackface.mycenter.actionresult.JSONActionResult;
+import com.jx.blackface.mycenter.annotaion.CheckLogin;
+import com.jx.blackface.mycenter.common.LocationPage;
+import com.jx.blackface.mycenter.frame.RSBLL;
+import com.jx.blackface.orderplug.buzs.OrderBuz;
+import com.jx.blackface.orderplug.vo.CancelOrderDetail;
+import com.jx.blackface.orderplug.vo.OrderBFVo;
+import com.jx.blackface.orderplug.vo.PayOrderBFVo;
+
+public class OrderblackController extends BaseController {
+
+	@SuppressWarnings("unused")
+	@Path("/tobuysigle/{productcode:\\S+}")
+	public ActionResult buySigle(String productcode){
+		long uid = getLoginuserid();
+		long sellerid = 0;
+		String activityid = beat().getRequest().getParameter("activityid");
+		beat().getModel().add("activityid", activityid);
+		String processid = beat().getRequest().getParameter("processid");
+		beat().getModel().add("processid", processid);
+		String buzid = beat().getRequest().getParameter("buzid");
+		beat().getModel().add("buzid", buzid);
+		LvzProductEntity lvpe = null;
+		try {
+			lvpe = OrderBuz.ob.getProductEbycodes(productcode);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		LvzSellProductEntity  vpe = null;
+		if(lvpe != null){
+			List<LvzSellProductEntity> splist = null;
+			String spcondition = "product_id="+lvpe.getProduct_id()+" and area_id="+101;
+			try {
+				splist = OrderBuz.ob.loadSelleridlistBycondition(spcondition, 1, 1, "sell_id");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			if(splist != null && splist.size() > 0){
+				vpe = splist.get(0);
+				beat().getModel().add("sellerid", vpe.getSell_id());
+				beat().getModel().add("product", vpe);
+			}
+		}
+		
+		if(vpe != null){
+			try {
+				BFAreasEntity citye = RSBLL.getstance().getAreaService().getAeasEntityById(vpe.getCity_id());
+				if(null != citye){
+					beat().getModel().add("city", citye);
+				}
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			LvzProductEntity pe = null;
+			try {
+				pe = OrderBuz.ob.getProductByid(vpe.getProduct_id());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String condition = "city_id="+vpe.getCity_id()+" and product_id="+vpe.getProduct_id()+" and sell_oneselflag=1 and sell_upderdesc = 0";
+			List<LvzSellProductEntity> splist = null;
+			try{
+				splist = OrderBuz.ob.loadSelleridlistBycondition(condition,1,99,"sell_id");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			List<BFAreasEntity>  locallist = new ArrayList<BFAreasEntity>();
+			if(null != splist && splist.size() > 0){
+				for(LvzSellProductEntity spe : splist){
+					try {
+						BFAreasEntity le = RSBLL.getstance().getAreaService().getAeasEntityById(spe.getArea_id());
+						locallist.add(le);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			if(null != locallist && locallist.size() > 0){
+				beat().getModel().add("locallist",locallist);
+			}
+			
+			List<UserCounponsBFGEntity> uclist = null;
+			
+			try {
+				uclist = OrderBuz.ob.getUserCounpslistBysellerid(uid, String.valueOf(vpe.getSell_id()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(uclist!=null && uclist.size()>0){
+				beat().getModel().add("uclist", uclist);
+				beat().getModel().add("uclistfist", uclist.get(0));
+			}
+			if(null != vpe ){
+				if( uclist!=null && uclist.size()>0){
+					float vp = vpe.getSell_overprice() - uclist.get(0).getCmoney();
+					if(vp > 0){
+						BigDecimal bb = BigDecimal.valueOf(vp);
+						float needpay = bb.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+						beat().getModel().add("neepay", needpay);
+					}else{
+						beat().getModel().add("neepay", vpe.getSell_overprice());
+					}
+				}else{
+					beat().getModel().add("neepay", vpe.getSell_overprice());
+				}
+			}
+			
+		}
+		return view("order/kzorder");
+	}
+	@Path("/tobuyconsult")
+	public ActionResult buyzixun(){
+		String returnurl=beat().getRequest().getParameter("returnurl");
+		beat().getModel().add("returnurl", returnurl);
+		
+		long uid = getLoginuserid();
+		String sellerid = beat().getRequest().getParameter("sellid");
+		String productcode = beat().getRequest().getParameter("sellcode");;
+		String city = beat().getRequest().getParameter("city");
+		int cid = 1;
+		if(null != city && !"".equals(city)){
+			cid = Integer.parseInt(city);
+		}
+		try {
+			BFAreasEntity citye = RSBLL.getstance().getAreaService().getAeasEntityById(cid);
+			if(null != citye){
+				beat().getModel().add("city", citye);
+			}
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		LvzProductEntity lvpe = null;
+		try {
+			lvpe = OrderBuz.ob.getProductEbycodes(productcode);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String condition = "city_id="+cid+" and product_id="+lvpe.getProduct_id();
+		List<LvzSellProductEntity> splist = null;
+		try{
+			splist = OrderBuz.ob.loadSelleridlistBycondition(condition,1,99,"sell_id");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		List<BFAreasEntity>  locallist = new ArrayList<BFAreasEntity>();
+		if(null != splist && splist.size() > 0){
+			for(LvzSellProductEntity spe : splist){
+				try {
+					BFAreasEntity le = RSBLL.getstance().getAreaService().getAeasEntityById(spe.getArea_id());
+					locallist.add(le);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		if(null != locallist && locallist.size() > 0){
+			beat().getModel().add("locallist",locallist);
+		}
+		if(null != sellerid && !"".equals(sellerid)){
+			beat().getModel().add("sellerid", sellerid);
+			
+			LvzSellProductEntity lvp = null;
+			try {
+				lvp = OrderBuz.ob.loadSellerProductByid(Long.parseLong(sellerid));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(null != lvp){
+				beat().getModel().add("product", lvp);
+			}
+			
+			List<UserCounponsBFGEntity> uclist = null;
+			try {
+				uclist = OrderBuz.ob.getUserCounpslistBysellerid(uid, sellerid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			List<UserCounponsBFGEntity> it = new ArrayList<UserCounponsBFGEntity>();
+		    for(UserCounponsBFGEntity uc:uclist){
+		    	if( lvp.getSell_overprice() >= uc.getCmoney() ){
+		    		it.add(uc);
+		    	}
+		    }
+			if(it!=null && it.size()>0){
+				beat().getModel().add("uclist", it);
+				beat().getModel().add("uclistfist", it.get(0));
+			}
+			if(null != lvp ){
+				if( it!=null && it.size()>0){
+					float vp = lvp.getSell_overprice() - it.get(0).getCmoney();
+					if(vp > 0){
+						BigDecimal bb = BigDecimal.valueOf(vp);
+						float needpay = bb.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+						beat().getModel().add("needpay", needpay);
+					}
+				}else{
+					beat().getModel().add("needpay", lvp.getSell_overprice());
+				}
+			}
+			
+		}
+		
+		return view("order/zxorder");
+	}
+	/**
+	 * 咨询下单
+	 * @return
+	 */
+	@Path("/consultorder/submit")
+	public ActionResult consultOrder(){
+		String selid = beat().getRequest().getParameter("selleridstr");
+		String count = beat().getRequest().getParameter("numbercount");
+		int zxc = 1;
+		if(null != count && !"".equals(count) && !"0".equals(count)){
+			zxc = Integer.parseInt(count);
+		}
+		long sellerid = Long.parseLong(selid);
+		long uid = getLoginuserid();
+		String ucid = beat().getRequest().getParameter("ucid");
+		long usecoponsid = 0;
+		long payid = 0;
+		if(ucid != null && !"".equals(ucid) && ucid.matches("\\d+")){
+			usecoponsid = Long.parseLong(ucid);
+		}
+		if(uid > 0){
+			try {
+				payid = OrderBuz.ob.addZixunOrder(sellerid, uid, zxc, usecoponsid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(payid > 0){//下单成功
+			
+		}else{
+			
+		}
+		String returnurl=beat().getRequest().getParameter("returnurl");
+		return redirect("http://pay.lvzheng.com/reqpay/"+payid+"?returnurl="+returnurl);
+	}
+	/**
+	 * 单品下单
+	 * @param sellerid
+	 * @return
+	 */
+	@Path("/agentorder")
+	public ActionResult agentOrder(){
+		long sellerid = 0;
+		long acid = 0;
+		long pid = 0;
+		long bid = 0;
+		String sellstr = beat().getRequest().getParameter("selleridstr");
+		String activityid = beat().getRequest().getParameter("activityid");
+		String processid = beat().getRequest().getParameter("processid");
+		String buzid = beat().getRequest().getParameter("buzid");
+		//String processid = beat().getRequest().getParameter("processid");
+		if(null != processid && !"".equals(processid)){
+			pid = Long.parseLong(processid);
+		}
+		if(buzid != null && !"".equals(buzid)){
+			bid = Long.parseLong(buzid);
+		}
+		if(sellstr != null && !"".equals(sellstr)){
+			sellerid = Long.parseLong(sellstr);
+		}
+		if(activityid != null && !"".equals(activityid)){
+			acid = Long.parseLong(activityid);
+		}
+ 		long uid = getLoginuserid();
+		String ucid = beat().getRequest().getParameter("ucid");
+		long ucouponseid = 0;
+		if(null != ucid && !"".equals(ucid) && ucid.matches("\\d+")){
+			ucouponseid = Long.parseLong(ucid);
+		}
+		long payid = 0;
+		try {
+			payid = OrderBuz.ob.addSigleNewBookOrder(uid, sellerid,ucouponseid,acid,pid,bid);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return redirect("http://pay.lvzheng.com/reqpay/"+payid);
+	}
+	@Path("/booksubmit")
+	public ActionResult bookOrdersubmit(){
+		long userid = getLoginUserid();
+		String sellerid = beat().getRequest().getParameter("sellerid");
+		if(userid > 0 && sellerid != null && !"".equals(sellerid)){
+			
+		}
+		return null;
+	}
+	@Path("/querysellerid/{productid:\\d+}/{localid:\\d+}")
+	public ActionResult querySellerid(long productid,int localid){
+		JSONObject jj = new JSONObject();
+		String condition = "product_id="+productid+" and area_id="+localid;
+		List<LvzSellProductEntity> list = null;
+		float pr = 0;
+		try {
+			list = OrderBuz.ob.loadSelleridlistBycondition(condition, 1, 1, "");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(null != list && list.size() > 0){
+			pr = list.get(0).getSell_overprice();
+			if(pr > 0){
+				jj.put("ret", "ok");
+				jj.put("price", pr+"");
+				jj.put("sellerid", list.get(0).getSell_id());
+				jj.put("localid", localid);
+			}else{
+				jj.put("ret", "fail");
+				jj.put("", "");
+			}
+		}
+		
+		return new JSONActionResult(jj.toString());
+	}
+	@Path("/orderdetail/{orderid:\\d+}")
+	@CheckLogin
+	public ActionResult orderDetail(long orderid){
+		long userid = getLoginUserid();
+		List<OrderBFVo> olist = null;
+		PayOrderBFVo pvo = null;
+		
+		
+		if(userid > 0 && orderid > 0){
+			try {
+				pvo = OrderBuz.ob.getPayOrderbfvo(orderid);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				olist = OrderBuz.ob.getOrderBFEntitybypayid(orderid,userid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(null != pvo){
+			beat().getModel().add("payorder", pvo);
+		}
+		if(null != olist && olist.size() > 0){
+			beat().getModel().add("orderlist", olist);
+		}
+		beat().getModel().add("LocationPage", new LocationPage("myorder", "orderdetail","myorder"));
+		return menuview("index");
+	}
+	
+	@Path("/refound/{orderid:\\d+}")
+	@CheckLogin
+	public ActionResult refoundOrder(long orderid){
+		long uid = getLoginUserid();
+		String str = "";
+		if(uid > 0 && orderid > 0){
+			try {
+				str = OrderBuz.ob.cancelOrderByPayid(uid, orderid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new JSONActionResult(str);
+	}
+	
+}

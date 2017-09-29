@@ -1,0 +1,189 @@
+package com.jx.blackface.mycenter.controllers;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.jx.argo.ActionResult;
+import com.jx.argo.Model;
+import com.jx.argo.annotations.Path;
+import com.jx.blackface.gaea.usercenter.entity.BFEmployersEntity;
+import com.jx.blackface.messagecenter.core.entity.MailBFGEntity;
+import com.jx.blackface.mycenter.annotaion.CheckLogin;
+import com.jx.blackface.mycenter.common.CommonUtils;
+import com.jx.blackface.mycenter.common.EmpSatisfactionAndOrdersum;
+import com.jx.blackface.mycenter.common.LocationPage;
+import com.jx.blackface.mycenter.frame.RSBLL;
+import com.jx.blackface.mycenter.service.MyCenterService;
+import com.jx.blackface.mycenter.utils.ActionResultUtils;
+import com.jx.blackface.mycenter.utils.CookieUtils;
+import com.jx.blackface.mycenter.utils.Timers;
+import com.jx.blackface.mycenter.vo.LoginUserVO;
+import com.jx.blackface.orderplug.buzs.OrderBuz;
+import com.jx.blackface.orderplug.vo.PayOrderBFVo;
+import com.jx.service.enterprise.contract.ILvEnterpriseRoleRelationService;
+import com.jx.service.enterprise.entity.LvEnterpriseEntity;
+import com.jx.service.workflow.entity.LvProcInstEntitiy;
+
+/**
+ * 我的主页controller
+ * @author duxiaofei
+ * @date   2015年12月19日
+ */
+@Path("/mycenter")
+@CheckLogin
+public class MyCenterController extends BaseController{
+	
+	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	@Path("/index.html")
+	public ActionResult gotoMyIndex(){
+		Model model = model();
+		
+		try {
+			/*****账户信息start********/
+			//获取用户信息
+			LoginUserVO loginVo = CommonUtils.getLoginEntity(beat());
+			
+			//获取优惠券总张数
+			int couponCount = MyCenterService.getInstan().getUnusedcoupounscount(loginVo.getUserid());
+			if(couponCount > 0){
+				model.add("couponCount", couponCount);
+			}
+			
+			if(StringUtils.isNotBlank(loginVo.getOpenid())){
+				model.add("wxClass", "class=\"wx-on\"");
+			}else{
+				model.add("wxClass", "class=\"wx\"");
+			}
+//			if(StringUtils.isNotBlank(loginVo.getEmail())){
+//				model.add("emailClass", "class=\"email-on\"");
+//			}else{
+//				model.add("emailClass", "class=\"email\"");
+//			}
+			
+			//判读是否手机认证
+			if(StringUtils.isNotBlank(loginVo.getUserphone()) && loginVo.getAuthenflag() == 1){ 
+				model.add("phoneClass", "class=\"phone-on\"");
+			}else{
+				model.add("phoneClass", "class=\"phone\"");
+			}
+			model.add("loginVo", loginVo);
+			
+			/********进行中的服务信息start*********/
+			Map<String, Object> variable = new HashMap<String, Object>();
+			// 查询当前登录人
+			variable.put("webUserId", loginVo.getUserid());
+			List<String> varKeyList = new ArrayList<String>();
+			varKeyList.add("busid");
+			List<LvProcInstEntitiy> doingServerList = RSBLL.getstance().getWfHistoryService().getPageRunProcListWithVarByVariableWithOutSubProc(variable, 0, 5, varKeyList); 
+			if(null != doingServerList && !doingServerList.isEmpty()){
+				for(LvProcInstEntitiy doingServer : doingServerList){
+					Map<String, Object> processVariables = doingServer.getProcessVariables();
+					if(processVariables == null){
+						continue;
+					}
+					Object busidObj = processVariables.get("busid");
+					if(busidObj == null){
+						continue;
+					}
+					String enterpriseName = null;
+					try {
+						enterpriseName = RSBLL.getstance().getEpEnterpriseService().getMainValueByEnterpriseIdAndKey(busidObj.toString(), "name");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					if(StringUtils.isNotBlank(enterpriseName)){
+						processVariables.put("enterpriseName", enterpriseName);
+					}
+				}
+				/*********服务顾问信息start**************/
+				//根据此用户获取企业信息
+				List<LvEnterpriseEntity> enterpriseEntityList = RSBLL.getstance().getEpEnterpriseService().getEnterpriseListByRoleTypeAndRoleIdWork(ILvEnterpriseRoleRelationService.ROLETYPE_ORDERPERSON, String.valueOf(loginVo.getUserid()));
+				if(null != enterpriseEntityList && !enterpriseEntityList.isEmpty()){
+					
+				}
+				//根据企业id获取当前企业负责人id
+				String empid = RSBLL.getstance().getWFCompanyService().getBusValueByCompanyIdAndBusKey(String.valueOf(0l), "AE");
+				if(StringUtils.isNotBlank(empid)){
+					BFEmployersEntity employerEntity = RSBLL.getstance().getEmployerService().getEmployersEntityById(Long.valueOf(empid));
+					if(null != employerEntity){
+						model.add("employerE", employerEntity);
+						model.addAll(EmpSatisfactionAndOrdersum.getStatisfactionAndOrderSum(empid));  
+					}
+				}
+				model.add("doingServerList", doingServerList);
+				model.add("simpleDateFormat", simpleDateFormat); 
+			}
+			
+			//带支付订单start
+			List<PayOrderBFVo> userUnpaylist = OrderBuz.ob.getUserUnpaylist(loginVo.getUserid(), 1, 5, "addtime desc");
+			if(null != userUnpaylist && !userUnpaylist.isEmpty()){
+				model.add("userUnpaylist", userUnpaylist);
+			}
+			
+			
+			
+			//String aa="32284470234625";
+			/****最新消息strt****/
+			List<Map<String,String>> mailListMap = new ArrayList<Map<String,String>>(); 
+			List<MailBFGEntity> mailEntityList = RSBLL.getstance().getMailBFGService().getMailListbypage("reciveid='"+loginVo.getUserid()+"'", 1, 5, "posttime desc");
+			if(null != mailEntityList && !mailEntityList.isEmpty()){
+				for(MailBFGEntity mailE : mailEntityList){
+					String posttime = Timers.formatLongDate("yyyy-MM-dd hh:mm", mailE.getAddtime());
+					 Map<String,String> tempMailMap = BeanUtils.describe(mailE);
+					 tempMailMap.put("addtime", posttime);
+					 String content=mailE.getContent();
+					 int length=content.length();
+					 if( length > 30 ){
+						 tempMailMap.put("content", content.substring(0, 30));
+						 tempMailMap.put("contentmore", content.substring(30, length-1));
+					 }else{
+						 tempMailMap.put("content", mailE.getContent());
+					 }
+					 mailListMap.add(tempMailMap);
+				}
+				model.add("messageList", mailListMap);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//转到的页面路径
+		model.add("LocationPage", new LocationPage("mycenter", "mycenter","mycenter"));
+		return menuview("index");
+	}
+	
+	//设置已读
+	@Path("/readMessage/{messageId:\\S+}")
+	public ActionResult readMessage(String messageId){
+		try {
+		    MailBFGEntity mailEntity = RSBLL.getstance().getMailBFGService().loadMailEntity(Long.valueOf(messageId));
+		    if(null != mailEntity){
+		    	mailEntity.setReadstate(1); //设置未已读
+		    	RSBLL.getstance().getMailBFGService().updateMail(mailEntity);
+		    }
+		} catch (Exception e) {
+			System.out.println("设置已读消息失败!;messageId:"+messageId);
+			e.printStackTrace();
+		}
+		return ActionResultUtils.renderJson("{\"success\":\"true\"}");
+	}
+	
+//	//退出登录
+//	@Path("/outlogin")
+//	public ActionResult outLogin(){
+//		try {
+//			CookieUtils.deleteCookie("lvuser", beat().getRequest(), beat().getResponse());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("退出登录失败!");
+//		}
+//		return redirect("http://www.lvzheng.com/index.html");
+//	}
+}

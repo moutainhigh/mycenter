@@ -1,0 +1,155 @@
+<!-- 经营范围弹出框 -->
+<div class="cd-popup cd-box12434" role="alert"> 
+    <div class="cd-popup-container">
+        <div class="zy-box">
+            <p class="title">选择主营业务</p>
+            <p class="search">
+                <label class="bel">主营业务：</label>
+                <input type="text" class="w_text_230" id="searchCodeName" >
+                <a href="javascript:void(0);" class="btn">搜索</a>
+            </p>
+
+            <div class="main">
+
+                <div class="left">
+                </div>
+                <div class="right type_right">
+                    <div class="name"><label><span>序号</span><span>行业代码</span><span class="name">主营业务</span></label></div>
+                </div>
+            </div>
+            <div class="btn-box">
+                <a href="javascript:void(0);" class="btn">保存</a>
+                <a href="javascript:void(0);" class="btn-g">取消</a>
+            </div>
+        </div>
+    </div> 
+</div> 
+<!-- 弹出框 -->
+
+<script type="text/javascript">
+<!-- 弹出框 -->
+$(document).ready(function(){
+	//  选择主营业务 - 查询
+	$(".zy-box .search .btn").click(function(){
+		var searchKey = $("#searchCodeName").val();
+		var pUniteCode = $(".left .menu_chioce.type_on").attr("data-id");
+		var lv2MainBus = LV.getMainBusiness(pUniteCode, searchKey);
+		mainBusinessRangeShow(lv2MainBus);
+	});
+	
+	// 选择主营业务 - 确定
+	$(".zy-box .btn-box .btn").click(function(){
+		var selectP = $(".zy-box .main .right.type_right .right_on");
+		if(selectP.length == 0){
+			alert("请您选择主营业务");
+			return;
+		}
+		$(this).parents(".cd-popup[role='alert']").removeClass('is-visible');
+		selectMainBusiness(selectP);
+	});
+	// 选择主营业务 - 取消
+	$(".zy-box .btn-box .btn-g").click(function(){
+		$(this).parents(".cd-popup[role='alert']").removeClass('is-visible');
+	});
+});
+
+/**
+* 动态加载展示主营业务
+* @param operatingRange
+*/
+function mainBusinessRangeShow(lv2MainBus){
+	if(lv2MainBus == undefined || lv2MainBus == ""){
+		return;
+	}
+	var lv2MainBusList = lv2MainBus.mainBusinessList;
+	var html = "";
+	if(lv2MainBusList != undefined && lv2MainBusList.length > 0){
+		 html += "<div class=\"name\"><label><span>序号</span><span>行业代码</span><span class=\"name\">主营业务</span></label></div>";
+		for(var i = 0; i < lv2MainBusList.length; i++ ){
+			var scope = lv2MainBusList[i]["scope"];
+			if(scope ==undefined || scope == "" ){
+				scope = lv2MainBusList[i]["codeName"];
+			}
+			html += "<p class=\"li\" " 
+			+ " data-codeName=\"" + lv2MainBusList[i]["codeName"] + "\" " 
+			+ " data-code=\"" + lv2MainBusList[i]["code"] + "\" " 
+			+ " data-uniteCode=\"" + lv2MainBusList[i]["uniteCode"] + "\" " 
+			+ " data-scope=\"" + scope + "\" " 
+			+ " ><label><span>" + (i+1)+ "</span>"
+			+ "<span>"+ lv2MainBusList[i]["code"] +"</span>"
+			+ "<span class=\"name\">"+ lv2MainBusList[i]["codeName"] +"</span></label></p>";
+		}
+	}
+	$(".zy-box .main .right.type_right").html(html);
+    $(".type_right p").each(function(){
+	    // 主营业务弹层 右类别选中    
+	    $(this).click(function(){
+            $(".type_right p").addClass("li").removeClass("right_on");
+            $(this).addClass("right_on").removeClass("li");
+        })
+    });
+}
+
+function initBusiness(){
+	// 经营范围一级类，初始化
+	var lv1MainBusList = LV.getL1MainBusiness();
+	if(lv1MainBusList == undefined || lv1MainBusList == ""){
+		return;
+	}
+	var html = "";
+	for(var i = 0; i < lv1MainBusList.length; i++ ){
+		html += "<dl class=\"l-type-list\"><dt>" + lv1MainBusList[i]["codeName"] + "</dt>";
+		var businessList = lv1MainBusList[i].businessList;			
+		if(businessList == undefined || businessList == ""){
+			html += "</dl>";
+			continue;
+		}
+		for(var j=0;j<businessList.length;j++){
+			html += "<dd data-id=\"" + businessList[j]["code"] +" \" ><a class=\"c-off\" href=\"javascript:void(0);\" >" + businessList[j]["codeName"] + "</a></dd>";
+		}
+		html += "</dl>";
+	}
+	$(".zy-box .main .left").html(html);
+	// 经营范围一级类，事件初始化
+	$(".zy-box .main .left dd").click(function(){
+        $(this).siblings().addClass("list").removeClass("type_on");
+        $(this).addClass("type_on").removeClass("list");
+        var parentCode = $(this).attr("data-id");
+		var lv2MainBus = LV.getMainBusiness(parentCode);
+		mainBusinessRangeShow(lv2MainBus);
+    });
+
+	// 选择主营业务 左列表点击显示子类
+    $(".left dd").hide();
+    $(".left dt").click(function(){
+        $(".left dt").css({"background-color":"#fff"});
+        $(this).css({"background-color": "#DAEBF7"});
+        $(this).parent().find('dd').removeClass("menu_chioce");
+        $(".menu_chioce").slideUp(); 
+        $(this).parent().find('dd').slideToggle();
+        $(this).parent().find('dd').addClass("menu_chioce");
+        $(this).next("dd").click();
+        $(this).next("dd").find("a").click();
+    });
+    // 子类选择颜色
+    $(".l-type-list a").each(function(){
+        $(this).click(function(){
+            $(".l-type-list a").addClass("c-off").removeClass("c-on");
+            $(this).addClass("c-on").removeClass("c-off");
+        });
+    });
+    
+    $(window).scroll(function(){
+        var a=parseInt($(window).scrollTop());
+        if(a<150){
+            $(".r-named").removeClass("listxf");
+        }
+        if(a>150){
+            $(".r-named").addClass("listxf");
+        }
+    });
+    $(".left dt:first").click();
+}
+
+</script>
+

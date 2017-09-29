@@ -1,0 +1,63 @@
+<div class="top-box-con">
+	<div class="lbox-on">
+		<!-- <div class="city-cho">
+			<ul>
+				<li class="city-list" id="hhDrop00">
+					<div class="boxSearch">
+						<span class="key-word">访问城市：<b class="size-14">北京</b></span> <a
+							class="thRight ico btn-search" href="javascript:void(0)"></a>
+					</div>
+					<div class="search-form-suggest" style="display: none;">
+						<dl class="child-list">
+							<dd class="clr-after">
+								<a href="#">北京</a> <a href="#">深圳</a>
+							</dd>
+						</dl>
+					</div>
+				</li>
+			</ul>
+		</div> -->
+		<!-- <div class="phone">
+			<a class="sm-box" href="javascript:void(0);">手机访问小微<b class="v-phone"><img src="/images/nav/ewm_phone.png"></b></a>
+		</div> -->
+	</div>
+	<div class="rbox-on">
+		<!-- <a class="new" href="http://www.lvzheng.com/home.html">返回旧版用户中心</a> -->
+		<a href="http://www.lvzheng.com/loginout">退出</a>
+		#if($!{unreadmailcount} > 0)
+		<a href="/maillist.html"
+			class="notice">消息 <span>$!{unreadmailcount}</span></a> 
+			#else
+			<a href="/messagecenter/index.html">消息</a> 
+			#end
+			<a href="/order/unpayorder.html">我的订单</a>
+			#if($!{unusedcounpons} > 0)
+			<a href="/unusecoupon.html" class="notice">我的优惠券 <span>$!{unusedcounpons}</span></a>
+			#else
+			<a href="/unusecoupon.html">我的优惠券#if($!{unusedcounpons} > 0)<span>$!{unusedcounpons}</span>#end</a>
+			#end
+			<!-- <a class="sm-box" href="javascript:void(0);">扫码优惠<b class="weixin-code"> 
+			<img src="/images/nav/ewm_wx.png"></b></a>
+			
+			-->
+			 <a class="tel" href="javascript:void(0);">010-57426695</a>
+	</div>
+</div>
+<script type="text/javascript">
+$(function(){
+    // 城市切换
+    $('#hhDrop00').hhDrop({});
+    $('#hhDrop01').hhDrop({});  
+
+    $('a.more').bind('click', function () { 
+        var txt = $(this).text(); 
+        if (txt == '展开') { 
+            $(this).parent().find(".morediv").show();
+            $(this).text('收起').addClass('top-arr'); 
+        } else { 
+            $(this).parent().find(".morediv").hide();
+            $(this).text('展开').removeClass('top-arr'); 
+        } 
+    })  
+});
+</script>

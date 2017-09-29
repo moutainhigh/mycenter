@@ -1,0 +1,149 @@
+<div class="named-box">
+	<div class="l-named">
+		#parse("views/mywf/company-reg/common/rename-info.html")
+		<div class="steps">
+			<a href="javascript:void(0);" class="s1-on">1. 我要起名</a>
+			<a href="javascript:void(0);" class="s2-un">2. 审核通知</a>
+		</div>
+
+		<div class="named-info">
+			<div class="one-box">
+				<span class="n1">我要起名</span>
+				<span class="n2">股东信息</span>
+			</div>
+		</div>
+		<div class="named-fill">
+			<ul class="name-list">
+				<div>
+					<a href="#name1" checkNameStatus-value="2" >我没有名称</a>
+				</div>
+				<div>
+					<a href="#name2" checkNameStatus-value="1" >我已有名称</a>
+				</div>
+			</ul>
+			<input type="hidden" id="checkNameStatus" value="$!{checkNameStatusKey}" data-info="enterprise:main"  />
+			<input type="hidden" id="name" value="$!{name}" data-info="enterprise:main"  />
+			
+			<div class="tab-box">
+				<div id="name1" class="tab-con">
+					<div class="box1">
+						<div class="tab">
+							<label><i>*</i>行政区划：</label>
+							<div>
+								北京 <b class="remark">（系统仅允许申请行政区划为“北京”的名称）</b>
+							</div>
+						</div>
+						<div class="tab">
+							<label><i>*</i>字号：</label>
+							<div class="link">
+								<div class="l-box t-hover" href="#n-link2">
+									<input class="w-input-310" type="text" placeholder="请填写字号" id="shopName" value="$!{shopName}" data-validate="chinese:true;required:true;" data-info="enterprise:main" />
+									<p class="tag-ceng">
+										<i></i><span>字号就是企业区别其他同行业机构的商号，为了避免与其他企业的字号重复或近似，建议选择3-4个汉字作为字号。</span>
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="tab">
+							<label><i>*</i>行业特点：</label>
+							<div class="link">
+								<!-- <div class="l-box td-box" href="#n-link3"> -->
+								<div class="l-box" href="#n-link4">
+									<input class="w-input-310" type="hidden" id="industryCharacteristics" data-select="none" value="$!{industryCharacteristics}" placeholder="行业特点" data-validate="chinese:true;required:true;" data-info="enterprise:main">
+									<!-- <div class="td-ul" id="ermblock" > -->
+									<div class="n-select w-310 td-ul" name="n-select" >
+										<input class="n-val" type="text" value="请选择..." readonly>
+										<ul>
+											#foreach($bus in $mainBusinessList)
+											<li data-industry="$!{bus.getIndustryText()}" data-code="$!{bus.getCode()}" data-codeName="$!{bus.getCodeName()}" data-uniteCode="$!{bus.getUniteCode()}" data-value="$!{bus.getIndustryText()}" >$!{bus.getIndustryText()}（主营业务：$!{bus.getCodeName()}）</li>
+											#end
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<p class="tab-tx" id="mainBusinessText" >主营业务：$!{mainBusiness}</p>
+						<input type="hidden" id="mainBusiness" placeholder="主营业务" value="$!{mainBusiness}" data-validate="required:true;" data-info="enterprise:main" />
+						<input type="hidden" id="mainBusinessCode" value="$!{mainBusinessCode}" data-validate="required:true;" data-info="enterprise:main" />
+						<input type="hidden" id="mainBusinessUniteCode" value="$!{mainBusinessUniteCode}" data-validate="required:true;" data-info="enterprise:main" />
+						<input type="hidden" id="operatingRange" value="$!{operatingRange}" data-info="enterprise:main"  />
+						
+						<div class="tab">
+							<label><i>*</i>组织形式：</label>
+							<div class="link">
+								<div class="l-box" href="#n-link4">
+									<input id="organizationType" type="hidden" value="$!{organizationType}" data-select="none" placeholder="组织形式" data-validate="required:true;" data-info="enterprise:main" />
+									<div class="n-select w-310" name="n-select">
+										<input class="n-val" type="text" value="请选择..." readonly>
+										<ul>
+											<li data-value="有限公司">有限公司</li>
+											<li data-value="有限责任公司">有限责任公司</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						<div class="bot-box">
+							<div class="b1">名称中行政区划所在位置： 
+								<input id="regionLocationInName" type="hidden" value="$!{regionLocationInName}" data-info="enterprise:main" />
+								<span class="lab-box"><input type="radio" name="regionLocationInName" id="regionLocationInName1" value="1" ><label for="regionLocationInName1">前</label></span>
+								<span class="lab-box"><input type="radio" name="regionLocationInName" id="regionLocationInName2" value="2" ><label for="regionLocationInName2">中</label></span> 
+								<span class="lab-box"><input type="radio" name="regionLocationInName" id="regionLocationInName3" value="3" ><label for="regionLocationInName3">后</label></span>
+							</div>
+							<div class="b1">
+								<p>根据您输入的信息生成的名称如下：</p>
+								<p class="com" ><span>$!{name}</span></p>
+								<a href="javascript:void(0);" id="foundcheckBtn" class="btn">检查是否可用</a>
+							</div>
+							 <div class="b1" id="foundCheckReasonDiv" style="display: none;" >
+							 </div>
+						</div>
+						<div class="btn-box" id="foundCheckOkDiv" style="display: none;" >
+							<a href="javascript:void(0);" class="tj-btn continue">继续填写补充信息</a>
+						</div>
+					</div>
+				</div>
+				<div id="name2" class="tab-con" >
+					<div class="ts">
+					    <label>小微提示：</label>
+					    <p>请准确填写您申请企业名称的用户名与密码，系统将根据您提供的信息，使用您已核准的名称为您进行公司设立申请</p>
+					</div>
+					<!-- 核名工商状态：1，未获取工商信息 -->
+					<input type="hidden" id="checkNameGovStatus" value="2" data-validate="required:true;" data-info="enterprise:main"  />
+					<div class="tab">
+						<label><i>*</i>公司名称：</label>
+						<div>
+							<input class="w-input-310" type="text" placeholder="请填写公司名称" id="namefull" value="$!{name}" data-validate="required:true;"/>
+						</div>
+					</div>
+					<div class="tab">
+						<label><i>*</i>核名账号：</label>
+						<div>
+							<input class="w-input-310" type="text" placeholder="请填写核名账号" id="checkNameAccount" value="$!{checkNameAccount}" data-validate="required:true;" data-info="enterprise:main" />
+						</div>
+					</div>
+					<div class="tab">
+						<label><i>*</i>核名密码：</label>
+						<div>
+							<input class="w-input-310" type="password" placeholder="请填写核名密码" id="checkNamePassword" value="$!{checkNamePassword}" data-validate="required:true;" data-info="enterprise:main" />
+						</div>
+					</div>
+					<div class="btn-box">
+						<a href="javascript:void(0);" class="tj-btn submit">提交</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	#parse("views/mywf/company-reg/common/common-tip.html")
+	
+	<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+	<script type="text/javascript" src="/js/mywf/heMing.js"></script> 
+	<script type="text/javascript" src="/js/mywf/selfCheckName.js"></script> 
+	<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+
+	<!-- 经营范围弹出框 -->
+	#parse("views/mywf/company-reg/common/mainBusinessRang.html")
+</div>

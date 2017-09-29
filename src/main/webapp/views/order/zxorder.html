@@ -1,0 +1,138 @@
+<div class="rides-cs" id="ridefloat">
+<div class="floatL">
+            <a class="open-btn" style="top: 20px; display: none;" name="showbuyceng" href="javascript:void(0);">展开</a>
+            <a class="colse-btn" style="top: 20px;" href="javascript:void(0);" name="getinbuyceng">收缩</a>
+        </div>
+        
+        
+<div class="floatR view-box" style="display: block;"><!-- 右侧购买层1 -->
+<form id="zixunbuy" method="post" action="/consultorder/submit">
+<input type="hidden" name="returnurl" id="returnurl" value="$!{returnurl}"/>
+<input type="hidden" name="selleridstr" id="selleridinput" value="$!{sellerid}"/>
+<input type="hidden" name="productid" id="buydivproductid" value="$!{product.product_id}"/>
+            <div class="title-box">
+                <span class="t1">购买商品</span>
+                <span class="t2">购买<i>&gt;</i>支付<i>&gt;</i>服务</span>
+            </div>
+            <div class="buy-box">
+                <div class="list">
+                    <span class="t1">商品名称</span>
+                    <span class="t2">$!{product.sell_product_name}</span>
+                </div>
+                <div class="list">
+                    <div class="t1">服务区域</div>
+                    <div class="t2">
+                        <div class="z-area">
+                            <span class="t2">北京</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="list">
+                    <span class="t1">金额</span>
+                    <span class="t2 red" name="pricespan" id="pricespan" data-value="$!{product.sell_overprice}" >￥$!{product.sell_overprice}</span>
+                </div>
+                <div class="list">
+                    <div class="t1">优惠券</div>
+                    <div class="t2">
+                        <div class="yh-area">
+  							<input type="hidden" name="ucid" id="ucid" value="$!{uclistfist.tucid}"/>
+                            <div class="n-select cw-120" name="n-selectzx">
+                                <input class="n-val" type="text" name="ucname" id="ucname" #if($!{uclist.size()} > 0) value="￥$!{uclistfist.cmoney}" data-value="$!{uclistfist.cmoney}" #else value="暂无优惠券" data-value=0  #end readonly="">
+                                <ul style="display: none;" name='counps'>
+                                	#foreach($userCoupons in $!{uclist})
+                                		<li data-value="$!{userCoupons.tucid}" data-price="$!{userCoupons.cmoney}">￥$!{userCoupons.cmoney}</li>
+                                	#end
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="buy-box">
+				    <div class="list">
+				        <span class="t1">应收金额</span>
+				        <span class="t2 red" id="shoudPay">￥$!{needpay}</span>
+				    </div>
+			</div>
+           
+            <div class="buy-btn pop_box1">
+                <a href="javascript:void(0);" name="zxbuybtnsubmit">确认购买</a>
+            </div>
+            </form>
+        </div>
+        <script type="text/javascript">
+        $(".dec").click(function(){
+        	var o = this;
+        	var v = numDec(o);
+        	if(!isNaN(v)){
+        		$("span[name='pricespan']").text("￥"+v);
+        	}
+        });
+
+         //计算应付金额
+      	var calculate = function(){
+      		var oldprice=$("#pricespan").attr("data-value");
+      		var coupon=$("#ucname").attr("data-value");
+      		var shoudpay=oldprice-coupon;//优惠券已经过滤掉大于原价的金额
+      		$("#shoudPay").text("￥"+parseFloat(shoudpay).toFixed(2));
+      	}
+         
+        $('[name="n-selectzx"]').click(function(e){
+        	  $('[name="n-selectzx"]').find('ul').hide();
+        	  $(this).find('ul').show();
+        	  e.stopPropagation();
+       	});
+       	$('[name="n-selectzx"] li').hover(function(e){
+       	  $(this).toggleClass('on');
+       	  e.stopPropagation();
+       	});
+       	$('[name="n-selectzx"] li').click(function(e){
+       	  var val = $(this).text();
+       	  var dataVal = $(this).attr("data-value");
+       	  $(this).parents('[name="n-selectzx"]').find('input').val(val);
+       	  $(this).parents('[name="n-selectzx"]').prev().val(dataVal);
+       	  //优惠券
+       	  var dataprice=$(this).attr("data-price");
+     	  $("#ucname").attr("data-value",dataprice);
+     	  
+     	  calculate();
+     	  
+       	  $('[name="n-selectzx"] ul').hide();
+       	  e.stopPropagation();
+       	});
+       	$(document).click(function(){
+       	  $('[name="n-selectzx"] ul').hide();
+       	});
+
+        var queryprice = function(data){
+        	if(data.ret == "ok"){
+        		var o =	$("#quantity");
+        		var v = parseInt(o.val()) * data.price;
+        		$("#selleridinput").val(data.sellerid);
+        		$("span[name='pricespan']").text("￥"+v);
+        	}else{
+        		alert("查询出现错误，请稍后再试！");
+        	}
+        }
+        
+        $(".add").click(function(){
+        	var v = addDec(this);
+        	if(!isNaN(v)){
+        	$("span[name='pricespan']").text("￥"+v);
+        	}
+        });
+        $("a[name='zxbuybtnsubmit']").click(function(){
+        	$("#zixunbuy").submit();
+        });
+        $("a[name='getinbuyceng']").click(function(){
+        	$("div.floatR").hide();
+        	$(this).hide();
+        	$("a[name='showbuyceng']").show();
+        });
+        $("a[name='showbuyceng']").click(function(){
+        	$("div.floatR").show();
+        	$(this).hide();
+        	$("a[name='getinbuyceng']").show();
+        });
+        </script>
+        </div>

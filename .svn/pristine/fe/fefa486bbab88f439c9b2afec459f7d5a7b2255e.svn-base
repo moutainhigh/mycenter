@@ -1,0 +1,160 @@
+
+
+        <div class="ser-main-box">
+			<br/>
+            <div class="s-flow">  
+                <ul class="tabbtn" id="normaltab">
+                    <li #if($listtype == "unpaylist") class="current" #end><a href="/order/unpayorder.html">待支付</a></li>
+                    <li #if($listtype == "orderlist") class="current"  #end><a href="/order/payedorder.html">已支付</a></li>                          
+                    <li #if($listtype == "cancellist") class="current"  #end><a href="/order/cancelorder.html">已取消</a></li>                          
+                </ul>
+                <div class="tabcon" id="normalcon">
+                #if($listtype == "unpaylist")
+                    <div class="sublist" #if($listtype != "unpaylist") style="display:none" #end>
+                    #if($unpaylist.size() > 0)
+                        <div class="tab-list">
+                            <table>
+                                <tr>
+                                    <th width="15%">下单时间</th>
+                                    <th width="15%">订单编号</th>
+                                    <th width="15%">商品名称</th>
+                                    <th width="25%">订单说明</th>
+                                    <th width="10%">订单价格</th>
+                                    <th>操作</th>
+                                </tr>
+                                #foreach($payorder in $unpaylist)
+                                <tr name="ordercontent" val-data="$!{payorder.payid}" style="cursor: pointer;">
+                                    <td>$!{payorder.addDatestr}</td>
+                                    <td>$!{payorder.payid}</td>
+                                    <td>
+                                    #foreach($str in $payorder.servicestr)
+                                    $!{str}<br/>
+                                    #end
+                                    </td>
+                                    <td>$!{payorder.orderdesc}</td>
+                                    <td><span class="price">￥$!{payorder.orderpric}</span></td>
+                                    <td><a class="btn" href="http://pay.lvzheng.com/reqpay/$!{payorder.payid}">去支付</a>
+                                    <a href="javascript:void(0);" class="xqbtn" name="cancelpayorder" val-data="$!{payorder.payid}">取消</a></td>
+                                </tr>
+                                #end
+                            </table>
+                        </div>
+                        #parse("views/common/fenye_order.html")
+				#else
+                        #parse("views/common/noservice.html")
+				#end
+                    </div>
+				#end
+				#if($listtype == "orderlist")
+                    <div class="sublist" #if($listtype != "orderlist") style="display:none" #end>
+                    #if($pageEntity.contentlist.size() > 0)
+                        <div class="tab-list">
+                            <table>
+                                <tr>
+                                    <th width="15%">下单时间</th>
+                                    <th width="15%">订单编号</th>
+                                    <th width="15%">商品名称</th>
+                                    <th width="25%">订单说明</th>
+                                    <th width="10%">订单价格</th>
+                                    <th>操作</th>
+                                </tr>
+                                #foreach($payorder in $pageEntity.contentlist)
+                                <tr>
+                                    <td>$!{payorder.booktime}</td>
+                                    <td>$!{payorder.orderid}</td>
+                                    <td>
+                                    $!{payorder.productname}
+                                    </td>
+                                    <td>$!{payorder.followcontent}</td>
+                                    <td><span class="price">￥$!{payorder.paycount}</span></td>
+                                    <td><a class="btn" href="/orderdetail/$!{payorder.payid}">查看</a></td>
+                                </tr>
+                                #end
+                            </table>
+                        </div>
+                         #parse("views/common/fenye_order.html")
+                        #else
+                        #parse("views/common/noservice.html")
+                        #end
+                    </div>
+				#end
+
+ 				#if($listtype == "cancellist")
+                    <div class="sublist" #if($listtype != "cancellist") style="display:none" #end>
+                    <div class="tab-list">
+                        <table>
+                            <tr>
+                                <th width="15%">下单时间</th>
+                                <th width="15%">订单编号</th>
+                                <th width="15%">商品名称</th>
+                                <th width="25%">订单说明</th>
+                                <th width="10%">订单价格</th>
+                                <th>操作</th>
+                            </tr>
+                            #foreach($order in $cancellist)
+                            <tr name="ordercancel" val-data="$!{order.payid}" style="cursor: pointer;">
+                                <td>$!{order.addDatestr}</td>
+                                <td>$!{order.payid}</td>
+                                <td>
+                                	#foreach($str in $order.servicestr)
+                                    $!{str}<br/>
+                                    #end
+                                 </td>
+                                <td>$!{order.orderdesc}</td>
+                                <td><span class="price">￥$!{order.paycount}</span></td>
+                                <td><a class="btn" href="/orderdetail/$!{order.payid}">查看</a></td>
+                            </tr>
+                            #end
+                        </table>
+                    </div>
+                        #parse("views/common/fenye_order.html")
+                    </div>
+				#end
+                </div>
+            </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("tr[name='ordercontent']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			var pid = obj.attr("val-data");
+			//obj.css("cursor","pointer");
+			window.location.href = "/orderdetail/"+pid;
+		});
+	});
+	$("tr[name='ordercancel']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			var pid = obj.attr("val-data");
+			//obj.css("cursor","pointer");
+			window.location.href = "/canceldetail/"+pid;
+		});
+	});
+	$("a[name='cancelpayorder']").each(function(){
+		var obj = $(this);
+		obj.click(function(){
+			event.stopPropagation(); 
+			if(confirm("是否确定取消订单？")){
+				var pid = obj.attr("val-data");
+				var url = "/refound/"+pid;
+				ajreq(url,"",cancelcallback);
+			}
+			
+		});
+	});
+	var cancelcallback = function(data){
+		if(data.ret == "ok"){
+			alert("订单成功取消！");
+		}else{
+			alert("取消失败！"+data.msg);
+		}
+		window.location.reload();
+	}
+	
+	
+});
+
+
+</script>
+        </div>
+##parse("views/myorder/order.html")

@@ -1,0 +1,90 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                <div class="hm-info">
+                    <p class="name">银行开户</p>
+                    <p class="text">企业设立银行基本账户是开展经营活动的必要条件，一家企业只能开设一个基本帐户，企业的日常转账结算、现金收付、工资、奖金发放等均需经过对公账户。</p>
+                    <p class="text">您可以咨询多家方便您企业办理对公业务的银行，了解相关的开户要求，最终确认一家为您企业的基本户开户行。</p>
+                    <p class="text-blue">银行开户需要以下几个步骤：</p>
+                    <p class="text">1、咨询并确认适合的银行作为企业基本账户开户行</p>
+                    <p class="text">2、到开户银行提交相关的申请文件。（详见材料清单）</p>
+                    <p class="text">3、提前到企业的主管国税所领取加盖税务机关公章的空白税款银行代扣代缴三方协议。（为后期国税报到做准备）</p>
+                    <p class="text">4、按银行通知领取企业银行开户许可证。</p>
+                </div>
+                <div class="dj-online r-top">
+                	<div class="ts">
+	               		<label>小微提示：</label><p>一般银行均可以开设企业基本账户，您可以选择任意一家您喜欢的银行进行开户。</p>
+	               	</div>
+                    <div class="tab">
+                            <table>
+                                <tr>
+                                    <th width="90px">序号</th>
+                                    <th width="300px">银行开户所需材料</th>
+                                    <th>注意事项</th>
+                                </tr>
+                                <tr>
+                                    <td class="one">1</td>
+                                    <td class="two">《营业执照副本》</td>
+                                    <td>需准备营业执照副本原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">2</td>
+                                    <td class="two">《企业印章》</td>
+                                    <td>企业法定名称章（公章）、财务专用章、法定代表人名章</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">3</td>
+                                    <td class="two">《企业章程》</td>
+                                    <td>视各银行需求</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">4</td>
+                                    <td class="two">《法定代表人身份证》</td>
+                                    <td>法定代表人身份证原件</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">5</td>
+                                    <td class="two">《银行账户UKey管理员身份证》</td>
+                                    <td>企业负责出纳与财务管理人员的身份证原件（2-3名）</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">6</td>
+                                    <td class="two">《企业住所房屋租赁合同》</td>
+                                    <td>视各银行需求</td>
+                                </tr>
+                                <tr>
+                                    <td class="one">7</td>
+                                    <td class="two">《其他必要材料》</td>
+                                    <td>银行要求提供的必要法律文件</td>
+                                </tr>
+                            </table>
+                    </div>
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn bank submit">我已完成</a></p>
+                    </div>
+                     #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                    
+                </div>
+            </div>
+            #parse("views/mywf/company-reg/common/common-tip.html")
+		</div>
+<script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+<script type="text/javascript" >
+$(document).ready(function(){
+	/**
+	 * 银行开户 - 完成
+	 */
+	$(".btn.bank.submit").click(function(){
+		LV.wfSignlReceiveTask();
+		window.location.href = "/mywf/company/reg/" + procInstId;
+		return true;
+	});
+})
+</script> 
+		
+		

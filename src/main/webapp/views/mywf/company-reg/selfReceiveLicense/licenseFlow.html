@@ -1,0 +1,67 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/receive-info.html")
+                <div class="show-flow">
+                    <div class="s-flow ">  
+	                    <ul class="tabbtn" id="normaltab">
+	                        <li class="current"><a>领取证照流程</a></li>                      
+	                    </ul>
+	                    <div class="tabcon bot" id="normalcon">
+	                        <div class="sublist">
+	
+	                            <div class="list-right">
+	                                <ul>
+	                                    <p class="tag">1</p>
+	                                    <li>
+	                                        <p class="title">预约工商</p>
+	                                        <p class="statu">预约提交法定申请文件</p>
+	                                       <!--  <p class="text">结果分为三种：</p> -->
+	                                        <p class="text">1、各个区域的预约方式有所不同：</p>
+	                                        <p class="text pl">网上预约：朝阳、海淀、丰台、石景山</p>
+	                                        <p class="text pl">微信约号：西城</p>
+	                                        <p class="text pl">电话约号：东城</p>
+	                                        <p class="text">2、小微可以免费帮您进行网上预约，您也可以自行通过登记机关官方网站自行预约</p>
+	                                    </li>
+	                                </ul>
+	                                <ul class="list">
+	                                    <p class="tag">2</p>
+	                                    <li>
+	                                        <p class="title">提交材料</p>
+	                                        <p class="statu">法定申请文件一般包括：</p>
+	                                        <p class="text">1、提交的材料为</p>
+	                                        <p class="text">《内资公司设立登记申请书》</p>
+	                                        <p class="text">《指定（委托）书》</p>
+	                                        <p class="text">《补充信息登记表》</p>
+	                                        <p class="text">《公司章程》</p>
+	                                        <p class="text">股东资格证明——自然人股东身份证件复印件或单位股东营业执照复印件</p>
+	                                        <p class="text">住所使用证明——房屋所有权证复印件</p>
+	                                        <p class="text">2、上述材料需经股东亲笔签字（盖章）并经法定代表人亲笔签字后，方可向登记机关提交</p>
+	                                    </li>
+	                                </ul>
+	                                <ul class="list">
+	                                    <p class="tag">3</p>
+	                                    <li>
+	                                        <p class="title">领取证照</p>
+	                                        <!-- <p class="statu">人工审核通过后可以领取证照</p> -->
+	                                        <p class="text">1、法定申请文件经登记机关受理后，登记机关将向您出具的《受理通知书》/《准予通知书》</p>
+	                                        <!-- <p class="text pl">领取营业执照</p> -->
+	                                        <p class="text">2、在《受理通知书》/《准予通知书》签字的被委托人您可以按照通知时间持本人身份证原件到登记机关领取营业执照</p>
+	                                        <p class="text">3、领取营业执照后需要刻制公司印章。</p>
+	                                        <!-- <p class="text pl">法定名称章（公章）、合同专用章、</p>
+	                                        <p class="text pl">财务专用章、发票专用章、法人代表名章。)</p> -->
+	                                    </li>
+	                                </ul>
+	                            </div>
+	                        </div>
+	                        
+	                    </div>
+	                </div>
+	                <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>            
+                </div>
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+			<script type="text/javascript" src="/js/mywf/receive.js"></script> 
+		</div>

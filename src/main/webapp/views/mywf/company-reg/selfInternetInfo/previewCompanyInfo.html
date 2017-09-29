@@ -1,0 +1,176 @@
+        <div class="named-box">
+			<div id="submitDataDiv" style="display: none;" >
+	        	<!-- 设立工商状态：1，未提交工商信息 -->
+				<input type="hidden" id="setupGovStatus" value="1" data-info="enterprise:main"  />
+				<input type="hidden" id="setupStatus" value="3" data-info="enterprise:main"  />
+	        </div>
+            <div class="l-named">
+                #parse("views/mywf/company-reg/common/internet-info.html")
+                
+				#parse("views/mywf/company-reg/common/internet-reason-step.html")
+
+                <div class="dj-online">
+                    <div class="show">
+                        <table class="tab1">
+                            <tr class="tr-tit">
+                                <td colspan="4">企业基本信息</td>
+                            </tr>
+                            <tr>
+                                <th width="160px">注册资本：</th>
+                                <td width="250px">$!{regCapital}万元</td>
+                                <th width="140px">营业期限：</th>
+                                <td width="190px">$!{doBusinessDuration}年</td>
+                            </tr>
+                            #set($addressInfo = $EnterpriseUtils.getAddressDataByEnterpriseId("$!{enterpriseId}"))
+                            <tr>
+                                <th>住所（经营场所）：</th>
+                                <td>$!{DicUtils.getEnterpriseDicValue("residenceProv", $addressInfo.get('domProvince'))}$!{DicUtils.getEnterpriseDicValue($addressInfo.get('domProvince'), $addressInfo.get('domDistrict'))}$!{addressInfo.get('domDetail')}</td>
+                                <th>住所产权人：</th>
+                                <td>$!{addressInfo.get("theOwnerName")}</td>
+                            </tr>
+                            <tr>
+                                <th>住所产权类型：</th>
+                                <td>$!{addressInfo.get("domOwnType")}</td>
+                                <th>住所提供方式：</th>
+                                <td>$!{addressInfo.get("getWay")}</td>
+                            </tr>
+                            <tr>
+                                <th>营业面积：</th>
+                                <td>$!{addressInfo.get("useArea")}平方米</td>
+                                <th>住所使用年限：</th>
+                                <td>$!{addressInfo.get("useAge")}年</td>
+                            </tr>
+                            <tr>
+                                <th>经营范围：</th>
+                                <td colspan="3">$!{operatingRange}</td>
+                            </tr>
+                            <tr>
+                                <th>执照副本数：</th>
+                                <td colspan="3">$!{copyNo}份</td>
+                            </tr>
+                        </table>
+
+                        <table class="tab2">
+                            <tr class="tr-tit">
+                                <td colspan="4">自然人股东信息</td>
+                            </tr>
+                            <tr>
+                                <th width="110px">姓名</th>
+                                <th width="210px">证件号码</th>
+                                <th width="320px">住所</th>
+                                <th width="150px">出资额（万元）</th>
+                            </tr>
+                            #foreach($partner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'naturalPartner')})
+                            <tr>
+                                <td>$!{partner.get('name')}</td>
+                                <td>$!{partner.get('idNum')}</td>
+                                <td>$!{DicUtils.getEnterpriseDicValue("residenceProv", $partner.get('residenceProv'))}$!{DicUtils.getEnterpriseDicValue($partner.get('residenceProv'), $partner.get('residenceCity'))}$!{partner.get('residenceAddress')}</td>
+                                <td>$!{partner.get('capitalSize')}</td>
+                            </tr>
+                            #end
+                        </table>
+
+                        <table class="tab2">
+                            <tr class="tr-tit">
+                                <td colspan="4">非自然人股东信息</td>
+                            </tr>
+                            <tr>
+                                <th width="320px">名称</th>
+                                <th width="110px">法定代表人</th>
+                                <th width="210px">证件号码</th>
+                                <th width="150px">出资额（万元）</th>
+                            </tr>
+                            #foreach($partner in $!{EnterpriseUtils.getRoleListByEnterpriseAndRoleType("$!{enterpriseId}", 'legalPartner')})
+                            <tr>
+                                <td>$!{partner.get('name')}</td>
+                                <td>$!{partner.get('legalPerson')}</td>
+                                <td>$!{partner.get('businessLicenseNum')}</td>
+                                <td>$!{partner.get('capitalSize')}</td>
+                            </tr>
+                            #end
+                        </table>
+
+                        <table class="tab2">
+                            <tr class="tr-tit">
+                                <td colspan="4">主要人员信息</td>
+                            </tr>
+                            <tr>
+                                <th width="110px">姓名</th>
+                                <th width="210px">证件类型</th>
+                                <th width="180px">证件号码</th>
+                                <th width="190px">职务</th>
+                            </tr>
+                            #foreach($roleInfo in $EnterpriseUtils.getMainMemberList("$!{enterpriseId}"))
+                            <tr>
+                                <td>$!{roleInfo.get("name")}</td>
+                                <td>中华人民共和国居民身份证</td>
+                                <td>$!{roleInfo.get("idNum")}</td>
+                                <td>$!{roleInfo.get("roleTypeNames")}</td>
+                            </tr>
+                            #end
+                        </table>
+                    </div>
+
+                    <div class="show1">
+                        <table class="tab1">
+                            <tr class="tr-tit">
+                                <td colspan="5">企业补充信息</td>
+                            </tr>           
+                            <tr>
+                                <th width="150px">企业固定电话：</th>
+                                <td width="250px">$!{fixedPhone}</td>
+                                <th width="130px">邮政编码：</th>
+                                <td width="210px">$!{zipCode}</td>
+                            </tr>
+                            <tr>
+                                <th>邮箱：</th>
+                                <td>$!{addresseeEmail}</td>
+                                <th>章程：</th>
+                                <td>$!{artiOfCorpCnt}份</td>
+                            </tr>
+                        </table>
+                        <table class="tab1">
+                        	#set($roleInfo = $EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", "contacts"))
+                            <tr>
+                                <th width="150px">联系人：</th>
+                                <td width="110px">$!{roleInfo.get("name")}</td>
+                                <td width="235px">$!{roleInfo.get("idNum")}</td>
+                                <td width="230px">$!{roleInfo.get("phoneNum")}</td>
+                            </tr>
+                            #set($roleInfo = $EnterpriseUtils.getRoleDataByEnterpriseIdAndRoleType("$!{enterpriseId}", "finance"))
+                            <tr>
+                                <th>财务负责人：</th>
+                                <td width="110px">$!{roleInfo.get("name")}</td>
+                                <td width="235px">$!{roleInfo.get("idNum")}</td>
+                                <td width="230px">$!{roleInfo.get("phoneNum")}</td>
+                            </tr>
+                        </table>
+                        <table class="tab1">
+                            <tr>
+                                <th width="150px">总人数：</th>
+                                <td width="250px">$!{staffTotalNum}人</td>
+                                <th width="130px">本地人数：</th>
+                                <td width="210px">$!{staffLocalNum}人</td>
+                            </tr>
+                            <tr>
+                                <th>外地人数：</th>
+                                <td>$!{staffOutNum}人</td>
+                                <th>女性人数：</th>
+                                <td>$!{staffFemaleNum}人</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="back-btn">
+                    	<a href="/mywf/company/detail/$!{procInstId}/$!{taskId}/$!{lastBusinessKey}"  class="btn">上一步</a>
+                        <a href="javascript:void(0);" class="btn other submit">提交</a>
+                    </div>
+                </div>
+            </div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+		</div>

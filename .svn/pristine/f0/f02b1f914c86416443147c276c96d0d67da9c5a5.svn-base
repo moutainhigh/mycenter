@@ -1,0 +1,119 @@
+        <div class="named-box">
+
+            <div class="l-named">
+                 #parse("views/mywf/company-reg/common/internet-info.html")
+                
+                 #parse("views/mywf/company-reg/common/internet-reason-step.html")
+                 
+                <div class="dj-online">
+                    <div class="ts">小微提示：您需要现场提交材料，请先将下述材料下载并整理</div>
+
+                    <div class="info-box">
+                        <p class="title"><span>需要下载的材料</span><span class="line"></span></p>
+                    </div>
+                    
+                    <div class="tab">
+                        <table>
+                            <tr>
+                                <th width="60px">序号</th>
+                                <th width="280px">文件名称</th>
+                                <th width="450px">注意事项</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td class="download">《内资公司设立登记申请书》<a #if($gov-regApplyDocFileId) href="/file/download/$!{gov-regApplyDocFileId}" #end ></a></td>
+                                <td class="atten">
+                                    由法定代表人亲笔签署，如已在工商局打印过，无需重复打印。<br>
+                                    <span>P1</span>《郑重承诺》页 由企业法定代表人亲笔签字；<br>
+                                    <span>P3</span>《法定代表人、董事、经理、监事信息表》页，由全体股东亲笔签字（股东为单位的，需加盖单位公章<br>
+                                    <span>P4</span>《董事、经理、监事人员的身份证件》粘贴页，请粘贴所有董事、经理、监事的居民身份证复印件（正反面）；<br>
+                                    <span>P5</span>《住所证明》页 房屋属于个人的，请房屋所有权人在“产权人盖章（签字）”处亲笔签字，房屋所有权属于单位的，请单位在此处加盖公章）
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td class="download">《指定（委托）书》<a #if($gov-regEntrustedDocFileId)href="/file/download/$!{gov-regEntrustedDocFileId}" #end class="download"></a></td>
+                                <td class="atten">应全体股东共同签署。<br>“指定（委托）人签字或加盖公章”处，请全体自然人股东亲笔签字（如企业有单位股东，请将加盖公章）</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td class="download">《补充信息登记表》<a #if($gov-regSupplementDocFileId)href="/file/download/$!{gov-regSupplementDocFileId}" #end class="download"></a></td>
+                                <td class="atten">请您如实填写本登记表相关内容，并对本表所填写内容的真实性负责。</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td class="download">《公司章程》<a #if($constitutionFile)href="/file/download/$!{constitutionFile}" #end class="download"></a></td>
+                                <td class="atten">
+                                    章程内容已自动填写完成，需要您下载后补充如下内容：<br>
+                                    章程末页需要由全体自然人股东亲笔签字<br>
+                                    （股东为单位的，请加盖单位公章）
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="tab-dw">
+                                        请安装Adobe Reader10或以上版本软件，以打开下载的pdf文件<a #if($constitutionFile || $gov-regSupplementDocFileId || $gov-regEntrustedDocFileId || $gov-regApplyDocFileId)
+                                         href="/file/download/$!{gov-regApplyDocFileId};$!{gov-regEntrustedDocFileId};$!{gov-regSupplementDocFileId};$!{constitutionFile}" #end class="dw-btn">全部下载</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+
+                    <div class="info-box">
+                        <p class="title"><span>其他准备的材料</span><span class="line"></span></p>
+                    </div>
+                    <div class="tab">
+                        <table>
+                            <tr>
+                                <th width="60px">序号</th>
+                                <th width="280px">文件名称</th>
+                                <th width="450px">注意事项</th>
+                            </tr>
+
+                            <tr>
+                                <td>1</td>
+                                <td >《企业名称核准通知书》</td>
+                                <td class="atten">
+                                    登记机关一般不发放纸质名称预先核准通知书，<br>
+                                    确认企业名称已通过审核即可；但已领取纸质名称预先核准通知书，<br>
+                                    需提交此项文件。
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td >《住所使用证明文件》</td>
+                                <td class="atten">房产证复印件（全套清晰），产权人为个人的应亲笔签字 <br>（产权人为单位的应加盖单位公章 ）；</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td >股东身份证明</td>
+                                <td class="atten">
+                                    自然人股东提交居民身份证复印件（已粘贴在申请文件中）；<br>
+                                    单位股东需要提交营业执照复印件并加盖公章<br>
+                                    （非企业单位可提交社会团体证书复印件并加盖公章）。
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    #if("$!{hiActEntity.getEndTime()}" == "" && "$!{hiActEntity.getStartTime()}" != "")
+                    <div class="done">
+                        <p>如果您已完成上述步骤，请点击<a href="javascript:void(0);" class="btn setupDownload submit">我已完成</a></p>
+                    </div>
+                    #else
+                    <div class="back-btn">
+						<a href="/mywf/company/reg/$!{procInstId}" class="btn">返回</a>
+		            </div>
+                    #end
+                    
+                </div>
+			</div>
+			#parse("views/mywf/company-reg/common/common-tip.html")
+            <script type="text/javascript" src="/js/mywf/enterprise.js"></script> 
+			<script type="text/javascript" src="/js/mywf/setup.js"></script> 
+			<script type="text/javascript" src="/js/mywf/gov.js"></script> 
+			
+			#parse("views/mywf/company-reg/common/mainMemInfo.html")
+			#parse("views/mywf/company-reg/common/invInfo.html")
+		</div>
